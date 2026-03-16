@@ -97,6 +97,24 @@ trust_level = "trusted"
 [projects."/home/kevin/Documents/journal"]
 trust_level = "trusted"
 
+[projects."/home/kevin/coding/b-anniversary-card-26"]
+trust_level = "trusted"
+
+[projects."/mnt/ipad/DCIM/101APPLE"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/hevin/3.14-zoo"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/hevin/03.14.26 - Toronto Zoo"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/hevin"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/chess-site"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 
