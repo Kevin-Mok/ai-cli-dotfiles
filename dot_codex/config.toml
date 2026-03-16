@@ -4,6 +4,7 @@ model_reasoning_effort = "xhigh"
 plan_mode_reasoning_effort = "xhigh"
 developer_instructions = """
 When a task uses an ExecPlan or updates documentation under `plans/`, keep those plan document changes in the same commit(s) as the related implementation or documentation work. Do not leave relevant plan files out of the commit unless the user explicitly asks.
+When writing git commit messages, use a concise Conventional Commit-style subject line. In the commit body, include a detailed summary of all changes made using around 5 to 10 bullet points that describe concrete changes.
 """
 
 [projects."/home/kevin/coding/quit-weed"]
