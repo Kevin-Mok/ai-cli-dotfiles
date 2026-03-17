@@ -10,7 +10,11 @@ This repo is a `chezmoi`-managed Linux config repo, but the
 main workflow documented here is the AI CLI stack shown in
 the screenshot above: parallel agent work in the terminal,
 shared instruction files, and tracked config for Codex,
-Claude, and reusable agent skills.
+Claude, and reusable agent skills. In practice, this setup
+improves my agentic engineering a lot because it gives the
+agents a stricter operating model, faster access to tools,
+and reusable workflows that stay versioned with the rest of
+my environment.
 
 The center of gravity is the instruction chain and config
 surface around `AGENTS.md`, `AGENTS.repo.md`,
@@ -21,6 +25,7 @@ surface around `AGENTS.md`, `AGENTS.repo.md`,
 - [Workflow At A Glance](#workflow-at-a-glance)
 - [Instruction Chain](#instruction-chain)
 - [AI CLI Surfaces](#ai-cli-surfaces)
+- [Why This Improves Agentic Engineering](#why-this-improves-agentic-engineering)
 - [Daily Workflow](#daily-workflow)
 - [Sync And Apply](#sync-and-apply)
 - [Rest Of Repo](#rest-of-repo)
@@ -50,13 +55,20 @@ Those files and directories define the AI CLI workflow:
 - `AGENTS.repo.md` is the repo-local pointer that says
   `dot_codex/AGENTS.md` is authoritative for Codex here.
 - `dot_codex/AGENTS.md` is the canonical merged instruction
-  document for this repository.
+  document for this repository, which makes the agent behave
+  more like a disciplined engineering teammate than a loose
+  autocomplete layer.
 - `dot_codex/config.toml` tracks the Codex model, reasoning
-  level, trusted projects, MCP servers, and TUI status line.
+  level, trusted projects, MCP servers, and TUI status line
+  so the terminal agent starts with better defaults instead
+  of re-learning the environment every session.
 - `dot_claude/settings.json` tracks Claude-side permissions,
-  model selection, and enabled plugins.
-- `dot_agents/skills/pd/SKILL.md` is a reusable skill for
-  planning coherent commits across a dirty working tree.
+  model selection, and enabled plugins so Claude can operate
+  with less permission friction in the same stack.
+- `dot_agents/skills/` tracks reusable local skills for
+  commit planning, browser automation, screenshot capture,
+  GitHub CI repair, OpenAI docs lookup, PDF work, image
+  generation, and transcription.
 
 ## Instruction Chain
 
@@ -127,15 +139,47 @@ Tracks the Claude-side environment:
 - enabled plugins
 - extra readable directories
 
-### `dot_agents/skills/pd/SKILL.md`
+### `dot_agents/skills/`
 
-Stores a focused reusable workflow for one common agent task:
-planning how to split dirty git changes into clean commits
-without mutating the working tree.
+Stores focused reusable workflows for common agent tasks.
+The current tracked local skills cover commit planning,
+browser automation and screenshot capture, GitHub PR and CI
+repair, OpenAI docs lookup, PDF handling, image generation,
+and transcription.
 
 This makes `dot_agents` the lightweight skill layer beside
 the heavier instruction and CLI-config layers in
 `dot_codex` and `dot_claude`.
+
+## Why This Improves Agentic Engineering
+
+This config materially improves my agentic engineering
+because it removes a lot of the normal slop around terminal
+agents:
+
+- `dot_codex/AGENTS.md` pushes Codex toward plan-first,
+  verification-heavy behavior with smaller diffs, explicit
+  repro steps, and tighter docs coupling.
+- `dot_codex/config.toml` gives Codex stronger defaults up
+  front: `gpt-5.4`, `xhigh` reasoning, trusted project
+  mappings, MCP servers, and a status line that keeps the
+  session legible while I work.
+- `dot_claude/settings.json` reduces tool friction by
+  pre-allowing the read, web, and shell actions that come up
+  all the time in real repo work.
+- `dot_agents/skills/` turns recurring jobs into reusable
+  workflows, so I do not need to keep re-explaining how to
+  inspect CI, drive a browser, read PDFs, look up OpenAI
+  docs, or transcribe media.
+- Because all of this lives in `chezmoi`, the behavior is
+  reproducible: the same instruction stack, permissions, and
+  skills follow the environment instead of living as fragile
+  local drift.
+
+The result is not just "AI tools installed on my machine."
+It is a versioned operating environment that makes agents
+more autonomous, more consistent, and more useful for real
+engineering work.
 
 ## Daily Workflow
 
@@ -151,13 +195,15 @@ to support:
 4. Use Claude with the tracked `dot_claude/settings.json`
    when that tool is part of the workflow.
 5. Reuse skills from `dot_agents/skills/` for repetitive
-   higher-level tasks such as commit planning.
+   higher-level tasks such as commit planning, browser
+   automation, docs lookup, CI repair, and media handling.
 6. Record execution plans in `plans/` for non-trivial work so
    implementation and documentation stay aligned.
 
 The point of this repo is not just "AI config files exist";
-it is that the instruction stack, CLI settings, and reusable
-skills are all versioned together.
+it is that the instruction stack, CLI settings, permissions,
+and reusable workflows are all versioned together in a way
+that makes the agents noticeably stronger day to day.
 
 ## Sync And Apply
 
