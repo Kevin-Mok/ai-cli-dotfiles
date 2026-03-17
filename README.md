@@ -99,7 +99,15 @@ Mechanically, this matters because Codex CLI is designed to read AGENTS-style in
 - **`AGENTS.repo.md`** tells Codex to treat `dot_codex/AGENTS.md` as authoritative for this repo.
 - **`dot_codex/AGENTS.md`** is the canonical working document for this codebase.
 
-That canonical document is not generic philosophy. It encodes concrete engineering behavior: **plan mode for non-trivial work**, **failing reproducers before bug fixes**, **explicit verification before done**, **docs updates with behavior changes**, **small reversible diffs**, **Conventional Commits**, and a **clear definition of done**.
+That canonical document is not generic philosophy. It encodes concrete engineering behavior:
+
+- **Plan mode for non-trivial work:** larger tasks should be broken into explicit steps, assumptions, risks, and verification, instead of being handled as one long improvisation. In practice, that means work should move through an ExecPlan in `plans/` when the task is big enough that sequencing and review matter.
+- **Failing reproducers before bug fixes:** bug work should start with a test or other executable proof of failure, so the fix is grounded in observed behavior instead of guesswork. The target is to make the problem fail for the right reason first, then fix it, then keep that reproducer as a regression check.
+- **Explicit verification before done:** work is not considered complete until the result is demonstrated through tests, diffs, logs, or a clear manual check. A change is not "done" because the code looks right; it is done when there is evidence that behavior matches the claim.
+- **Docs updates with behavior changes:** when the workflow or behavior changes, the related documentation and plans should change with it so the repo stays truthful. If a README, plan, setup step, or operator workflow is now different, the documentation should be updated in the same change rather than deferred.
+- **Small reversible diffs:** changes should be narrow, reviewable, and easy to back out, rather than broad refactors that mix multiple concerns. That pushes the work toward focused commits and away from drive-by cleanup that makes failures harder to isolate.
+- **Conventional Commits:** commit history should communicate intent clearly and consistently, not leave future readers to infer what happened. A subject like `docs: expand README instruction-chain examples` is part of the system's operating discipline, not just a stylistic preference.
+- **A clear definition of done:** the system defines completion as working implementation, updated supporting docs or types where needed, and enough context for another engineer to verify the result. The goal is that someone else can read the diff, run the checks, and understand why the task is actually complete.
 
 This is where agent behavior stops being prompt folklore and becomes **versioned repo policy**.
 
