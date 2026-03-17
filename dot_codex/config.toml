@@ -125,6 +125,22 @@ url = "https://developers.openai.com/mcp"
   command = "memora-server"  # or full path: /path/to/bin/memora-server
   args = ["--no-graph"]
 
+[mcp_servers.graphiti]
+command = "uv"
+args = [
+  "run",
+  "main.py",
+  "--transport",
+  "stdio",
+  "--database-provider",
+  "neo4j",
+  "--model",
+  "qwen3:14b",
+]
+cwd = "/home/kevin/coding/graphiti/mcp_server"
+startup_timeout_sec = 120
+tool_timeout_sec = 120
+
 [tui]
 notifications = true
 notification_method = "osc9"
