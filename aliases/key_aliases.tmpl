@@ -1097,12 +1097,13 @@ xsv "npx nodemon --exitcrash --exec tsx src/server.ts"
 clw "watch npx ts-node src/cli.ts list-nfts -p 5 -t 100"
 vp "vercel --prod"
 
-cr "~/Applications/cursor.AppImage --no-sandbox &"
+#cr "~/Applications/cursor.AppImage --no-sandbox &"
 
 h ./start.sh
 v ./start.sh voice
 
 c codex
+cr "codex resume -a never"
 cpx "cp ~/.codex/config.toml ~/linux-config/dot_codex/config.toml"
 #csp "claude --dangerously-skip-permissions" 
 #cu "curl -fsSL https://claude.ai/install.sh | bash"
