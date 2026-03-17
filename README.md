@@ -17,6 +17,7 @@ If you are evaluating me as a software engineer or contractor, this repo is a us
 ## Table of Contents
 
 - [Workflow At A Glance](#workflow-at-a-glance)
+- [AI Layer Highlights](#ai-layer-highlights)
 - [Why This Is Different From Normal Dotfiles](#why-this-is-different-from-normal-dotfiles)
 - [How The System Works](#how-the-system-works)
 - [Core Components](#core-components)
@@ -51,6 +52,39 @@ Those files and directories define the operating layer:
 - **`plans/`:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.
+
+## AI Layer Highlights
+
+The repo now treats the AI operating layer as documentation-worthy
+surface area, not hidden implementation detail. Repo-local guidance
+explicitly requires `README.md` updates whenever these paths
+materially change:
+
+```text
+AGENTS.md
+AGENTS.repo.md
+dot_codex/
+dot_agents/
+plans/
+```
+
+That matters because the most interesting changes here are often not
+traditional dotfile tweaks. They are workflow upgrades.
+
+- **Instruction chain upgrades:** changes in `AGENTS.md`,
+  `AGENTS.repo.md`, or `dot_codex/AGENTS.md` can tighten planning,
+  verification, bug-fix discipline, and repo-specific behavior.
+- **Runtime default upgrades:** `dot_codex/config.toml` versions the
+  model, reasoning, trust, MCP, and session defaults that every new
+  Codex pane inherits.
+- **Skill surface growth:** `dot_agents/skills/` packages recurring
+  jobs into reusable local capabilities instead of one-off prompts.
+- **Execution discipline:** `plans/` makes non-trivial tasks
+  explicit, reviewable, and easier to validate after the fact.
+
+Keeping the README tied to those changes makes the repo easier to
+evaluate: the high-leverage additions stay visible instead of
+disappearing into internal docs and folder trees.
 
 ## Why This Is Different From Normal Dotfiles
 
