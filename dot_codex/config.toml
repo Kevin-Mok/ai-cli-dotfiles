@@ -124,9 +124,9 @@ trust_level = "trusted"
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
-[mcp_servers.memora]
-command = "memora-server"
-args = ["--no-graph"]
+# [mcp_servers.memora]
+# command = "memora-server"
+# args = ["--no-graph"]
 
 [mcp_servers.graphiti]
 command = "uv"
