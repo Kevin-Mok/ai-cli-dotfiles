@@ -1,7 +1,7 @@
 # KM's Four-Codex Operating Environment
 
 <p align="center">
-  <img src="ai-cli-workflow.png"
+  <img src="media/ai-cli-workflow-samurai.png"
        alt="Multi-agent AI CLI workflow across Codex, Claude, skills, and AGENTS files"
        width="100%">
 </p>
