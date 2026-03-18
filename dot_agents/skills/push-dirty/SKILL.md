@@ -1,6 +1,6 @@
 ---
-name: pd
-description: Plan commits for all dirty git changes in the current repository. Use when I say `pd`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit immediately, rewrite history, or work outside git.
+name: push-dirty
+description: Plan commits for all dirty git changes in the current repository. Use when I say `push-dirty`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit immediately, rewrite history, or work outside git.
 ---
 
 ## Purpose
@@ -12,7 +12,7 @@ Create a safe, reviewable commit plan for the current repository's dirty changes
 Use this skill when the goal is to inspect the current git working tree and turn all dirty changes into a sensible commit plan.
 
 Typical triggers:
-- `pd`
+- `push-dirty`
 - `plan to commit all dirty`
 - `group all dirty changes into commits`
 - `what should I commit here`
