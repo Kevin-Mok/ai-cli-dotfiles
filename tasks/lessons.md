@@ -9,3 +9,4 @@
 - When a user points to a specific env-backed MCP checkout, prefer launching that checkout directly and verify that the default HTTP port is not already serving a different local app before keeping a URL-based MCP registration.
 - When a user wants README wording to stay functionality-based, do not introduce explicit internal skill names there if the existing capability description is already accurate.
 - When the user specifies a concrete new skill name, use that exact name instead of inventing a nearby alternative.
+- When adding an i3 launcher for a CLI installed through shell-managed PATH, verify the command from a clean session and prefer a stable absolute entry point over `bash -lc` if shell startup can drop the binary.

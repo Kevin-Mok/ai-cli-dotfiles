@@ -66,7 +66,7 @@ bindsym Mod4+Return exec /home/kevin/scripts/dmenu-history -nb "$fg" -nf "$bg" -
 # bindsym Mod4+c exec $browser
 # bindsym Mod4+$mod+c exec chatterino
 #bindsym Mod4+c exec chatterino
-bindsym Mod4+c exec pass -c finances/metamask
+bindsym Mod4+c exec "kitty --directory /home/kevin/linux-config /home/kevin/.local/share/fnm/aliases/default/bin/node /home/kevin/.local/share/fnm/aliases/default/lib/node_modules/@openai/codex/bin/codex.js"
 bindsym Mod4+$mod+c exec $browser
 # bindsym Mod4+e exec notify-send "HPS Word Count" "$(pdftotext /home/kevin/school/latex-notes/hps/essay.pdf - | wc -w)"
 # bindsym Mod4+e exec emacs
@@ -83,7 +83,7 @@ bindsym Mod4+$mod+i exec sleep .2 && xdotool type '.info latest'
 bindsym Mod4+l exec ~/scripts/dmenu-twitch
 # bindsym Mod4+m exec $term -e ~/scripts/vim-man
 bindsym Mod4+m exec $type_delay_cmd && xdotool type 'me@kevin-mok.com'
-# bindsym Mod4+$mod+m exec pass -c uoft/markus
+bindsym Mod4+$mod+m exec pass -c finances/metamask
 bindsym Mod4+n exec $term -e nvim
 # bindsym Mod4+$mod+o exec xset dpms force off
 bindsym Mod4+o exec xclip -selection clipboard ~/.password-store/social/gmail && $type_delay_cmd && xdotool key 'Control_L+v'
