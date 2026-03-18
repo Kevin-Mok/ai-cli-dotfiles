@@ -147,5 +147,5 @@ tool_timeout_sec = 120
 [tui]
 notifications = true
 notification_method = "osc9"
-status_line = ["model-with-reasoning", "five-hour-limit", "context-remaining", "used-tokens", "current-dir", "total-input-tokens", "total-output-tokens", "context-window-size", "session-id"]
+status_line = ["model-with-reasoning", "five-hour-limit", "context-remaining", "used-tokens", "current-dir", "total-input-tokens", "total-output-tokens", "context-window-size", "session-id", "codex-version"]
 
