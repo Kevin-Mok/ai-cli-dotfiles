@@ -1,0 +1,7 @@
+interface:
+  display_name: "Commit & Push"
+  short_description: "Verify, commit, and push ready git work"
+  default_prompt: "Use $commit-push to verify the current repo changes, create a clean commit, and push the active branch."
+
+policy:
+  allow_implicit_invocation: false

@@ -49,7 +49,7 @@ Those files and directories define the operating layer:
 - **[`AGENTS.repo.md`][agents-repo-pointer]:** the repo-local pointer that says [`dot_codex/AGENTS.md`][codex-agents] is authoritative for Codex here.
 - **[`dot_codex/AGENTS.md`][codex-agents]:** the canonical merged instruction document for this repository, which pushes Codex toward plan-first, verification-heavy engineering behavior.
 - **[`dot_codex/config.toml`][codex-config]:** the tracked runtime config for model defaults, reasoning level, trust boundaries, MCP servers, and session behavior.
-- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, and commit planning.
+- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning, and direct verified git shipping.
 - **[`plans/`][plans-dir]:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.
@@ -205,7 +205,7 @@ workflow lives in [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc].
 
 [`dot_agents/skills/`][skills-dir] turns repeated prompting into reusable capabilities.
 
-The current skill tree includes workflows for GitHub CI repair, OpenAI docs lookup, browser automation with Playwright, screenshots, PDFs, image generation, transcription, and commit planning. Several skills are packaged with `SKILL.md`, agent metadata, helper scripts, and reference material, which makes them closer to local tools than to one-off prompts.
+The current skill tree includes workflows for GitHub CI repair, OpenAI docs lookup, browser automation with Playwright, screenshots, PDFs, image generation, transcription, commit planning, and direct commit-and-push execution for ready changes. Several skills are packaged with `SKILL.md`, agent metadata, helper scripts, and reference material, which makes them closer to local tools than to one-off prompts.
 
 That is one of the clearest differences from a normal dotfiles repo. Instead of re-explaining recurring work every week, the workflow is already **packaged and versioned**.
 
