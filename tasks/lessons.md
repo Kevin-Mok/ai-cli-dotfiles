@@ -12,3 +12,4 @@
 - When adding an i3 launcher for a CLI installed through shell-managed PATH, verify the command from a clean session and prefer a stable absolute entry point over `bash -lc` if shell startup can drop the binary.
 - When ingesting external content with permission, record that permission explicitly and do not describe it as ownership.
 - When importing external skills or templates, record the upstream source in tracked files near the imported material, not only in chat or plan notes.
+- When writing a catalog-style README with many peer entries, organize it into meaningful category headings instead of leaving it as one flat list of same-level sections.
