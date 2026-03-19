@@ -251,6 +251,15 @@ chezmoi apply
 
 The difference is what is being reproduced. It is not only shell comfort. It is the **operating environment for AI-assisted engineering**.
 
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
+
+You may use, modify, and redistribute it, including for commercial work, as
+long as the copyright and license notice stay with copies or substantial
+portions of the material. If a file or subdirectory carries its own license
+notice, that specific notice controls for that material.
+
 ## Rest Of Repo
 
 The rest of the repository is still a full desktop-dotfiles setup, not just an AI CLI config repo. The major non-AI surfaces break down like this.
