@@ -350,3 +350,9 @@ That broader dotfiles surface is still substantial, but the README stays centere
 [calcurse-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/private_dot_calcurse/
 [gnupg-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/private_dot_gnupg/
 [ssh-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_ssh/
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
+
+You may use, modify, and redistribute it, including for commercial work, as long as the copyright and license notice stay with copies or substantial portions of the material. If a file or subdirectory carries its own license notice, that specific notice controls for that material.
