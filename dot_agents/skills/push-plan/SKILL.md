@@ -1,18 +1,23 @@
 ---
-name: push-dirty
-description: Plan commits for all dirty git changes in the current repository. Use when I say `push-dirty`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit immediately, rewrite history, or work outside git.
+name: push-plan
+description: Plan commits for all dirty git changes in the current repository. Use when I say `push-plan`, `push plan`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit or push immediately, rewrite history, or work outside git.
 ---
+
+# Push Plan
 
 ## Purpose
 
 Create a safe, reviewable commit plan for the current repository's dirty changes without making any write actions.
+
+This skill is planning-only. It inspects the worktree and proposes commit boundaries, but it must not stage, commit, or push changes.
 
 ## When to use
 
 Use this skill when the goal is to inspect the current git working tree and turn all dirty changes into a sensible commit plan.
 
 Typical triggers:
-- `push-dirty`
+- `push-plan`
+- `push plan`
 - `plan to commit all dirty`
 - `group all dirty changes into commits`
 - `what should I commit here`
@@ -22,6 +27,7 @@ Typical triggers:
 
 Do not use this skill when:
 - I explicitly ask you to create commits right now
+- I explicitly ask you to push right now
 - I want to rebase, squash, amend, cherry-pick, or rewrite history
 - I only want review of one file or one tiny change
 - the current directory is not a git repository
@@ -57,6 +63,7 @@ For this skill, "dirty changes" include:
 Do not run these unless I explicitly ask:
 - `git add`
 - `git commit`
+- `git push`
 - `git restore`
 - `git reset`
 - `git stash`

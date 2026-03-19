@@ -31,7 +31,7 @@ Use this skill for explicit write requests to create a real git commit and push 
 
 ## Guardrails
 
-- Do not use this skill when the task is only to plan commits or group dirty changes without writing. Use the read-only commit-planning workflow for that case.
+- Do not use this skill when the task is only to plan commits or group dirty changes without writing. Use `push-plan` for that case.
 - Never bundle unrelated dirty changes into one commit to save time.
 - Never stage secrets, credentials, caches, build output, or machine-local files unless they clearly belong in version control.
 - Respect pre-existing user changes. Do not revert or discard work you did not make.

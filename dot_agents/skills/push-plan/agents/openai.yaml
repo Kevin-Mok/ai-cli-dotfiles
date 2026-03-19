@@ -1,0 +1,7 @@
+interface:
+  display_name: "Push Plan"
+  short_description: "Plan safe git commits without writing changes"
+  default_prompt: "Use $push-plan to inspect the current repo, group dirty changes into coherent commits, and return a safe commit plan without staging, committing, or pushing."
+
+policy:
+  allow_implicit_invocation: false
