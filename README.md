@@ -49,7 +49,7 @@ Those files and directories define the operating layer:
 - **[`AGENTS.repo.md`][agents-repo-pointer]:** the repo-local pointer that says [`dot_codex/AGENTS.md`][codex-agents] is authoritative for Codex here.
 - **[`dot_codex/AGENTS.md`][codex-agents]:** the canonical merged instruction document for this repository, which pushes Codex toward plan-first, verification-heavy engineering behavior.
 - **[`dot_codex/config.toml`][codex-config]:** the tracked runtime config for model defaults, reasoning level, trust boundaries, MCP servers, and session behavior.
-- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, and direct verified git shipping.
+- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
 - **[`plans/`][plans-dir]:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.
@@ -203,7 +203,7 @@ workflow lives in [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc].
 
 ### 3. Reusable local skills
 
-[`dot_agents/skills/`][skills-dir] turns repeated prompting into reusable capabilities.
+[`dot_agents/skills/`][skills-dir] turns repeated prompting into reusable capabilities. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
 
 The current skill tree includes workflows for frontend design generation, UI redesign, premium visual polish, output enforcement, minimalist/editorial interface design, GitHub CI repair, OpenAI docs lookup, browser automation with Playwright, screenshots, PDFs, image generation, transcription, commit planning with a bottom-of-response commit-subject summary, and direct commit-and-push execution for ready changes. Several skills are packaged with `SKILL.md`, agent metadata, helper scripts, reference material, or explicit `SOURCE.md` provenance notes, which makes them closer to local tools than to one-off prompts. The frontend design skill cluster was imported from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) with permission, and each imported skill directory includes a `SOURCE.md` file that records the upstream path and commit.
 
@@ -308,6 +308,7 @@ That broader dotfiles surface is still substantial, but the README stays centere
 [codex-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_codex/config.toml?plain=1#L1
 [graphiti-codex-doc]: https://github.com/Kevin-Mok/linux-config/blob/master/docs/graphiti-mcp-codex.md?plain=1#L1
 [skills-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_agents/skills/
+[skills-readme]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_agents/skills/README.md?plain=1#L1
 [plans-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/plans/
 [plan-commit-all-dirty]: https://github.com/Kevin-Mok/linux-config/blob/master/plans/commit-all-dirty.md?plain=1#L1
 [dot-bashrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_bashrc?plain=1#L1
