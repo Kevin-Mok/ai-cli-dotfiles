@@ -98,6 +98,13 @@ Call out anything that should probably be excluded, split out, double-checked, o
 ### 4) Optional manual commands
 Provide manual `git add ...` and `git commit ...` commands I can run myself if useful.
 
+### 5) Commit message summary
+End the response with a compact summary of the suggested commit message subjects:
+- put this section at the very bottom of the response
+- list one subject line per proposed commit, in commit order
+- keep each line to the concise Conventional Commit-style subject only
+- if there is only one proposed commit, still include the one-line summary
+
 ## Commit message rules
 
 When writing git commit messages:
