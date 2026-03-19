@@ -211,7 +211,7 @@ The current live skill tree is:
 
 - **[`commit-push`](dot_agents/skills/commit-push/SKILL.md):** ships ready changes with scoped staging, targeted verification, a Conventional Commit message, and a real push.
 - **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
-- **[`push-plan`](dot_agents/skills/push-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.
+- **[`commit-plan`](dot_agents/skills/commit-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.
 
 #### Design and frontend
 

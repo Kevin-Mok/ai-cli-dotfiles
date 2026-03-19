@@ -15,3 +15,9 @@
 - When writing a catalog-style README with many peer entries, organize it into meaningful category headings instead of leaving it as one flat list of same-level sections.
 - When building a catalog for repo-local components or skills, link each entry directly to its canonical source file so the summary page also works as navigation.
 - When a user says "README" after an ambiguous docs request in this repo, default the scope to the root `README.md` unless they explicitly name a different one.
+- When validating `sshd` config changes in setup scripts, account for runtime prerequisites like `/run/sshd` instead of assuming the validation environment already matches a started service.
+- When a setup script fundamentally changes privileged system state, prefer making it require or self-acquire `sudo` up front instead of scattering best-effort `sudo` calls deeper in the flow.
+- When exposing SSH on a custom port, check for `ssh.socket` systemd socket activation; `sshd_config` alone may not change the actual listening ports.
+- When debugging public service exposure, add a host-side doctor path that can separate local listener/firewall issues from router, NAT, or ISP reachability.
+- When a setup script applies a service config, do not use `try-reload-or-restart` if the service may be inactive; use logic that actually starts the service.
+- When adding a personal-machine hardening script, default the target login user sensibly instead of forcing an explicit flag for the common single-user case.

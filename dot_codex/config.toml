@@ -122,6 +122,12 @@ trust_level = "trusted"
 [projects."/home/kevin/coding/taste-skill"]
 trust_level = "trusted"
 
+[projects."/mnt/linux-files-3/Pictures/nomar-halloween"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/ai-blog"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 

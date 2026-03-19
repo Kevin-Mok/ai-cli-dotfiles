@@ -1,0 +1,7 @@
+interface:
+  display_name: "Commit Plan"
+  short_description: "Plan safe git commits without writing changes"
+  default_prompt: "Use $commit-plan to inspect the current repo, group dirty changes into coherent commits, return a safe commit plan without staging, committing, or pushing, and end with a compact summary of the suggested commit message subjects."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
-name: push-plan
-description: Plan commits for all dirty git changes in the current repository. Use when I say `commit-plan`, `commit plan`, `push-plan`, `push plan`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit or push immediately, rewrite history, or work outside git.
+name: commit-plan
+description: Plan commits for all dirty git changes in the current repository. Use when I say `commit-plan`, `commit plan`, `plan to commit all dirty`, `group my dirty changes into commits`, or ask for a safe commit plan without actually committing. Do not use when I explicitly want you to commit or push immediately, rewrite history, or work outside git.
 ---
 
 # Commit Plan
@@ -18,8 +18,6 @@ Use this skill when the goal is to inspect the current git working tree and turn
 Typical triggers:
 - `commit-plan`
 - `commit plan`
-- `push-plan`
-- `push plan`
 - `plan to commit all dirty`
 - `group all dirty changes into commits`
 - `what should I commit here`

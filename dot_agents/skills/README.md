@@ -12,9 +12,9 @@ This directory packages reusable local skills for recurring Codex work. The sect
 
 `gh-fix-ci` is for debugging failing GitHub PR checks that run in GitHub Actions when the user wants failure analysis before any fix is attempted. It uses `gh` to locate the relevant PR, inspect actionable logs, summarize the real failure snippet, and draft a concrete remediation plan, while explicitly treating non-GitHub providers like Buildkite as out of scope apart from surfacing their details URL.
 
-### [push-plan](push-plan/SKILL.md)
+### [commit-plan](commit-plan/SKILL.md)
 
-`push-plan` is the read-only git planning skill for turning a dirty worktree into a sensible set of commit boundaries without staging, committing, or pushing anything. It is the right choice when the user wants help grouping changes, reviewing scope, or deciding commit order, and its main constraint is that it must remain planning-only even while inspecting the repository in detail.
+`commit-plan` is the read-only git planning skill for turning a dirty worktree into a sensible set of commit boundaries without staging, committing, or pushing anything. It is the right choice when the user wants help grouping changes, reviewing scope, or deciding commit order, and its main constraint is that it must remain planning-only even while inspecting the repository in detail.
 
 ## Design And Frontend
 

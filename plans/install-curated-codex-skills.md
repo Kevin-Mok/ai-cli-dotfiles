@@ -20,7 +20,7 @@
 - Reworked `README.md` so it no longer frames `dot_agents` as a single commit-planning skill folder and instead documents the broader local skill library.
 - Added a new `Why This Improves Agentic Engineering` section to explain how the AGENTS chain, Codex config, Claude permissions, and tracked skill library make the terminal agents more autonomous and repeatable.
 - Verification completed with:
-  - `rg -n 'Why This Improves Agentic Engineering|dot_agents/skills/push-plan/SKILL.md|playwright|gh-fix-ci|openai-docs|transcribe|agentic engineering' /home/kevin/linux-config/README.md`
+  - `rg -n 'Why This Improves Agentic Engineering|dot_agents/skills/commit-plan/SKILL.md|playwright|gh-fix-ci|openai-docs|transcribe|agentic engineering' /home/kevin/linux-config/README.md`
   - `sed -n '1,230p' /home/kevin/linux-config/README.md`
   - `find /home/kevin/linux-config/dot_agents/skills -maxdepth 2 -type f | sort`
   - `git -C /home/kevin/linux-config diff -- README.md plans/install-curated-codex-skills.md dot_agents/skills`
