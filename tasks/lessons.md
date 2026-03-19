@@ -14,3 +14,4 @@
 - When importing external skills or templates, record the upstream source in tracked files near the imported material, not only in chat or plan notes.
 - When writing a catalog-style README with many peer entries, organize it into meaningful category headings instead of leaving it as one flat list of same-level sections.
 - When building a catalog for repo-local components or skills, link each entry directly to its canonical source file so the summary page also works as navigation.
+- When a user says "README" after an ambiguous docs request in this repo, default the scope to the root `README.md` unless they explicitly name a different one.
