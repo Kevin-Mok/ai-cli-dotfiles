@@ -10,3 +10,5 @@
 - When a user wants README wording to stay functionality-based, do not introduce explicit internal skill names there if the existing capability description is already accurate.
 - When the user specifies a concrete new skill name, use that exact name instead of inventing a nearby alternative.
 - When adding an i3 launcher for a CLI installed through shell-managed PATH, verify the command from a clean session and prefer a stable absolute entry point over `bash -lc` if shell startup can drop the binary.
+- When ingesting external content with permission, record that permission explicitly and do not describe it as ownership.
+- When importing external skills or templates, record the upstream source in tracked files near the imported material, not only in chat or plan notes.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Output Enforcement"
+  short_description: "Force complete outputs without placeholders, skipped sections, or lazy truncation."
+  default_prompt: "Use $full-output-enforcement to deliver the complete output for this task without placeholders, omissions, or compressed shortcuts."

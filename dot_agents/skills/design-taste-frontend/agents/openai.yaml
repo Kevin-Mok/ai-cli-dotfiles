@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design Taste"
+  short_description: "Design premium frontends from scratch with stronger layout, typography, and motion."
+  default_prompt: "Use $design-taste-frontend to design this frontend from scratch with strong layout, typography, motion, and visual direction."

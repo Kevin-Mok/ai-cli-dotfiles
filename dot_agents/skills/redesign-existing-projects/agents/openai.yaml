@@ -1,0 +1,4 @@
+interface:
+  display_name: "Redesign Existing Projects"
+  short_description: "Audit an existing UI and apply focused visual upgrades without breaking behavior."
+  default_prompt: "Use $redesign-existing-projects to audit this existing interface, preserve behavior, and apply targeted design improvements."

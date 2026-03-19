@@ -1,0 +1,4 @@
+interface:
+  display_name: "High-End Visual Design"
+  short_description: "Push an interface toward a more premium visual style with stronger spacing, depth, and motion."
+  default_prompt: "Use $high-end-visual-design to make this interface feel more premium with better typography, spacing, depth, and motion."
