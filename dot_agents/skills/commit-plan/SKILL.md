@@ -55,7 +55,7 @@ For this skill, "dirty changes" include:
    - unrelated refactors mixed into feature work
    - large binary files
    - vendor or cache artifacts
-6. Produce a commit plan that covers all dirty changes.
+6. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
 7. Do not run any write action unless I explicitly ask for it.
 
 ## Write actions forbidden by default
@@ -80,6 +80,8 @@ Return the result in this structure:
 - one short sentence about the overall shape of the change
 
 ### 2) Proposed commit plan
+List the proposed commits in execution order from oldest to newest.
+
 For each proposed commit:
 - commit number
 - purpose
@@ -142,6 +144,7 @@ feat: add retry handling for webhook delivery
 ## Decision rules
 
 - Prefer multiple small coherent commits over one giant mixed commit.
+- Order proposed commits from the oldest changes to the newest changes.
 - If all dirty changes clearly belong together, say so and propose a single commit.
 - If the diff is messy, propose a cleanup or split strategy before proposing final commits.
 - If a file is ambiguous, call out the ambiguity instead of guessing.
