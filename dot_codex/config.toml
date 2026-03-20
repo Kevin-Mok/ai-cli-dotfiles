@@ -9,6 +9,9 @@ Before the first command or patch that can modify repo-tracked files in a git re
 """
 service_tier = "fast"
 
+[features]
+multi_agent = true
+
 [projects."/home/kevin/coding/quit-weed"]
 trust_level = "trusted"
 
@@ -136,6 +139,12 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/kevin/Documents"]
+trust_level = "trusted"
+
+[projects."/home/kevin/Downloads"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/auction-bot"]
 trust_level = "trusted"
 
 [notice.model_migrations]
