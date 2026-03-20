@@ -76,6 +76,7 @@ traditional dotfile tweaks. They are workflow upgrades.
 - **Instruction chain upgrades:** changes in [`AGENTS.md`][agents-baseline],
   [`AGENTS.repo.md`][agents-repo-pointer], or [`dot_codex/AGENTS.md`][codex-agents] can tighten planning,
   verification, bug-fix discipline, and repo-specific behavior.
+- **Scripted manual handoffs:** when Codex has to hand commands off instead of running them directly, the instruction chain now prefers writing a script and explicitly calling out any required `sudo` invocation.
 - **Runtime default upgrades:** [`dot_codex/config.toml`][codex-config] versions the
   model, reasoning, trust, MCP, and session defaults that every new
   Codex pane inherits.

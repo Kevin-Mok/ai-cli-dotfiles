@@ -238,6 +238,12 @@ Executing...
 
 This keeps you on track without heavyweight ceremony.
 
+### 4.7 Script Manual Commands
+
+- Whenever the user needs to run commands manually, create a script for that workflow instead of replying with raw commands alone.
+- If the script needs `sudo`, say so explicitly.
+- Include the exact `sudo` invocation in the output the user should run when elevation is required.
+
 ---
 
 ## 5) Code Principles

@@ -25,3 +25,4 @@
 - When doing a commit plan, order the proposed commits from oldest changes to newest changes.
 - When a user asks to ship only the current Codex session, leave unrelated dirty changes from other sessions uncommitted instead of bundling them into the same commit.
 - When a user explicitly asks to commit the current dirty work as one commit, collapse any earlier split-commit plan and ship the remaining changes together.
+- When the user must run commands manually, package them in a script instead of listing only raw commands, and include the exact `sudo` invocation when elevation is required.
