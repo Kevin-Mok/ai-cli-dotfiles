@@ -301,7 +301,7 @@ apu "apt upgrade"
 {{ end }}
 
 {{ if eq .linux_os "ubuntu" }}
-ai "sudo apt install"
+apti "sudo apt install"
 ar "sudo apt remove"
 au "sudo apt upgrade"
 {{ end }}
@@ -1004,6 +1004,8 @@ prg "python retweet.py --giveaway"
 prm "python retweet.py --mentions | bat"
 
 cpcx "cp ~/.codex/config.toml ~/linux-config/dot_codex/config.toml  "
+
+cre "code README.md"
 
 # ]]] coding projs  #
 
