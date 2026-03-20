@@ -1,0 +1,7 @@
+interface:
+  display_name: "Commit Session"
+  short_description: "Commit and push only current-session git work"
+  default_prompt: "Use $commit-session to commit and push only the dirty git changes created in the current Codex session, while leaving unrelated dirty files untouched."
+
+policy:
+  allow_implicit_invocation: false

@@ -4,6 +4,10 @@ This directory packages reusable local skills for recurring Codex work. The sect
 
 ## Git Workflow
 
+### [commit-session](commit-session/SKILL.md)
+
+`commit-session` is the session-scoped shipping skill for cases where the user wants a real git commit and push, but only for dirty files attributable to the current Codex session. It computes a high-confidence file set from the current `CODEX_THREAD_ID`, the matching `~/.codex/sessions/` log, and a pre-write `git status --short` baseline, then refuses to guess when the session boundary is ambiguous.
+
 ### [commit-push](commit-push/SKILL.md)
 
 `commit-push` is the shipping skill for cases where the user explicitly wants a real git commit and push performed in the current repository. It is meant for ready-to-ship changes, not planning or history surgery, and it emphasizes checking the worktree, staging only the intended scope, running the smallest relevant verification, and producing a Conventional Commit message with a concrete bullet summary before pushing upstream.

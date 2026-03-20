@@ -23,3 +23,4 @@
 - When adding a personal-machine hardening script, default the target login user sensibly instead of forcing an explicit flag for the common single-user case.
 - When a local Codex skill needs durable preferences in this repo, keep the mutable log in the chezmoi source tree and make the installed skill read and append that tracked file instead of maintaining a second copy under `~/.agents/skills`.
 - When doing a commit plan, order the proposed commits from oldest changes to newest changes.
+- When a user asks to ship only the current Codex session, leave unrelated dirty changes from other sessions uncommitted instead of bundling them into the same commit.
