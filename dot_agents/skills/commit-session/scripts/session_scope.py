@@ -7,8 +7,9 @@ import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,48 @@ EXIT_CODE_RE = re.compile(r"Process exited with code (\d+)")
 PATCH_FILE_RE = re.compile(r"^\*\*\* (?:Update|Add|Delete) File: (.+)$", re.MULTILINE)
 PATCH_MOVE_RE = re.compile(r"^\*\*\* Move to: (.+)$", re.MULTILINE)
 INIT_SKILL_DIR_RE = re.compile(r"^\[OK\] Created skill directory: (.+)$", re.MULTILINE)
+SHELL_CONTROL_TOKENS = {"|", "||", "&&", ";", "&", "(", ")"}
+READ_ONLY_SIMPLE_COMMANDS = {
+    "basename",
+    "cat",
+    "cut",
+    "date",
+    "dirname",
+    "echo",
+    "env",
+    "file",
+    "find",
+    "grep",
+    "head",
+    "ls",
+    "printenv",
+    "printf",
+    "pwd",
+    "readlink",
+    "rg",
+    "sort",
+    "ss",
+    "stat",
+    "tail",
+    "test",
+    "tr",
+    "uname",
+    "uniq",
+    "wc",
+    "which",
+}
+READ_ONLY_GIT_SUBCOMMANDS = {
+    "branch",
+    "check-attr",
+    "diff",
+    "log",
+    "ls-files",
+    "remote",
+    "rev-parse",
+    "show",
+    "status",
+    "symbolic-ref",
+}
 
 
 @dataclass
@@ -26,6 +69,7 @@ class StatusEntry:
     canonical_path: str
     stage_paths: list[str]
     is_untracked_dir: bool = False
+    ownership_reason: str | None = None
 
 
 @dataclass
@@ -146,6 +190,54 @@ def parse_patch_paths(patch_text: str, base_dir: Path, repo_root: Path) -> set[s
     return touched
 
 
+def parse_exec_tokens(cmd: str) -> list[str] | None:
+    try:
+        tokens = shlex.split(cmd, posix=True)
+    except ValueError:
+        return None
+    return tokens or None
+
+
+def tokens_have_shell_controls(tokens: list[str]) -> bool:
+    return any(
+        token in SHELL_CONTROL_TOKENS
+        or token in {">", ">>", "<", "<<", "<<<"}
+        or token.startswith((">", "<"))
+        for token in tokens
+    )
+
+
+def is_read_only_git_command(tokens: list[str]) -> bool:
+    if len(tokens) < 2 or tokens[0] != "git":
+        return False
+
+    subcommand = tokens[1]
+    if subcommand in READ_ONLY_GIT_SUBCOMMANDS:
+        return True
+    if subcommand == "config":
+        return any(flag in tokens for flag in ("--get", "--get-all", "--get-regexp", "--list"))
+    if subcommand == "lfs":
+        return len(tokens) >= 3 and tokens[2] == "ls-files"
+    return False
+
+
+def is_read_only_exec_command(cmd: str) -> bool:
+    tokens = parse_exec_tokens(cmd.strip())
+    if not tokens or tokens_have_shell_controls(tokens):
+        return False
+
+    command = tokens[0]
+    if command in READ_ONLY_SIMPLE_COMMANDS:
+        return True
+    if command == "command":
+        return len(tokens) >= 2 and tokens[1] == "-v"
+    if command == "sed":
+        return not any(token == "-i" or token.startswith("-i") for token in tokens[1:])
+    if command == "git":
+        return is_read_only_git_command(tokens)
+    return False
+
+
 def extract_written_paths_from_exec(cmd: str, raw_output: str, repo_root: Path) -> set[str]:
     touched: set[str] = set()
 
@@ -167,26 +259,6 @@ def extract_written_paths_from_exec(cmd: str, raw_output: str, repo_root: Path) 
         touched.add(relative)
 
     return touched
-
-
-def looks_like_repo_write_command(cmd: str) -> bool:
-    stripped = cmd.strip()
-    if not stripped or GIT_STATUS_CMD_RE.search(stripped):
-        return False
-
-    patterns = (
-        r"(^|\s)(mkdir|cp|mv|touch|install|ln)\b",
-        r"\b(sed|perl)\b.*\s-i\b",
-        r"\btee\b",
-        r"(^|\s)cat\s+.+>",
-        r">>",
-        r"(?<!-)>(?!\|)",
-        r"\binit_skill\.py\b",
-        r"\bgenerate_openai_yaml\.py\b",
-        r"\bchezmoi\s+apply\b",
-        r"\bgit\s+apply\b",
-    )
-    return any(re.search(pattern, stripped) for pattern in patterns)
 
 
 def locate_session_file(session_id: str) -> Path | None:
@@ -224,6 +296,10 @@ def path_is_preexisting(path: str, baseline_entries: list[StatusEntry]) -> bool:
         if entry.is_untracked_dir and path.startswith(f"{entry.canonical_path}/"):
             return True
     return False
+
+
+def with_ownership_reason(entry: StatusEntry, ownership_reason: str) -> StatusEntry:
+    return replace(entry, ownership_reason=ownership_reason)
 
 
 def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
@@ -335,7 +411,7 @@ def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
                 if inferred_files:
                     touched_files.update(inferred_files)
                     write_events.append(timestamp)
-                elif looks_like_repo_write_command(cmd):
+                elif not is_read_only_exec_command(cmd):
                     write_events.append(timestamp)
                 continue
 
@@ -385,17 +461,24 @@ def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
 
     baseline_at, _, baseline_entries = pre_write_statuses[-1]
 
+    classified_current_dirty: list[StatusEntry] = []
     commitable: list[StatusEntry] = []
     skipped_preexisting: list[StatusEntry] = []
     skipped_unknown: list[StatusEntry] = []
 
     for entry in current_dirty:
         if path_is_preexisting(entry.canonical_path, baseline_entries):
-            skipped_preexisting.append(entry)
+            classified_entry = with_ownership_reason(entry, "preexisting_at_baseline")
+            classified_current_dirty.append(classified_entry)
+            skipped_preexisting.append(classified_entry)
         elif entry.canonical_path in touched_files:
-            commitable.append(entry)
+            classified_entry = with_ownership_reason(entry, "observed_touch")
+            classified_current_dirty.append(classified_entry)
+            commitable.append(classified_entry)
         else:
-            skipped_unknown.append(entry)
+            classified_entry = with_ownership_reason(entry, "newly_dirty_since_baseline")
+            classified_current_dirty.append(classified_entry)
+            commitable.append(classified_entry)
 
     status = "ready" if commitable else "empty"
     return ScopeResult(
@@ -407,7 +490,7 @@ def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
         first_write_at=first_write_at,
         baseline_at=baseline_at,
         touched_files=sorted(touched_files),
-        current_dirty=current_dirty,
+        current_dirty=classified_current_dirty,
         commitable=commitable,
         skipped_preexisting=skipped_preexisting,
         skipped_unknown=skipped_unknown,

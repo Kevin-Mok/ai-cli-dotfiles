@@ -209,7 +209,7 @@ The current live skill tree is:
 
 #### Git workflow
 
-- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the dirty changes attributable to the current Codex session while leaving unrelated dirty files untouched.
+- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files dirtied during the current Codex session while leaving baseline-dirty work untouched.
 - **[`commit-push`](dot_agents/skills/commit-push/SKILL.md):** ships ready changes with scoped staging, targeted verification, a Conventional Commit message, and a real push.
 - **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
 - **[`commit-plan`](dot_agents/skills/commit-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.

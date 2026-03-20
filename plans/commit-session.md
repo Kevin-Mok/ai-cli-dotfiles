@@ -1,26 +1,25 @@
-# ExecPlan: Add `commit-session` Skill
+# ExecPlan: Relax `commit-session` Scoping
 
 ## Checklist
 
-- [x] Inspect the existing git workflow skills and confirm `commit-session` should remain separate from `commit-push`.
-- [x] Scaffold `dot_agents/skills/commit-session/` with agent metadata.
-- [x] Replace the scaffolded content with a session-scoped commit-and-push workflow that excludes unrelated dirty files.
-- [x] Update the related skill docs, repo docs, and durable lessons.
-- [x] Validate the new skill and review the resulting diff.
+- [x] Reproduce the over-conservative classification with an executable synthetic session.
+- [x] Update the helper to treat files dirtied after the session baseline as committable by default.
+- [x] Preserve the pre-existing dirty boundary and add ownership provenance to the helper output.
+- [x] Update the skill docs, README surface, and agent metadata to match the new scoping model.
+- [x] Validate the helper with regression tests and a rerun of the synthetic scenario.
 
 ## Assumptions
 
-- The user wants an explicit `commit-session` skill rather than a behavior change to `commit-push`.
-- Session-scoped shipping should fail closed: ambiguous files stay uncommitted instead of being guessed into the commit.
-- Future sessions should capture a pre-write `git status --short` baseline so the skill can distinguish pre-existing dirty files from session work.
+- The user wants `commit-session` to keep excluding files that were already dirty at the pre-write baseline.
+- Files that were clean at baseline and are dirty now should be considered session-owned by default, even without direct per-file write attribution.
+- The helper should still fail closed when it cannot find a pre-write `git status --short` baseline.
 
 ## Review Notes
 
-- Added a new `commit-session` skill with explicit-only agent metadata and a fail-closed workflow that scopes commits to the current `CODEX_THREAD_ID`.
-- Implemented `dot_agents/skills/commit-session/scripts/session_scope.py` to parse Codex session logs, require a pre-write `git status --short` baseline, and classify dirty files into `commitable`, `skipped_preexisting`, and `skipped_unknown`.
-- Tightened the helper so current dirty state uses `git status --short --untracked-files=all`, which prevents new untracked directories from being collapsed into ambiguous directory entries.
-- Added baseline prefix matching for collapsed untracked directories, so files that were already dirty under an untracked directory remain excluded even when current git status expands them to individual files.
-- Updated `commit-push`, the local skills catalog, the root README, `dot_codex/config.toml`, and `tasks/lessons.md` so the new session-scoped shipping behavior is documented and future sessions capture the needed baseline.
-- Validation completed with `python3 /home/kevin/.codex/skills/.system/skill-creator/scripts/quick_validate.py /home/kevin/linux-config/dot_agents/skills/commit-session`.
-- Validation completed with `PYTHONDONTWRITEBYTECODE=1 python3 dot_agents/skills/commit-session/scripts/session_scope.py --repo-root /home/kevin/linux-config`.
-- Validation completed with synthetic positive and negative repo scenarios under `/tmp` to prove both pre-dirty exclusion and missing-baseline fail-closed behavior.
+- Updated `dot_agents/skills/commit-session/scripts/session_scope.py` so any file that was clean at the session baseline and is dirty now becomes `commitable`, with `ownership_reason` distinguishing `observed_touch` from `newly_dirty_since_baseline`.
+- Replaced the narrow write-command detector with a read-only command allowlist, so successful in-repo commands that might have dirtied files count as plausible write events instead of forcing `unsafe`.
+- Preserved the pre-existing dirty boundary, including prefix matching for untracked baseline directories that later expand into individual files.
+- Added `dot_agents/skills/commit-session/tests/test_session_scope.py` with synthetic repo and session-log coverage for direct edits, indirect dirties, generated companions, pre-existing dirty files, untracked-dir prefixes, and missing baselines.
+- Updated the `commit-session` skill docs, skill catalog, root README, and agent metadata to describe baseline-delta scoping instead of direct-attribution-only scoping.
+- Validation completed with `python3 -m unittest discover -s dot_agents/skills/commit-session/tests -p 'test_*.py'`.
+- Validation completed with a synthetic temp-repo repro of the original bug to confirm that the same scenario now classifies a newly dirty tracked file as `commitable`.
