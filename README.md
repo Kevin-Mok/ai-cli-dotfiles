@@ -54,6 +54,13 @@ chezmoi -S "$PWD" diff
 chezmoi -S "$PWD" apply
 ```
 
+That apply path also follows the upstream native-discovery install flow
+for [`obra/superpowers`](https://github.com/obra/superpowers): chezmoi
+clones it to `~/.codex/superpowers` and writes
+`~/.agents/skills/superpowers` as a symlink to its `skills/` directory,
+so Codex can discover the bundle without a bootstrap block in
+`~/.codex/AGENTS.md`.
+
 To use the AI layer after the dotfiles are in place, open the repo in
 Codex:
 
@@ -133,7 +140,7 @@ Those files and directories define the operating layer:
 - **[`AGENTS.repo.md`][agents-repo-pointer]:** the repo-local pointer that says [`dot_codex/AGENTS.md`][codex-agents] is authoritative for Codex here.
 - **[`dot_codex/AGENTS.md`][codex-agents]:** the canonical merged instruction document for this repository, which pushes Codex toward plan-first, verification-heavy engineering behavior.
 - **[`dot_codex/config.toml`][codex-config]:** the tracked runtime config for model defaults, reasoning level, trust boundaries, MCP servers, and session behavior.
-- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, durable feedback memory, README recruiter-sync checks, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, session-scoped git shipping, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
+- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, durable feedback memory, README recruiter-sync checks, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, session-scoped git shipping, and direct verified git shipping. The live skill surface also includes the externally managed [`superpowers`](https://github.com/obra/superpowers) bundle, exposed through `~/.agents/skills/superpowers` via chezmoi. For more detail on the repo-tracked local skills, see [`dot_agents/skills/README.md`][skills-readme].
 - **[`plans/`][plans-dir]:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.

@@ -2,6 +2,8 @@
 
 This directory packages reusable local skills for recurring Codex work. The sections below group each live skill by the kind of job it handles, so you can scan by category first and then read a short summary of each skill's purpose, trigger cases, and distinctive tool or guardrail. Each skill subheading links directly to its `SKILL.md` file. The empty legacy `push-dirty/` directory is omitted because it does not currently define a live skill.
 
+The live Codex install also mounts the external [`obra/superpowers`](https://github.com/obra/superpowers) bundle at `~/.agents/skills/superpowers` by cloning it into `~/.codex/superpowers` and symlinking its `skills/` directory. It is intentionally omitted from the catalog below because this file only documents the repo-tracked skill sources that live under `dot_agents/skills/`.
+
 ## Git Workflow
 
 ### [commit-session](commit-session/SKILL.md)
