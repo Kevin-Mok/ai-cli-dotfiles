@@ -1,0 +1,7 @@
+interface:
+  display_name: "README Recruiter Sync"
+  short_description: "Keep the root README commit-ready and recruiter-ready."
+  default_prompt: "Use $readme-recruiter-sync to verify the root README is current, repo-aligned, and recruiter-ready before a commit or docs refresh."
+
+policy:
+  allow_implicit_invocation: true

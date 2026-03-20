@@ -22,20 +22,27 @@ Use this skill for explicit write requests that should ship only the files dirti
    - `commitable` can include directly observed edits and files that became dirty after the session baseline.
    - If any `commitable` file still looks mixed or suspicious, stop instead of guessing.
 6. Run the smallest relevant automated checks for the scoped change.
-7. Stage only the union of `stage_paths` from `commitable`.
-8. Write the commit message.
+7. Run `readme-recruiter-sync` against the root `README.md`.
+   - Treat the gate as mandatory before staging or committing.
+   - If the gate passes without README changes, continue.
+   - If the gate requires `README.md` edits, continue only when `README.md` is already present in `commitable`.
+   - If `README.md` was already dirty at the session baseline or is otherwise excluded from `commitable`, stop and report that the session-scoped commit cannot satisfy the required README gate safely.
+8. Stage only the union of `stage_paths` from `commitable`.
+9. Write the commit message.
    - Use a concise Conventional Commit subject line.
    - Add a body with around 5 to 10 concrete bullet points describing the actual changes.
-9. Create the commit.
-10. Push to the configured upstream.
+10. Create the commit.
+11. Push to the configured upstream.
     - If no upstream exists or the push target is unclear, stop and ask instead of guessing.
     - Do not amend, rebase, squash, or force-push unless the user explicitly asks.
-11. Report the result with the validation performed, commit SHA, push target, skipped files, and remaining worktree state.
+12. Report the result with the validation performed, commit SHA, push target, skipped files, and remaining worktree state.
 
 ## Guardrails
 
 - Never stage files listed under `skipped_preexisting`.
 - Never stage files listed under `skipped_unknown`.
+- Never bypass `readme-recruiter-sync` because the scoped diff looks small.
+- Never invent README claims, flags, install steps, or recruiter copy that the repo does not support.
 - If the helper cannot find a pre-write `git status --short` baseline for the session, fail closed instead of reconstructing scope from timestamps or memory.
 - If a file was already dirty at the session baseline and the current session also edited it, leave the file uncommitted unless the user explicitly asks for a manual split.
 - Review newly eligible generated or companion files before staging them; baseline-delta scoping is intentionally permissive, not blind.

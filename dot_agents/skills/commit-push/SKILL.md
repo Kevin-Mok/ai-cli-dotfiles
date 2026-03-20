@@ -18,21 +18,27 @@ Use this skill for explicit write requests to create a real git commit and push 
    - Run the smallest relevant automated checks.
    - Add or run a failing reproducer first for bug fixes when practical.
    - Do not commit failing or unverified work just because the user asked for a quick push.
-5. Stage only the intended files or hunks.
-6. Write the commit message.
+5. Run `readme-recruiter-sync` against the root `README.md`.
+   - Treat the gate as mandatory before staging or committing.
+   - If the README is stale or missing required install or bootstrap, usage, core command flag, repo-based tech stack rationale, or recruiter-facing coverage, update it in the same change before continuing.
+   - If satisfying the gate would require mixing unrelated dirty README work or other user changes, stop and ask instead of guessing.
+6. Stage only the intended files or hunks, including `README.md` when the gate required it.
+7. Write the commit message.
    - Use a concise Conventional Commit subject line.
    - Add a body with around 5 to 10 concrete bullet points that describe the actual changes.
-7. Create the commit.
-8. Push the branch.
+8. Create the commit.
+9. Push the branch.
    - Push to the configured upstream by default.
    - If no upstream exists or the target remote is unclear, stop and ask instead of guessing.
    - Do not amend, rebase, squash, or force-push unless the user explicitly asks.
-9. Report the result with the validation performed, commit SHA, push target, and remaining worktree state.
+10. Report the result with the validation performed, commit SHA, push target, and remaining worktree state.
 
 ## Guardrails
 
 - Do not use this skill when the task is only to plan commits or group dirty changes without writing. Use `commit-plan` for that case.
 - Do not use this skill when the user explicitly wants to ship only the current Codex session's changes. Use `commit-session` for that case.
+- Never bypass `readme-recruiter-sync` because the code diff looks small.
+- Never invent README claims, flags, install steps, or recruiter copy that the repo does not support.
 - Never bundle unrelated dirty changes into one commit to save time.
 - Never stage secrets, credentials, caches, build output, or machine-local files unless they clearly belong in version control.
 - Respect pre-existing user changes. Do not revert or discard work you did not make.

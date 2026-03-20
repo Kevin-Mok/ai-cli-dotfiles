@@ -2,3 +2,5 @@
 2026-03-20 - When drafting tweets or X posts for this repo, write them to a markdown doc in the repo instead of replying only inline.
 2026-03-20 - When manual commands must be handed off, create a script for them instead of sending raw commands alone.
   Say explicitly when the script needs `sudo`, and include the exact `sudo` invocation in the handoff.
+2026-03-20 - Run `readme-recruiter-sync` before every commit or push workflow in this repo.
+  Keep the root README aligned on install, usage, core flags, repo-based tech stack rationale, and recruiter-facing value.

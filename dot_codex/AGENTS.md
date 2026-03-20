@@ -48,6 +48,14 @@ These repo-local instructions apply in addition to the merged guidance below.
 - When the user asks Codex to create a prompt, write it to a Markdown file in `prompts/` instead of returning only inline prompt text.
 - Use a concise kebab-case filename that matches the prompt purpose unless the user specifies a filename.
 
+### README Sync
+
+- Treat the root `README.md` as part of the repo's public operating surface, not optional marketing copy.
+- When repo behavior, onboarding steps, command usage, skills, plans, AGENTS guidance, or Codex config changes, verify that the root `README.md` still matches the repository.
+- Before staging or finalizing any commit or push flow in this repo, run `readme-recruiter-sync`.
+- The README gate only passes when the root `README.md` accurately covers install or bootstrap, day-to-day use, core command flags for README-documented entrypoints, a repo-based "Tech Stack And Why Chosen" section, and why the repo is impressive to recruiters.
+- If the README gate would require mixing unrelated dirty work, stop and surface the conflict instead of bypassing the gate.
+
 ## Source Order
 
 1. `upwork`

@@ -16,6 +16,11 @@ If you are evaluating me as a software engineer or contractor, this repo is a us
 
 ## Table of Contents
 
+- [Install And Bootstrap](#install-and-bootstrap)
+- [How To Use It](#how-to-use-it)
+- [Core Command Reference](#core-command-reference)
+- [Tech Stack And Why Chosen](#tech-stack-and-why-chosen)
+- [Why Recruiters Should Care](#why-recruiters-should-care)
 - [Workflow At A Glance](#workflow-at-a-glance)
 - [AI Layer Highlights](#ai-layer-highlights)
 - [Graphiti Memory Layer](#graphiti-memory-layer)
@@ -30,6 +35,85 @@ If you are evaluating me as a software engineer or contractor, this repo is a us
   - [Window Manager And Desktop UI](#window-manager-and-desktop-ui)
   - [Productivity And File Management](#productivity-and-file-management)
   - [Scripts, Assets, And Machine-Specific State](#scripts-assets-and-machine-specific-state)
+
+## Install And Bootstrap
+
+The minimum bootstrap path is `git` plus `chezmoi`. Add Codex CLI if you
+want the AI operating layer, and add Neo4j plus the local Graphiti
+checkout only if you want the optional memory layer described later in
+this README.
+
+```bash
+git clone https://github.com/Kevin-Mok/ai-cli-dotfiles.git
+cd ai-cli-dotfiles
+
+# Preview what this repo would write into $HOME
+chezmoi -S "$PWD" diff
+
+# Apply the tracked source state from this clone
+chezmoi -S "$PWD" apply
+```
+
+To use the AI layer after the dotfiles are in place, open the repo in
+Codex:
+
+```bash
+codex
+```
+
+If you want the Graphiti memory layer, keep Neo4j reachable on
+`localhost:7687` and follow
+[`docs/graphiti-mcp-codex.md`][graphiti-codex-doc] for the repo-specific
+MCP setup.
+
+## How To Use It
+
+Treat this repository as the source of truth for the environment rather
+than editing live files under `$HOME` directly.
+
+1. Edit the tracked source files in this repo.
+2. Preview the resulting home-directory diff with `chezmoi -S "$PWD" diff`.
+3. Apply the changes with `chezmoi -S "$PWD" apply`.
+4. Run `codex` from the repo root when you want the tracked AGENTS chain, Codex config, local skills, and plans to shape the session.
+5. Keep the root `README.md` updated whenever the repo's public workflow changes, especially for install steps, usage, command flags, the repo-based tech stack section, and recruiter-facing positioning.
+
+## Core Command Reference
+
+These are the core entrypoints the README depends on. The flags listed
+below are verified against local CLI help in this repo's environment.
+
+| Command | When to use it | Flags and options that matter |
+| --- | --- | --- |
+| `chezmoi -S "$PWD" diff` | Preview what the checked-out source tree would change in `$HOME`. | `-S` / `--source` points chezmoi at this clone instead of the default source directory. `--reverse` flips the diff direction when you need the comparison the other way around. |
+| `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
+| `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
+| `codex` or `codex -C /path/to/your-clone` | Start Codex in the repo so the tracked instruction chain and config take effect. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. |
+| `codex mcp list --json` | Verify which MCP servers Codex is loading from the tracked config. | `--json` emits machine-readable output that is easier to inspect or diff. |
+
+## Tech Stack And Why Chosen
+
+This section is intentionally based on what the repo actually contains,
+not on generic dotfiles or AI-tool boilerplate.
+
+| Layer | Repo evidence | Why chosen |
+| --- | --- | --- |
+| `chezmoi` | [`dot_config/chezmoi/chezmoi-template.toml.tmpl`][chezmoi-template] plus the templated repo structure | It keeps the environment reproducible across machines instead of trapping the setup inside one laptop. |
+| Codex CLI and tracked config | [`dot_codex/config.toml`][codex-config] | It versions model, reasoning, trust, MCP, and session defaults so a new Codex pane starts from repo policy instead of memory or re-prompting. |
+| AGENTS instruction chain | [`AGENTS.md`][agents-baseline], [`AGENTS.repo.md`][agents-repo-pointer], and [`dot_codex/AGENTS.md`][codex-agents] | It turns workflow expectations into inspectable repo policy for planning, verification, commit hygiene, and docs sync. |
+| Local skills | [`dot_agents/skills/`][skills-dir] | They package recurring jobs into reusable local capabilities instead of re-explaining the same workflows in every session. |
+| Graphiti MCP with Neo4j | [`dot_codex/config.toml`][codex-config] and [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc] | It adds a retrievable memory layer for multi-session work where provenance and evolving context matter. |
+| Shell and terminal tooling | [`dot_config/fish/config.fish.tmpl`][fish-config], [`dot_tmux.conf`][tmux-conf], [`dot_config/kitty/kitty.conf`][kitty-conf], and [`dot_config/i3/config.tmpl`][i3-config] | It optimizes for terminal-first execution and multiple parallel panes instead of a single-editor workflow. |
+| Python and Bash automation | [`scripts/`][scripts-dir] and skill helper scripts under [`dot_agents/skills/`][skills-dir] | It keeps repeatable operations small, inspectable, and version-controlled instead of burying them in chat instructions or manual muscle memory. |
+
+## Why Recruiters Should Care
+
+This repo is more useful as evidence of engineering approach than as a
+generic dotfiles archive.
+
+- It shows how I turn AI usage into versioned operating infrastructure with tracked instructions, config, skills, and plans.
+- It shows process discipline: non-trivial work gets planned, commit workflows are explicit, and docs are expected to stay aligned with behavior.
+- It shows leverage without hand-waving: reusable skills, local automation, and an optional memory layer reduce repeated manual work.
+- It still demonstrates broad Linux fluency across shell, terminal, window manager, editor, and desktop tooling, but the differentiator is that the workflow itself is inspectable.
 
 ## Workflow At A Glance
 
@@ -49,17 +133,17 @@ Those files and directories define the operating layer:
 - **[`AGENTS.repo.md`][agents-repo-pointer]:** the repo-local pointer that says [`dot_codex/AGENTS.md`][codex-agents] is authoritative for Codex here.
 - **[`dot_codex/AGENTS.md`][codex-agents]:** the canonical merged instruction document for this repository, which pushes Codex toward plan-first, verification-heavy engineering behavior.
 - **[`dot_codex/config.toml`][codex-config]:** the tracked runtime config for model defaults, reasoning level, trust boundaries, MCP servers, and session behavior.
-- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, durable feedback memory, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, session-scoped git shipping, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
+- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, durable feedback memory, README recruiter-sync checks, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, session-scoped git shipping, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
 - **[`plans/`][plans-dir]:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.
 
 ## AI Layer Highlights
 
-The repo now treats the AI operating layer as documentation-worthy
-surface area, not hidden implementation detail. Repo-local guidance in
+The repo now treats the root `README.md` as part of the operating
+surface, not as loose marketing copy. Repo-local guidance in
 [`AGENTS.repo.md`][agents-repo-readme-sync]
-explicitly requires `README.md` updates whenever these paths
+explicitly requires the README to stay aligned whenever these paths
 materially change:
 
 ```text
@@ -85,6 +169,7 @@ traditional dotfile tweaks. They are workflow upgrades.
   and troubleshooting live in [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc].
 - **Skill surface growth:** [`dot_agents/skills/`][skills-dir] packages recurring
   jobs into reusable local capabilities instead of one-off prompts.
+- **Commit-time README gate:** [`readme-recruiter-sync`](dot_agents/skills/readme-recruiter-sync/SKILL.md) keeps install steps, usage, command flags, stack rationale, and recruiter-facing positioning in sync before commit workflows ship changes.
 - **Execution discipline:** [`plans/`][plans-dir] makes non-trivial tasks
   explicit, reviewable, and easier to validate after the fact.
 
@@ -225,6 +310,7 @@ The current live skill tree is:
 #### Research and output control
 
 - **[`feedback-memory`](dot_agents/skills/feedback-memory/SKILL.md):** carries forward durable user corrections and workflow preferences across sessions by reading and appending a repo-tracked plain-text `feedback.log`.
+- **[`readme-recruiter-sync`](dot_agents/skills/readme-recruiter-sync/SKILL.md):** hard-gates commit workflows on a root README that is still truthful about install, usage, core command flags, the repo-based tech stack, and recruiter-facing value.
 - **[`full-output-enforcement`](dot_agents/skills/full-output-enforcement/SKILL.md):** prevents partial delivery on generation-heavy tasks by forcing complete outputs and banning placeholder shortcuts.
 - **[`openai-docs`](dot_agents/skills/openai-docs/SKILL.md):** answers OpenAI product and API questions from current official docs first, with citations and minimal reliance on general browsing.
 
@@ -280,8 +366,8 @@ Second, **the leverage is inspectable**. You can see exactly which instructions,
 Typical commands are still the usual ones:
 
 ```bash
-chezmoi diff
-chezmoi apply
+chezmoi -S "$PWD" diff
+chezmoi -S "$PWD" apply
 ```
 
 The difference is what is being reproduced. It is not only shell comfort. It is the **operating environment for AI-assisted engineering**.
@@ -336,56 +422,56 @@ The rest of the repository is still a full desktop-dotfiles setup, not just an A
 
 That broader dotfiles surface is still substantial, but the README stays centered on the **four-Codex operating environment** because that is the most distinctive and actively evolving part of the repo right now.
 
-[agents-baseline]: https://github.com/Kevin-Mok/linux-config/blob/master/AGENTS.md?plain=1#L9
-[agents-repo-pointer]: https://github.com/Kevin-Mok/linux-config/blob/master/AGENTS.repo.md?plain=1#L5
-[agents-repo-readme-sync]: https://github.com/Kevin-Mok/linux-config/blob/master/AGENTS.repo.md?plain=1#L9
-[codex-agents]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_codex/AGENTS.md?plain=1#L11
-[codex-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_codex/config.toml?plain=1#L1
-[graphiti-codex-doc]: https://github.com/Kevin-Mok/linux-config/blob/master/docs/graphiti-mcp-codex.md?plain=1#L1
-[skills-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_agents/skills/
-[skills-readme]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_agents/skills/README.md?plain=1#L1
-[plans-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/plans/
-[plan-commit-all-dirty]: https://github.com/Kevin-Mok/linux-config/blob/master/plans/commit-all-dirty.md?plain=1#L1
-[dot-bashrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_bashrc?plain=1#L1
-[dot-zshrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_zshrc?plain=1#L1
-[aliases-key-aliases]: https://github.com/Kevin-Mok/linux-config/blob/master/aliases/key_aliases.tmpl?plain=1#L1
-[aliases-key-dirs]: https://github.com/Kevin-Mok/linux-config/blob/master/aliases/key_dirs.tmpl?plain=1#L1
-[aliases-key-files]: https://github.com/Kevin-Mok/linux-config/blob/master/aliases/key_files.tmpl?plain=1#L1
-[sync-shortcuts]: https://github.com/Kevin-Mok/linux-config/blob/master/scripts/executable_sync-shortcuts?plain=1#L1
-[fish-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/fish/config.fish.tmpl?plain=1#L1
-[fish-functions]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/fish/functions/
-[fish-completions]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/fish/completions/
-[kitty-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/kitty/kitty.conf?plain=1#L1
-[st-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/st/config.def.h.tmpl?plain=1#L1
-[tmux-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_tmux.conf?plain=1#L1
-[vimrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_vimrc.tmpl?plain=1#L1
-[nvim-init]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/nvim/init.vim?plain=1#L1
-[mpv-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/mpv/
-[zathura-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/zathura/
-[neofetch-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/neofetch/
-[xinitrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_xinitrc.tmpl?plain=1#L1
-[xresources]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_Xresources.tmpl?plain=1#L1
-[xmodmap-family]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_Xmodmap?plain=1#L1
-[i3-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/i3/config.tmpl?plain=1#L1
-[i3blocks-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/i3blocks/
-[dunst-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/dunst/dunstrc?plain=1#L1
-[picom-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/picom/picom.conf?plain=1#L1
-[dot-config-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/
-[taskrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_taskrc?plain=1#L1
-[taskopenrc]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_taskopenrc?plain=1#L1
-[ranger-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/ranger/
-[neomutt-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/neomutt/neomuttrc?plain=1#L1
-[msmtp-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/msmtp/config?plain=1#L1
-[zathura-conf]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/zathura/zathurarc?plain=1#L1
-[mgba-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_config/mgba/
-[minikube-config]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_minikube/config/config.json?plain=1#L1
-[scripts-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/scripts/
-[scripts-colors-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/scripts/colors/
-[txt-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/txt/
-[chezmoi-template]: https://github.com/Kevin-Mok/linux-config/blob/master/dot_config/chezmoi/chezmoi-template.toml.tmpl?plain=1#L1
-[calcurse-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/private_dot_calcurse/
-[gnupg-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/private_dot_gnupg/
-[ssh-dir]: https://github.com/Kevin-Mok/linux-config/tree/master/dot_ssh/
+[agents-baseline]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/AGENTS.md?plain=1#L9
+[agents-repo-pointer]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/AGENTS.repo.md?plain=1#L5
+[agents-repo-readme-sync]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/AGENTS.repo.md?plain=1#L9
+[codex-agents]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_codex/AGENTS.md?plain=1#L11
+[codex-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_codex/config.toml?plain=1#L1
+[graphiti-codex-doc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/docs/graphiti-mcp-codex.md?plain=1#L1
+[skills-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_agents/skills/
+[skills-readme]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_agents/skills/README.md?plain=1#L1
+[plans-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/plans/
+[plan-commit-all-dirty]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/plans/commit-all-dirty.md?plain=1#L1
+[dot-bashrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_bashrc?plain=1#L1
+[dot-zshrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_zshrc?plain=1#L1
+[aliases-key-aliases]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/aliases/key_aliases.tmpl?plain=1#L1
+[aliases-key-dirs]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/aliases/key_dirs.tmpl?plain=1#L1
+[aliases-key-files]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/aliases/key_files.tmpl?plain=1#L1
+[sync-shortcuts]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/scripts/executable_sync-shortcuts?plain=1#L1
+[fish-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/fish/config.fish.tmpl?plain=1#L1
+[fish-functions]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/fish/functions/
+[fish-completions]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/fish/completions/
+[kitty-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/kitty/kitty.conf?plain=1#L1
+[st-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/st/config.def.h.tmpl?plain=1#L1
+[tmux-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_tmux.conf?plain=1#L1
+[vimrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_vimrc.tmpl?plain=1#L1
+[nvim-init]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/nvim/init.vim?plain=1#L1
+[mpv-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/mpv/
+[zathura-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/zathura/
+[neofetch-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/neofetch/
+[xinitrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_xinitrc.tmpl?plain=1#L1
+[xresources]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_Xresources.tmpl?plain=1#L1
+[xmodmap-family]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_Xmodmap?plain=1#L1
+[i3-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/i3/config.tmpl?plain=1#L1
+[i3blocks-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/i3blocks/
+[dunst-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/dunst/dunstrc?plain=1#L1
+[picom-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/picom/picom.conf?plain=1#L1
+[dot-config-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/
+[taskrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_taskrc?plain=1#L1
+[taskopenrc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_taskopenrc?plain=1#L1
+[ranger-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/ranger/
+[neomutt-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/neomutt/neomuttrc?plain=1#L1
+[msmtp-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/msmtp/config?plain=1#L1
+[zathura-conf]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/zathura/zathurarc?plain=1#L1
+[mgba-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_config/mgba/
+[minikube-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_minikube/config/config.json?plain=1#L1
+[scripts-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/scripts/
+[scripts-colors-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/scripts/colors/
+[txt-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/txt/
+[chezmoi-template]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_config/chezmoi/chezmoi-template.toml.tmpl?plain=1#L1
+[calcurse-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/private_dot_calcurse/
+[gnupg-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/private_dot_gnupg/
+[ssh-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_ssh/
 
 ## License
 

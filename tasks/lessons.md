@@ -1,6 +1,7 @@
 # Lessons
 
 - When a user widens README scope after an initial pass, update the documented surface to include every newly named repo entrypoint, not just the most obvious directories.
+- When a user says a README tech-stack section must be based on the repo, derive it from tracked repo evidence and named core layers instead of generic stack language.
 - When reframing the README, preserve requested navigation and coverage elements from the prior version, especially the hero screenshot, table of contents, and expanded non-AI dotfiles sections.
 - When repo instructions require logging user corrections to `tasks/lessons.md`, create the file first if it does not already exist.
 - When updating committed Codex config content, treat the current edited file as the source of truth for new additions, restore any deleted committed content, and do not duplicate entries while merging.

@@ -44,6 +44,10 @@ This directory packages reusable local skills for recurring Codex work. The sect
 
 `feedback-memory` is the durable preference-capture skill for carrying reusable user corrections and working preferences across Codex sessions through a repo-tracked plain-text `feedback.log`. It is the right fit when the user gives process, formatting, tooling, review, or communication feedback that should keep applying later, because it requires reading the canonical log before work starts, appending durable feedback immediately, and explicitly skipping ticket-specific or temporary notes.
 
+### [readme-recruiter-sync](readme-recruiter-sync/SKILL.md)
+
+`readme-recruiter-sync` is the root README truthfulness and recruiter-readiness skill for commit paths, docs refreshes, and any workflow change that could make the repo's public documentation stale. It checks that the root `README.md` still matches the repository, covers install and usage, documents only the core command flags the README actually asks readers to run, explains the repo-based tech stack with rationale, and keeps an explicit recruiter-facing section in place before commit workflows proceed.
+
 ### [full-output-enforcement](full-output-enforcement/SKILL.md)
 
 `full-output-enforcement` is the anti-truncation skill for tasks where partial delivery would break the result, such as full files, complete component sets, or exhaustive structured output. It forces the model to count deliverables up front, bans placeholder shortcuts like omitted middle sections or "continue the pattern" prose, and requires token-limit splits to preserve completeness instead of silently dropping content.

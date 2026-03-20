@@ -55,8 +55,10 @@ For this skill, "dirty changes" include:
    - unrelated refactors mixed into feature work
    - large binary files
    - vendor or cache artifacts
-6. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
-7. Do not run any write action unless I explicitly ask for it.
+6. Identify whether `readme-recruiter-sync` will likely require a root `README.md` update before any commit is safe.
+   - Pay extra attention when changes touch `AGENTS.md`, `AGENTS.repo.md`, `dot_codex/`, `dot_agents/`, `plans/`, the root `README.md`, onboarding or setup flows, or any command the README currently documents.
+7. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
+8. Do not run any write action unless I explicitly ask for it.
 
 ## Write actions forbidden by default
 
@@ -86,6 +88,7 @@ For each proposed commit:
 - commit number
 - purpose
 - files to include
+- README impact (`include root README`, `no README change expected`, or `blocked by README gate`)
 - why these belong together
 - suggested commit message:
   - a concise Conventional Commit-style subject line
@@ -149,3 +152,4 @@ feat: add retry handling for webhook delivery
 - If the diff is messy, propose a cleanup or split strategy before proposing final commits.
 - If a file is ambiguous, call out the ambiguity instead of guessing.
 - If validation matters, recommend the minimum relevant checks before commit.
+- If `readme-recruiter-sync` likely requires a README update, include it in the matching commit or call out the blocker explicitly.
