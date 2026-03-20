@@ -1,5 +1,6 @@
 README.md
 commit-msg.txt
+.agents/skills/feedback-memory/feedback.log
 
 {{ if not .gui }}
 .config/i3/

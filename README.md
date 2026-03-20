@@ -49,7 +49,7 @@ Those files and directories define the operating layer:
 - **[`AGENTS.repo.md`][agents-repo-pointer]:** the repo-local pointer that says [`dot_codex/AGENTS.md`][codex-agents] is authoritative for Codex here.
 - **[`dot_codex/AGENTS.md`][codex-agents]:** the canonical merged instruction document for this repository, which pushes Codex toward plan-first, verification-heavy engineering behavior.
 - **[`dot_codex/config.toml`][codex-config]:** the tracked runtime config for model defaults, reasoning level, trust boundaries, MCP servers, and session behavior.
-- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
+- **[`dot_agents/skills/`][skills-dir]:** the reusable workflow layer for higher-level jobs like frontend design generation, redesign, premium visual polish, output enforcement, durable feedback memory, minimalist/editorial UI design, CI repair, browser automation, screenshots, docs lookup, PDF work, image generation, transcription, commit planning with bottom-line message summaries, and direct verified git shipping. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
 - **[`plans/`][plans-dir]:** the place where non-trivial work becomes explicit, checklisted, reviewable, and easier to validate.
 
 The screenshot still reflects a broader terminal-agent environment, but the main story here is the **Codex operating layer** that makes the workflow reproducible.
@@ -222,6 +222,7 @@ The current live skill tree is:
 
 #### Research and output control
 
+- **[`feedback-memory`](dot_agents/skills/feedback-memory/SKILL.md):** carries forward durable user corrections and workflow preferences across sessions by reading and appending a repo-tracked plain-text `feedback.log`.
 - **[`full-output-enforcement`](dot_agents/skills/full-output-enforcement/SKILL.md):** prevents partial delivery on generation-heavy tasks by forcing complete outputs and banning placeholder shortcuts.
 - **[`openai-docs`](dot_agents/skills/openai-docs/SKILL.md):** answers OpenAI product and API questions from current official docs first, with citations and minimal reliance on general browsing.
 

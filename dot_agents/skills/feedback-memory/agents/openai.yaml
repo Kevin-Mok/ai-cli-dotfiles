@@ -1,0 +1,7 @@
+interface:
+  display_name: "Feedback Memory"
+  short_description: "Carry forward durable user feedback"
+  default_prompt: "Use $feedback-memory to load durable user preferences from the repo-tracked `feedback.log`, follow them before starting work, and append any new reusable feedback immediately."
+
+policy:
+  allow_implicit_invocation: true
