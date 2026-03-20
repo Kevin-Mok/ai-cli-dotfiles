@@ -233,9 +233,6 @@
 │   └── config
 │       └── config.json
 ├── dot_qalcrc
-├── dot_ssh
-│   ├── authorized_keys-all
-│   └── known_hosts-all
 ├── dot_taskopenrc
 ├── dot_taskrc
 ├── dot_tmux.conf
