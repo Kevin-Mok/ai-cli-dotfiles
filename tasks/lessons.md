@@ -32,3 +32,4 @@
 - When a workflow will require the user to run commands manually, proactively package it in a script in the first response instead of listing raw commands, and include the exact `sudo` invocation when elevation is required.
 - Do not wait for the user to remind you to script manual command workflows; treat that requirement as automatic.
 - When validating or repairing symlinks in a script, resolve relative targets from the symlink's directory, not from the current working directory.
+- When Python-based verification in this repo generates `__pycache__` or `.pyc` artifacts, add or keep repo-level ignore rules so those local caches do not pollute commit workflows.

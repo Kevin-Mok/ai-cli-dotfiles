@@ -1,2 +1,4 @@
 commit-msg.txt
 .nvimlog
+__pycache__/
+*.py[cod]
