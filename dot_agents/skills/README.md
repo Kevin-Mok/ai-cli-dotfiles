@@ -177,7 +177,8 @@ Codex skill surface on this machine.
   user says otherwise.
 - [`commit-session`](commit-session/SKILL.md): Ships only the files
   dirtied during the current Codex session by combining a pre-write git
-  baseline with session-log evidence.
+  baseline with direct session-touch evidence, then pushes each
+  successful scoped commit by default unless the user says otherwise.
 - [`gh-fix-ci`](gh-fix-ci/SKILL.md): Investigates failing GitHub Actions
   PR checks with `gh`, summarizes the real failure context, and drafts a
   fix plan before implementation.

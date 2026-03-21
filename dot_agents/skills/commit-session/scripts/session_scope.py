@@ -467,14 +467,14 @@ def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
     skipped_unknown: list[StatusEntry] = []
 
     for entry in current_dirty:
-        if path_is_preexisting(entry.canonical_path, baseline_entries):
-            classified_entry = with_ownership_reason(entry, "preexisting_at_baseline")
-            classified_current_dirty.append(classified_entry)
-            skipped_preexisting.append(classified_entry)
-        elif entry.canonical_path in touched_files:
+        if entry.canonical_path in touched_files:
             classified_entry = with_ownership_reason(entry, "observed_touch")
             classified_current_dirty.append(classified_entry)
             commitable.append(classified_entry)
+        elif path_is_preexisting(entry.canonical_path, baseline_entries):
+            classified_entry = with_ownership_reason(entry, "preexisting_at_baseline")
+            classified_current_dirty.append(classified_entry)
+            skipped_preexisting.append(classified_entry)
         else:
             classified_entry = with_ownership_reason(entry, "newly_dirty_since_baseline")
             classified_current_dirty.append(classified_entry)

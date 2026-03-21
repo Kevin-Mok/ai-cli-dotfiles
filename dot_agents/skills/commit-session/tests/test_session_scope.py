@@ -209,7 +209,7 @@ class SessionScopeTestCase(unittest.TestCase):
         self.assertEqual("observed_touch", reasons["source.txt"])
         self.assertEqual("newly_dirty_since_baseline", reasons["generated.txt"])
 
-    def test_preexisting_dirty_file_stays_skipped(self):
+    def test_direct_touch_reclaims_preexisting_dirty_file(self):
         self.commit_repo_file("tracked.txt")
         self.write_repo_file("tracked.txt", "base\nchanged\n")
 
@@ -221,6 +221,26 @@ class SessionScopeTestCase(unittest.TestCase):
                     "2026-03-20T10:00:03Z",
                     "*** Begin Patch\n*** Update File: tracked.txt\n@@\n-base\n+base\n+changed\n*** End Patch\n",
                 ),
+            ]
+        )
+
+        self.assertEqual("ready", result.status)
+        self.assertEqual(["tracked.txt"], [entry.canonical_path for entry in result.commitable])
+        self.assertEqual(
+            ["observed_touch"],
+            [entry.ownership_reason for entry in result.commitable],
+        )
+        self.assertEqual([], result.skipped_preexisting)
+
+    def test_untouched_preexisting_dirty_file_stays_skipped(self):
+        self.commit_repo_file("tracked.txt")
+        self.write_repo_file("tracked.txt", "base\nchanged\n")
+
+        result = self.analyze_with_log(
+            [
+                self.session_meta(),
+                *self.baseline_call_items([" M tracked.txt"]),
+                *self.exec_call_items("call_write", "2026-03-20T10:00:03Z", "python3 tool.py"),
             ]
         )
 
