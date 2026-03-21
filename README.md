@@ -439,7 +439,7 @@ The rest of the repository is still a full desktop-dotfiles setup, not just an A
 
 ### Scripts, Assets, And Machine-Specific State
 
-- **[`scripts/`][scripts-dir]:** holds the automation layer behind the desktop, including wallpaper shuffling, `dmenu` helpers, audio sink changes, pass integration, package installation, finance or status scripts, backup helpers, and small terminal utilities.
+- **[`scripts/`][scripts-dir]:** holds the automation layer behind the desktop, including wallpaper shuffling, `dmenu` helpers, audio sink changes, pass integration, package installation, finance or status scripts, backup helpers, small terminal utilities, and repair helpers such as restoring a broken `fnm` + Codex install when a Node prefix is missing `npm` shims.
 - **[`scripts/colors/`][scripts-colors-dir] and [`txt/`][txt-dir]:** hold supporting assets such as terminal art, package lists, backup exclude files, TeX cleanup inputs, USB notes, and other small operational datasets.
 - **[`dot_config/chezmoi/chezmoi-template.toml.tmpl`][chezmoi-template]:** is the host-data entrypoint for machine-specific toggles such as `gui`, `ext_kb`, and `linux_os`, which then feed template logic across the repo.
 - **[`private_dot_calcurse/`][calcurse-dir], [`private_dot_gnupg/`][gnupg-dir], and [`dot_ssh/`][ssh-dir]:** cover the sensitive or machine-population side of the setup, alongside config files like `msmtp` or `taskrc` that should be treated carefully when syncing credentials.

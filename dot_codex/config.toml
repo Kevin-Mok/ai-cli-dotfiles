@@ -10,6 +10,10 @@ Before the first command or patch that can modify repo-tracked files in a git re
 
 [features]
 multi_agent = true
+js_repl = true
+apps = true
+guardian_approval = true
+prevent_idle_sleep = true
 
 [projects."/home/kevin/coding/quit-weed"]
 trust_level = "trusted"
