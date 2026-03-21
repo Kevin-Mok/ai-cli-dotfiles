@@ -56,6 +56,12 @@ These repo-local instructions apply in addition to the merged guidance below.
 - The README gate only passes when the root `README.md` accurately covers install or bootstrap, day-to-day use, core command flags for README-documented entrypoints, a repo-based "Tech Stack And Why Chosen" section, and why the repo is impressive to recruiters.
 - If the README gate would require mixing unrelated dirty work, stop and surface the conflict instead of bypassing the gate.
 
+### Smoke Tests
+
+- When work reveals a concrete manual verification step or an obvious smoke-coverage gap, update `docs/smoke-tests.md` in the same change.
+- Keep smoke-test entries grouped by area and written as an `Action` plus `Expected` result.
+- Update or replace stale smoke-test entries instead of appending duplicates or one-off debugging notes.
+
 ## Source Order
 
 1. `upwork`

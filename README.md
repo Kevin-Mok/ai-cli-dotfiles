@@ -318,6 +318,7 @@ The current live skill tree is:
 
 - **[`feedback-memory`](dot_agents/skills/feedback-memory/SKILL.md):** carries forward durable user corrections and workflow preferences across sessions by reading and appending a repo-tracked plain-text `feedback.log`.
 - **[`readme-recruiter-sync`](dot_agents/skills/readme-recruiter-sync/SKILL.md):** hard-gates commit workflows on a root README that is still truthful about install, usage, core command flags, the repo-based tech stack, and recruiter-facing value.
+- **[`smoke-test-capture`](dot_agents/skills/smoke-test-capture/SKILL.md):** keeps the shared [`docs/smoke-tests.md`](docs/smoke-tests.md) checklist current whenever work reveals a reusable manual verification step or a missing smoke check.
 - **[`full-output-enforcement`](dot_agents/skills/full-output-enforcement/SKILL.md):** prevents partial delivery on generation-heavy tasks by forcing complete outputs and banning placeholder shortcuts.
 - **[`openai-docs`](dot_agents/skills/openai-docs/SKILL.md):** answers OpenAI product and API questions from current official docs first, with citations and minimal reliance on general browsing.
 

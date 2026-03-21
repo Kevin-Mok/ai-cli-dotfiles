@@ -1,0 +1,7 @@
+interface:
+  display_name: "Smoke Test Capture"
+  short_description: "Keep the shared smoke-test checklist current"
+  default_prompt: "Use $smoke-test-capture to update docs/smoke-tests.md whenever work reveals a manual verification step, changes a manual expectation, or exposes an obvious smoke-test gap."
+
+policy:
+  allow_implicit_invocation: true

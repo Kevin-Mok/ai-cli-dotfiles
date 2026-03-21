@@ -9,30 +9,18 @@ straight to the source file.
 The live Codex install also mounts the external
 [`obra/superpowers`](https://github.com/obra/superpowers) bundle at
 `~/.agents/skills/superpowers` by cloning it into `~/.codex/superpowers`
-and symlinking its `skills/` directory. It is intentionally omitted from
-the catalog below because this file only documents repo-tracked skill
-sources that live under `dot_agents/skills/`. The legacy `push-dirty/`
-directory is also omitted because it does not currently define a live
-skill.
+and symlinking its `skills/` directory. This catalog still focuses on
+repo-tracked skill sources that live under `dot_agents/skills/`, but it
+includes one dedicated section for the externally managed superpowers
+bundle because that workflow meaningfully changes how the broader skill
+surface is supposed to be used in this environment. The legacy
+`push-dirty/` directory is omitted because it does not currently define
+a live skill.
 
 Many of the design skills are composable rather than mutually
 exclusive: `teach-impeccable` captures persistent design context,
 generator skills create or redesign a feature, and the narrower pass
 skills tighten one specific aspect of an existing interface.
-
-## Git Workflow
-
-- [`commit-plan`](commit-plan/SKILL.md): Plans safe commit boundaries for
-  all dirty git changes without staging, committing, or pushing.
-- [`commit-push`](commit-push/SKILL.md): Verifies scope, runs the minimum
-  relevant checks, then stages, commits, and pushes ready changes in the
-  current repository.
-- [`commit-session`](commit-session/SKILL.md): Ships only the files
-  dirtied during the current Codex session by combining a pre-write git
-  baseline with session-log evidence.
-- [`gh-fix-ci`](gh-fix-ci/SKILL.md): Investigates failing GitHub Actions
-  PR checks with `gh`, summarizes the real failure context, and drafts a
-  fix plan before implementation.
 
 ## Frontend Direction And Generators
 
@@ -113,6 +101,84 @@ skills tighten one specific aspect of an existing interface.
   weight, and readability so the typography looks deliberate instead of
   default.
 
+## Browser And Desktop Automation
+
+- [`playwright`](playwright/SKILL.md): Uses terminal-driven Playwright
+  automation for navigation, form filling, screenshots, extraction, and
+  other real-browser tasks.
+- [`playwright-interactive`](playwright-interactive/SKILL.md): Keeps a
+  browser or Electron session alive through `js_repl` for fast iterative
+  UI debugging without constant relaunches.
+- [`screenshot`](screenshot/SKILL.md): Captures desktop-level screenshots
+  when the user needs a full-screen, window, or system-level image and a
+  more integrated tool cannot grab it.
+
+## External Superpowers Skills
+
+These skills are mounted from the chezmoi-managed
+`~/.codex/superpowers` checkout into
+`~/.agents/skills/superpowers/<skill>/SKILL.md`. They are not
+repo-tracked under `dot_agents/skills/`, but they are part of the live
+Codex skill surface on this machine.
+
+- [`brainstorming`](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md):
+  Turns a rough idea into an approved design or spec before any
+  implementation work starts.
+- [`dispatching-parallel-agents`](https://github.com/obra/superpowers/blob/main/skills/dispatching-parallel-agents/SKILL.md):
+  Splits independent investigations or tasks across parallel subagents
+  with tightly scoped context.
+- [`executing-plans`](https://github.com/obra/superpowers/blob/main/skills/executing-plans/SKILL.md):
+  Executes an existing implementation plan step by step when you are not
+  using the more review-heavy subagent workflow.
+- [`finishing-a-development-branch`](https://github.com/obra/superpowers/blob/main/skills/finishing-a-development-branch/SKILL.md):
+  Verifies the branch is ready, presents merge or PR options, and helps
+  close out development work cleanly.
+- [`receiving-code-review`](https://github.com/obra/superpowers/blob/main/skills/receiving-code-review/SKILL.md):
+  Forces technical evaluation of review feedback before making changes,
+  instead of blindly accepting comments.
+- [`requesting-code-review`](https://github.com/obra/superpowers/blob/main/skills/requesting-code-review/SKILL.md):
+  Adds an explicit review pass so spec or code-quality problems get
+  caught before work continues or lands.
+- [`subagent-driven-development`](https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md):
+  Runs a written plan through fresh subagents, with review after each
+  task for spec compliance and code quality.
+- [`systematic-debugging`](https://github.com/obra/superpowers/blob/main/skills/systematic-debugging/SKILL.md):
+  Enforces root-cause investigation before any bug fix or speculative
+  patching.
+- [`test-driven-development`](https://github.com/obra/superpowers/blob/main/skills/test-driven-development/SKILL.md):
+  Requires the red-green-refactor loop so tests fail first, then guide
+  the minimal implementation.
+- [`using-git-worktrees`](https://github.com/obra/superpowers/blob/main/skills/using-git-worktrees/SKILL.md):
+  Sets up an isolated worktree and branch safely before feature work or
+  plan execution.
+- [`using-superpowers`](https://github.com/obra/superpowers/blob/main/skills/using-superpowers/SKILL.md):
+  The gateway skill that makes the agent check for relevant skills
+  before responding or taking action.
+- [`verification-before-completion`](https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md):
+  Requires fresh verification evidence before claiming work is complete,
+  fixed, or passing.
+- [`writing-plans`](https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md):
+  Converts an approved design into a granular implementation plan with
+  exact files, tests, and verification steps.
+- [`writing-skills`](https://github.com/obra/superpowers/blob/main/skills/writing-skills/SKILL.md):
+  Applies TDD-style discipline to creating or refining skills, including
+  pressure-testing whether the documentation actually changes agent
+  behavior.
+
+## Git Workflow
+
+- [`commit-plan`](commit-plan/SKILL.md): Plans safe commit boundaries for
+  all dirty git changes without staging, committing, or pushing.
+- [`commit-push`](commit-push/SKILL.md): Verifies scope, runs the minimum
+  relevant checks, then stages, commits, and pushes ready changes in the
+  current repository.
+- [`commit-session`](commit-session/SKILL.md): Ships only the files
+  dirtied during the current Codex session by combining a pre-write git
+  baseline with session-log evidence.
+- [`gh-fix-ci`](gh-fix-ci/SKILL.md): Investigates failing GitHub Actions
+  PR checks with `gh`, summarizes the real failure context, and drafts a
+  fix plan before implementation.
+
 ## Docs, Knowledge, And Output Control
 
 - [`feedback-memory`](feedback-memory/SKILL.md): Stores durable user
@@ -128,18 +194,10 @@ skills tighten one specific aspect of an existing interface.
   root `README.md` as a hard documentation gate for repo-surface changes,
   keeping setup, usage, command flags, stack rationale, and recruiter
   framing aligned with the repo.
-
-## Browser And Desktop Automation
-
-- [`playwright`](playwright/SKILL.md): Uses terminal-driven Playwright
-  automation for navigation, form filling, screenshots, extraction, and
-  other real-browser tasks.
-- [`playwright-interactive`](playwright-interactive/SKILL.md): Keeps a
-  browser or Electron session alive through `js_repl` for fast iterative
-  UI debugging without constant relaunches.
-- [`screenshot`](screenshot/SKILL.md): Captures desktop-level screenshots
-  when the user needs a full-screen, window, or system-level image and a
-  more integrated tool cannot grab it.
+- [`smoke-test-capture`](smoke-test-capture/SKILL.md): Keeps the shared
+  `docs/smoke-tests.md` checklist current whenever work reveals a manual
+  verification step, a changed manual expectation, or an obvious smoke
+  coverage gap.
 
 ## Documents And Media
 
