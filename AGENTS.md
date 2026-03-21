@@ -205,6 +205,9 @@ Output format:
 - Keep commits focused (one feature, one intent).
 - Use [Conventional Commits](https://www.conventionalcommits.org/) format.
 - Prefer a follow-up refactor commit after behavior is stable.
+- If the task includes commits, push the active remote or branch after
+  each successful commit by default unless the user explicitly says not
+  to.
 
 ### 4.3 Update Docs with Changes
 

@@ -27,6 +27,7 @@
 - When doing a commit plan, order the proposed commits from oldest changes to newest changes.
 - When a user asks to ship only the current Codex session, leave unrelated dirty changes from other sessions uncommitted instead of bundling them into the same commit.
 - When a user explicitly asks to commit the current dirty work as one commit, collapse any earlier split-commit plan and ship the remaining changes together.
+- When a workflow in this repo creates one or more commits, default to pushing the active branch after each successful commit unless the user explicitly says not to.
 - When a workflow will require the user to run commands manually, proactively package it in a script in the first response instead of listing raw commands, and include the exact `sudo` invocation when elevation is required.
 - Do not wait for the user to remind you to script manual command workflows; treat that requirement as automatic.
 - When validating or repairing symlinks in a script, resolve relative targets from the symlink's directory, not from the current working directory.

@@ -33,6 +33,10 @@ examples plus why the categories matter.
 Before any commit or push workflow finalizes work in this repo, run the
 `readme-recruiter-sync` skill against the root `README.md`.
 
+When a workflow in this repo creates one or more commits, push the
+active branch after each successful commit by default unless the user
+explicitly says not to.
+
 Treat the gate as failed until the root `README.md` is both aligned with
 the repository and explicitly covers:
 

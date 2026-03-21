@@ -177,6 +177,7 @@ traditional dotfile tweaks. They are workflow upgrades.
 - **Skill surface growth:** [`dot_agents/skills/`][skills-dir] packages recurring
   jobs into reusable local capabilities instead of one-off prompts.
 - **Commit-time README gate:** [`readme-recruiter-sync`](dot_agents/skills/readme-recruiter-sync/SKILL.md) keeps install steps, usage, command flags, stack rationale, and recruiter-facing positioning in sync before commit workflows ship changes.
+- **Push-after-commit default:** when a commit workflow in this repo creates a commit, the instruction chain defaults to pushing the active branch immediately afterward unless the user explicitly says not to.
 - **Execution discipline:** [`plans/`][plans-dir] makes non-trivial tasks
   explicit, reviewable, and easier to validate after the fact.
 
@@ -305,10 +306,10 @@ The current live skill tree is best understood as a few high-signal categories r
 Representative highlights:
 
 - **[`commit-plan`](dot_agents/skills/commit-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.
-- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files dirtied during the current Codex session while leaving baseline-dirty work untouched.
+- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files owned by the current Codex session, including directly touched files that were already dirty when the session started, then pushes the successful scoped commit by default unless I explicitly say not to.
 - **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
 
-This category matters because the repo does not just store git aliases or notes about workflow. It stores reusable guardrails for commit hygiene, session scoping, and CI repair.
+This category matters because the repo does not just store git aliases or notes about workflow. It stores reusable guardrails for commit hygiene, session scoping, CI repair, and immediate push behavior after successful commits.
 
 #### Design and frontend
 

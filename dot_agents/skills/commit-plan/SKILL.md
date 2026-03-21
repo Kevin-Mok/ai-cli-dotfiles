@@ -58,7 +58,8 @@ For this skill, "dirty changes" include:
 6. Identify whether `readme-recruiter-sync` will likely require a root `README.md` update before any commit is safe.
    - Pay extra attention when changes touch `AGENTS.md`, `AGENTS.repo.md`, `dot_codex/`, `dot_agents/`, `plans/`, the root `README.md`, onboarding or setup flows, or any command the README currently documents.
 7. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
-8. Do not run any write action unless I explicitly ask for it.
+8. Assume that when the plan is later executed in this repo, each successful commit will be pushed to the active branch by default unless the user explicitly says not to.
+9. Do not run any write action unless I explicitly ask for it.
 
 ## Write actions forbidden by default
 
@@ -101,7 +102,7 @@ For each proposed commit:
 Call out anything that should probably be excluded, split out, double-checked, or cleaned up first.
 
 ### 4) Optional manual commands
-Provide manual `git add ...` and `git commit ...` commands I can run myself if useful.
+Provide manual `git add ...`, `git commit ...`, and `git push ...` commands I can run myself if useful.
 
 ### 5) Commit message summary
 End the response with a compact summary of the suggested commit message subjects:
@@ -153,3 +154,4 @@ feat: add retry handling for webhook delivery
 - If a file is ambiguous, call out the ambiguity instead of guessing.
 - If validation matters, recommend the minimum relevant checks before commit.
 - If `readme-recruiter-sync` likely requires a README update, include it in the matching commit or call out the blocker explicitly.
+- When suggesting how the plan would be executed in this repo, assume each successful commit is followed by a push unless the user explicitly says not to.

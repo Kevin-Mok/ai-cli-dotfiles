@@ -168,10 +168,13 @@ Codex skill surface on this machine.
 ## Git Workflow
 
 - [`commit-plan`](commit-plan/SKILL.md): Plans safe commit boundaries for
-  all dirty git changes without staging, committing, or pushing.
+  all dirty git changes without staging, committing, or pushing, while
+  assuming later execution will push after each successful commit by
+  default unless the user says otherwise.
 - [`commit-push`](commit-push/SKILL.md): Verifies scope, runs the minimum
   relevant checks, then stages, commits, and pushes ready changes in the
-  current repository.
+  current repository immediately after each successful commit unless the
+  user says otherwise.
 - [`commit-session`](commit-session/SKILL.md): Ships only the files
   dirtied during the current Codex session by combining a pre-write git
   baseline with session-log evidence.

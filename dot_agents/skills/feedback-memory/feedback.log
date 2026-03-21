@@ -4,6 +4,7 @@
  Say explicitly when the script needs `sudo`, and include the exact `sudo` invocation in the handoff.
 2026-03-20 - Run `readme-recruiter-sync` before every commit or push workflow in this repo.
   Keep the root README aligned on install, usage, core flags, repo-based tech stack rationale, and recruiter-facing value.
+2026-03-21 - In this repo, when a workflow creates one or more commits, push the active branch after each successful commit by default unless I explicitly say not to.
 2026-03-21 - In /home/kevin/coding/auction-bot, document Red commands with the repo-specific `.` prefix from AGENTS.repo.md instead of generic `[p]` placeholders.
 2026-03-21 - When a workflow requires the user to run commands manually, provide a script in the first response instead of raw commands.
   Do not wait for the user to remind you to script the workflow; treat that as automatic.

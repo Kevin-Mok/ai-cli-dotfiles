@@ -53,6 +53,7 @@ These repo-local instructions apply in addition to the merged guidance below.
 - Treat the root `README.md` as part of the repo's public operating surface, not optional marketing copy.
 - When repo behavior, onboarding steps, command usage, skills, plans, AGENTS guidance, or Codex config changes, verify that the root `README.md` still matches the repository.
 - Before staging or finalizing any commit or push flow in this repo, run `readme-recruiter-sync`.
+- When a workflow in this repo creates one or more commits, push the active remote/branch after each successful commit by default unless the user explicitly says not to.
 - The README gate only passes when the root `README.md` accurately covers install or bootstrap, day-to-day use, core command flags for README-documented entrypoints, a repo-based "Tech Stack And Why Chosen" section, and why the repo is impressive to recruiters.
 - If the README gate would require mixing unrelated dirty work, stop and surface the conflict instead of bypassing the gate.
 

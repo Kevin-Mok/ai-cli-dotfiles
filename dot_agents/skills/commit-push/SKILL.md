@@ -28,6 +28,7 @@ Use this skill for explicit write requests to create a real git commit and push 
    - Add a body with around 5 to 10 concrete bullet points that describe the actual changes.
 8. Create the commit.
 9. Push the branch.
+   - Push immediately after each successful commit by default.
    - Push to the configured upstream by default.
    - If no upstream exists or the target remote is unclear, stop and ask instead of guessing.
    - Do not amend, rebase, squash, or force-push unless the user explicitly asks.
@@ -39,6 +40,7 @@ Use this skill for explicit write requests to create a real git commit and push 
 - Do not use this skill when the user explicitly wants to ship only the current Codex session's changes. Use `commit-session` for that case.
 - Never bypass `readme-recruiter-sync` because the code diff looks small.
 - Never invent README claims, flags, install steps, or recruiter copy that the repo does not support.
+- Never leave a newly created commit unpushed by default unless the user explicitly told you not to push.
 - Never bundle unrelated dirty changes into one commit to save time.
 - Never stage secrets, credentials, caches, build output, or machine-local files unless they clearly belong in version control.
 - Respect pre-existing user changes. Do not revert or discard work you did not make.
