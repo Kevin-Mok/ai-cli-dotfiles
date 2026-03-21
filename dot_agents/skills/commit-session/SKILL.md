@@ -5,7 +5,7 @@ description: Commit and push only the git changes dirtied during the current Cod
 
 # Commit Session
 
-Use this skill for explicit write requests that should ship only the files dirtied during the current Codex session. Treat the pre-write dirty baseline as the primary safety boundary.
+Use this skill for explicit write requests that should ship only the files dirtied during the current Codex session. Treat the pre-write dirty baseline as the primary safety boundary, with a narrower observed-touch fallback when that baseline is missing.
 
 ## Required Workflow
 
@@ -45,7 +45,7 @@ Use this skill for explicit write requests that should ship only the files dirti
 - Never bypass `readme-recruiter-sync` because the scoped diff looks small.
 - Never invent README claims, flags, install steps, or recruiter copy that the repo does not support.
 - Never leave a newly created session-scoped commit unpushed by default unless the user explicitly told you not to push.
-- If the helper cannot find a pre-write `git status --short` baseline for the session, fail closed instead of reconstructing scope from timestamps or memory.
+- If the helper cannot find a pre-write `git status --short` baseline for the session, only directly observed touched files are eligible; leave every other dirty file out of scope instead of reconstructing ownership from timestamps or memory.
 - If a file was already dirty at the session baseline and the current session did not directly touch it, leave the file uncommitted unless the user explicitly asks for a manual split.
 - Review newly eligible generated or companion files before staging them; baseline-delta scoping is intentionally permissive, not blind.
 - Never bundle unrelated dirty changes just because they happen to be present in the same repository.
@@ -66,7 +66,7 @@ The helper returns JSON with:
 
 - `commitable`: files directly touched in the current session or files that were clean at the session baseline and are dirty now, with an `ownership_reason` of `observed_touch` or `newly_dirty_since_baseline`
 - `skipped_preexisting`: files that were already dirty before this session started writing and were not directly touched in the current session
-- `skipped_unknown`: compatibility bucket for dirty files the helper still cannot classify safely
+- `skipped_unknown`: compatibility bucket for dirty files the helper still cannot classify safely, including unattributed dirties in a missing-baseline session where only observed touches are safe to ship
 - `unsafe_reason`: why the skill must stop when the session boundary is not trustworthy
 
 ## Output Contract

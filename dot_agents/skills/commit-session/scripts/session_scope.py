@@ -443,6 +443,37 @@ def analyze_session(repo_root: Path, session_id: str | None) -> ScopeResult:
     first_write_at = min(write_events)
     pre_write_statuses = [entry for entry in statuses if entry[0] < first_write_at]
     if not pre_write_statuses:
+        classified_current_dirty: list[StatusEntry] = []
+        commitable: list[StatusEntry] = []
+        skipped_unknown: list[StatusEntry] = []
+
+        for entry in current_dirty:
+            if entry.canonical_path in touched_files:
+                classified_entry = with_ownership_reason(entry, "observed_touch")
+                classified_current_dirty.append(classified_entry)
+                commitable.append(classified_entry)
+            else:
+                classified_entry = with_ownership_reason(entry, "missing_baseline_unattributed")
+                classified_current_dirty.append(classified_entry)
+                skipped_unknown.append(classified_entry)
+
+        if commitable:
+            return ScopeResult(
+                status="ready",
+                session_id=session_id,
+                session_file=session_file.as_posix(),
+                repo_root=repo_root.as_posix(),
+                session_cwd=session_cwd.as_posix(),
+                first_write_at=first_write_at,
+                baseline_at=None,
+                touched_files=sorted(touched_files),
+                current_dirty=classified_current_dirty,
+                commitable=commitable,
+                skipped_preexisting=[],
+                skipped_unknown=skipped_unknown,
+                unsafe_reason=None,
+            )
+
         return ScopeResult(
             status="unsafe",
             session_id=session_id,

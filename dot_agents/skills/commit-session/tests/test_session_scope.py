@@ -283,6 +283,34 @@ class SessionScopeTestCase(unittest.TestCase):
         self.assertEqual("unsafe", result.status)
         self.assertIn("No successful `git status --short` baseline", result.unsafe_reason)
 
+    def test_missing_baseline_allows_direct_touches_and_skips_other_dirties(self):
+        self.commit_repo_file("tracked.txt")
+        self.write_repo_file("tracked.txt", "base\nchanged\n")
+        self.write_repo_file("unrelated.txt", "left-alone\n")
+
+        result = self.analyze_with_log(
+            [
+                self.session_meta(),
+                self.apply_patch_item(
+                    "2026-03-20T10:00:03Z",
+                    "*** Begin Patch\n*** Update File: tracked.txt\n@@\n-base\n+base\n+changed\n*** End Patch\n",
+                ),
+            ]
+        )
+
+        self.assertEqual("ready", result.status)
+        self.assertEqual(["tracked.txt"], [entry.canonical_path for entry in result.commitable])
+        self.assertEqual(
+            ["observed_touch"],
+            [entry.ownership_reason for entry in result.commitable],
+        )
+        self.assertEqual(["unrelated.txt"], [entry.canonical_path for entry in result.skipped_unknown])
+        self.assertEqual(
+            ["missing_baseline_unattributed"],
+            [entry.ownership_reason for entry in result.skipped_unknown],
+        )
+        self.assertIsNone(result.unsafe_reason)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -306,7 +306,7 @@ The current live skill tree is best understood as a few high-signal categories r
 Representative highlights:
 
 - **[`commit-plan`](dot_agents/skills/commit-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.
-- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files owned by the current Codex session, including directly touched files that were already dirty when the session started, then pushes the successful scoped commit by default unless I explicitly say not to.
+- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files owned by the current Codex session, including directly touched files that were already dirty when the session started and an observed-touch-only fallback when a session missed its pre-write baseline, then pushes the successful scoped commit by default unless I explicitly say not to.
 - **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
 
 This category matters because the repo does not just store git aliases or notes about workflow. It stores reusable guardrails for commit hygiene, session scoping, CI repair, and immediate push behavior after successful commits.

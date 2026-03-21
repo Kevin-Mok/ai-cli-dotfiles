@@ -26,6 +26,7 @@
 - When a local Codex skill needs durable preferences in this repo, keep the mutable log in the chezmoi source tree and make the installed skill read and append that tracked file instead of maintaining a second copy under `~/.agents/skills`.
 - When doing a commit plan, order the proposed commits from oldest changes to newest changes.
 - When a user asks to ship only the current Codex session, leave unrelated dirty changes from other sessions uncommitted instead of bundling them into the same commit.
+- When `commit-session` has strong direct file attribution but the original session missed its pre-write `git status --short`, do not fail the whole workflow; ship the directly observed touched files and leave unattributed dirties out.
 - When a user explicitly asks to commit the current dirty work as one commit, collapse any earlier split-commit plan and ship the remaining changes together.
 - When a workflow in this repo creates one or more commits, default to pushing the active branch after each successful commit unless the user explicitly says not to.
 - When a workflow will require the user to run commands manually, proactively package it in a script in the first response instead of listing raw commands, and include the exact `sudo` invocation when elevation is required.
