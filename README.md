@@ -298,41 +298,57 @@ workflow lives in [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc].
 
 [`dot_agents/skills/`][skills-dir] turns repeated prompting into reusable capabilities. For more detail on my packaged skills, see [`dot_agents/skills/README.md`][skills-readme].
 
-The current live skill tree is:
+The current live skill tree is best understood as a few high-signal categories rather than a full inventory here. The detailed catalog lives in [`dot_agents/skills/README.md`][skills-readme].
 
 #### Git workflow
 
-- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files dirtied during the current Codex session while leaving baseline-dirty work untouched.
-- **[`commit-push`](dot_agents/skills/commit-push/SKILL.md):** ships ready changes with scoped staging, targeted verification, a Conventional Commit message, and a real push.
-- **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
+Representative highlights:
+
 - **[`commit-plan`](dot_agents/skills/commit-plan/SKILL.md):** turns a dirty worktree into a clean commit plan without staging, committing, or rewriting history.
+- **[`commit-session`](dot_agents/skills/commit-session/SKILL.md):** ships only the files dirtied during the current Codex session while leaving baseline-dirty work untouched.
+- **[`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md):** investigates failing GitHub Actions checks with `gh`, summarizes the real failure, and plans the fix before touching code.
+
+This category matters because the repo does not just store git aliases or notes about workflow. It stores reusable guardrails for commit hygiene, session scoping, and CI repair.
 
 #### Design and frontend
 
+Representative highlights:
+
 - **[`design-taste-frontend`](dot_agents/skills/design-taste-frontend/SKILL.md):** generates new React or Next.js interfaces with explicit art direction, stronger structure, and more disciplined motion than default LLM UI output.
 - **[`high-end-visual-design`](dot_agents/skills/high-end-visual-design/SKILL.md):** pushes visual polish toward agency-grade work with stricter typography, spacing, card treatment, and motion standards.
-- **[`minimalist-ui`](dot_agents/skills/minimalist-ui/SKILL.md):** steers interfaces toward a restrained editorial style built on warm monochrome color, flat structure, and strong text hierarchy.
 - **[`redesign-existing-projects`](dot_agents/skills/redesign-existing-projects/SKILL.md):** upgrades an existing site or app in place by auditing the current UI and applying targeted design improvements without breaking functionality.
+
+This category matters because it turns design direction into a repeatable local capability instead of a one-off prompting exercise.
 
 #### Research and output control
 
+Representative highlights:
+
 - **[`feedback-memory`](dot_agents/skills/feedback-memory/SKILL.md):** carries forward durable user corrections and workflow preferences across sessions by reading and appending a repo-tracked plain-text `feedback.log`.
 - **[`readme-recruiter-sync`](dot_agents/skills/readme-recruiter-sync/SKILL.md):** hard-gates commit workflows on a root README that is still truthful about install, usage, core command flags, the repo-based tech stack, and recruiter-facing value.
-- **[`smoke-test-capture`](dot_agents/skills/smoke-test-capture/SKILL.md):** keeps the shared [`docs/smoke-tests.md`](docs/smoke-tests.md) checklist current whenever work reveals a reusable manual verification step or a missing smoke check.
-- **[`full-output-enforcement`](dot_agents/skills/full-output-enforcement/SKILL.md):** prevents partial delivery on generation-heavy tasks by forcing complete outputs and banning placeholder shortcuts.
 - **[`openai-docs`](dot_agents/skills/openai-docs/SKILL.md):** answers OpenAI product and API questions from current official docs first, with citations and minimal reliance on general browsing.
 
+This category matters because it makes repository knowledge, documentation quality, and output discipline persistent instead of relying on memory inside a single session.
+
 #### Browser and desktop automation
+
+Representative highlights:
 
 - **[`playwright`](dot_agents/skills/playwright/SKILL.md):** drives a real browser from the terminal for navigation, screenshots, extraction, and UI debugging.
 - **[`playwright-interactive`](dot_agents/skills/playwright-interactive/SKILL.md):** keeps a Playwright browser session alive for faster repeated inspection and debugging passes in the same context.
 - **[`screenshot`](dot_agents/skills/screenshot/SKILL.md):** handles desktop- or window-level capture requests when an OS-level screenshot is the most reliable path.
 
+This category matters because terminal-first agent work still needs direct access to browser state and desktop evidence when text-only inspection is not enough.
+
 #### Documents and media
+
+Representative highlights:
 
 - **[`imagegen`](dot_agents/skills/imagegen/SKILL.md):** runs image generation and editing workflows through the OpenAI Image API with reproducible CLI-driven execution.
 - **[`pdf`](dot_agents/skills/pdf/SKILL.md):** handles PDF reading, generation, and review workflows where rendered layout matters as much as extracted text.
 - **[`transcribe`](dot_agents/skills/transcribe/SKILL.md):** converts speech from audio or video into text with optional diarization and known-speaker hints when needed.
+
+This category matters because the repo packages higher-friction media workflows as inspectable local tools instead of leaving them as ad hoc prompts.
 
 Several skills are packaged with `SKILL.md`, agent metadata, helper scripts, reference material, or explicit `SOURCE.md` provenance notes, which makes them closer to local tools than to one-off prompts. The frontend design skill cluster was imported from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) with permission, and each imported skill directory includes a `SOURCE.md` file that records the upstream path and commit.
 

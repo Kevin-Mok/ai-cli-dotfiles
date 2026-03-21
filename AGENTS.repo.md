@@ -24,6 +24,12 @@ When those files or directories gain meaningful new instructions,
 skills, config, or planning workflow, refresh the README to call out
 the addition and explain why it matters.
 
+When the root `README.md` covers `dot_agents/skills/`, summarize
+highlights from each skill category instead of trying to inventory every
+individual skill. Keep the exhaustive catalog in
+`dot_agents/skills/README.md` and use the root README for representative
+examples plus why the categories matter.
+
 Before any commit or push workflow finalizes work in this repo, run the
 `readme-recruiter-sync` skill against the root `README.md`.
 
