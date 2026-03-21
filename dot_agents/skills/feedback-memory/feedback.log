@@ -1,6 +1,9 @@
 2026-03-20 - When planning commits, order the proposed commits from oldest changes to newest changes.
 2026-03-20 - When drafting tweets or X posts for this repo, write them to a markdown doc in the repo instead of replying only inline.
 2026-03-20 - When manual commands must be handed off, create a script for them instead of sending raw commands alone.
-  Say explicitly when the script needs `sudo`, and include the exact `sudo` invocation in the handoff.
+ Say explicitly when the script needs `sudo`, and include the exact `sudo` invocation in the handoff.
 2026-03-20 - Run `readme-recruiter-sync` before every commit or push workflow in this repo.
   Keep the root README aligned on install, usage, core flags, repo-based tech stack rationale, and recruiter-facing value.
+2026-03-21 - In /home/kevin/coding/auction-bot, document Red commands with the repo-specific `.` prefix from AGENTS.repo.md instead of generic `[p]` placeholders.
+2026-03-21 - When a workflow requires the user to run commands manually, provide a script in the first response instead of raw commands.
+  Do not wait for the user to remind you to script the workflow; treat that as automatic.

@@ -16,6 +16,7 @@
 - When writing a catalog-style README with many peer entries, organize it into meaningful category headings instead of leaving it as one flat list of same-level sections.
 - When building a catalog for repo-local components or skills, link each entry directly to its canonical source file so the summary page also works as navigation.
 - When a user says "README" after an ambiguous docs request in this repo, default the scope to the root `README.md` unless they explicitly name a different one.
+- When shortening a recruiter/client-facing README, do not optimize for brevity so hard that the repo stops feeling substantial; keep the value proposition first and preserve enough technical proof to sell the work.
 - When validating `sshd` config changes in setup scripts, account for runtime prerequisites like `/run/sshd` instead of assuming the validation environment already matches a started service.
 - When a setup script fundamentally changes privileged system state, prefer making it require or self-acquire `sudo` up front instead of scattering best-effort `sudo` calls deeper in the flow.
 - When exposing SSH on a custom port, check for `ssh.socket` systemd socket activation; `sshd_config` alone may not change the actual listening ports.
@@ -26,4 +27,6 @@
 - When doing a commit plan, order the proposed commits from oldest changes to newest changes.
 - When a user asks to ship only the current Codex session, leave unrelated dirty changes from other sessions uncommitted instead of bundling them into the same commit.
 - When a user explicitly asks to commit the current dirty work as one commit, collapse any earlier split-commit plan and ship the remaining changes together.
-- When the user must run commands manually, package them in a script instead of listing only raw commands, and include the exact `sudo` invocation when elevation is required.
+- When a workflow will require the user to run commands manually, proactively package it in a script in the first response instead of listing raw commands, and include the exact `sudo` invocation when elevation is required.
+- Do not wait for the user to remind you to script manual command workflows; treat that requirement as automatic.
+- When validating or repairing symlinks in a script, resolve relative targets from the symlink's directory, not from the current working directory.
