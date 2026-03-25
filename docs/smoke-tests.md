@@ -43,3 +43,12 @@ of stacking duplicates.
   progress, ETA, the current path, and rsync `xfr#/to-chk` counters;
   otherwise the helper exits early with an install hint instead of
   failing mid-transfer.
+
+## Remote Access
+
+- Action: Run `sudo ./scripts/executable_setup-mosh.sh` on a Linux host
+  meant to accept remote `mosh` sessions.
+  Expected: The script installs `mosh` when missing, opens
+  `60000:61000/udp` in `ufw` or `firewalld` when one is active, and
+  prints whether SSH server bootstrap still needs attention before
+  remote clients can connect.
