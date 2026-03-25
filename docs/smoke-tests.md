@@ -31,3 +31,15 @@ of stacking duplicates.
 - Action: Add or change a standing workflow rule in `dot_codex/AGENTS.md`.
   Expected: The corresponding public docs and reusable verification
   guidance stay in sync with that rule in the same change.
+
+## Fish Helpers
+
+- Action: Run `fish -c 'backup-phone-storage'` from a machine that can
+  reach the phone over SSH on port `8022`.
+  Expected: If Termux has `rsync` installed, `rsync` copies the shared
+  storage tree from `$PHONE_IP:/data/data/com.termux/files/home/storage/`
+  into `/mnt/linux-files-3/pixel-9`, following Termux storage symlinks
+  such as `dcim -> /storage/emulated/0/DCIM`, while showing transfer
+  progress, ETA, the current path, and rsync `xfr#/to-chk` counters;
+  otherwise the helper exits early with an install hint instead of
+  failing mid-transfer.
