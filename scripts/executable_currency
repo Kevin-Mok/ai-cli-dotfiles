@@ -3,27 +3,45 @@
 import sys
 import requests
 
+REQUEST_TIMEOUT_SECONDS = 5
+EXCHANGE_RATE_API_URL = "https://open.er-api.com/v6/latest/{from_currency}"
+
+
 def convert_currency(amount, from_currency, to_currency):
-    url = f"https://api.frankfurter.app/latest?amount={amount}&from={from_currency}&to={to_currency}"
-    response = requests.get(url)
+    url = EXCHANGE_RATE_API_URL.format(from_currency=from_currency)
+    try:
+        response = requests.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
+    except requests.Timeout:
+        print(f"Error: Request timed out after {REQUEST_TIMEOUT_SECONDS}s.", file=sys.stderr)
+        return 1
+    except requests.RequestException:
+        print("Error: Unable to fetch exchange rates. Check your network and try again.", file=sys.stderr)
+        return 1
+
     if response.status_code == 200:
         data = response.json()
-        converted_amount = data['rates'][to_currency]
+        if data.get("result") != "success" or to_currency not in data.get("rates", {}):
+            print("Error: Unable to fetch exchange rates.", file=sys.stderr)
+            return 1
+
+        converted_amount = amount * data["rates"][to_currency]
         print(f"{amount} {from_currency} = {converted_amount} {to_currency}")
+        return 0
     else:
-        print("Error: Unable to fetch exchange rates.")
+        print("Error: Unable to fetch exchange rates.", file=sys.stderr)
+        return 1
 
 def main():
     if len(sys.argv) != 4:
         print("Usage: currency_converter.py <amount> <from_currency> <to_currency>")
         print("Example: currency_converter.py 100 CAD USD")
-        sys.exit(1)
+        return 1
 
     amount = float(sys.argv[3])
     from_currency = sys.argv[1].upper()
     to_currency = sys.argv[2].upper()
 
-    convert_currency(amount, from_currency, to_currency)
+    return convert_currency(amount, from_currency, to_currency)
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
