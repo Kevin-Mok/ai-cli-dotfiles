@@ -287,7 +287,7 @@ This is where agent behavior stops being prompt folklore and becomes **versioned
 
 [`dot_codex/config.toml`][codex-config] makes each Codex session start strong instead of neutral.
 
-It tracks the default model and reasoning effort, trusted local project paths, MCP servers, notification and status-line preferences, and extra developer instructions for commit and plan hygiene. In the current config, even commit discipline is codified: plan updates should ship with related work, and commit messages should use concise Conventional Commit subjects with detailed bullet summaries in the body.
+It tracks the default model and reasoning effort, trusted local project paths, MCP servers, notification and status-line preferences, and extra developer instructions for commit and plan hygiene. In the current config, even commit discipline is codified: plan updates should ship with related work, and commit messages should use concise Conventional Commit subjects with minimal but clear bullet summaries in the body.
 
 That matters because a new Codex pane inherits the same defaults immediately. **No re-briefing. No guesswork.**
 

@@ -91,10 +91,10 @@ For each proposed commit:
 - files to include
 - README impact (`include root README`, `no README change expected`, or `blocked by README gate`)
 - why these belong together
-- suggested commit message:
+  - suggested commit message:
   - a concise Conventional Commit-style subject line
-  - a detailed commit body
-  - around 5 to 10 bullet points in the body
+  - a minimal but clear commit body
+  - only as many bullet points as needed
   - each bullet should describe a concrete change made
   - avoid vague bullets like "updated stuff" or "misc fixes"
 
@@ -115,12 +115,12 @@ End the response with a compact summary of the suggested commit message subjects
 
 When writing git commit messages:
 - use a concise Conventional Commit-style subject line
-- include a detailed commit body
-- the body should contain around 5 to 10 bullet points
+- include a minimal but clear commit body
+- use only as many bullet points as needed
 - each bullet should describe a specific, concrete change
 - prefer clear, implementation-level details over generic summaries
 - make the bullets collectively cover the meaningful parts of the diff
-- avoid filler bullets written only to hit the count
+- avoid filler bullets
 
 Prefer the most specific Conventional Commit type that fits:
 - `feat:`
