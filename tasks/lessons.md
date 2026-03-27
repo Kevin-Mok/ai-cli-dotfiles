@@ -33,3 +33,4 @@
 - Do not wait for the user to remind you to script manual command workflows; treat that requirement as automatic.
 - When validating or repairing symlinks in a script, resolve relative targets from the symlink's directory, not from the current working directory.
 - When Python-based verification in this repo generates `__pycache__` or `.pyc` artifacts, add or keep repo-level ignore rules so those local caches do not pollute commit workflows.
+- When a recruiter-facing README skill validates a README, enforce front-of-file hierarchy and hook strength, not just section presence; setup and command blocks should usually come after the repo has already sold why it matters.
