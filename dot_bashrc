@@ -192,13 +192,9 @@ if [ "$(whoami)" == "kevin" ]; then
 	export PATH="${PATH}:${HOME}/.local/bin/"
 	(cat ~/.cache/wal/sequences &)
 fi
-# NZXT
-if [ "$(hostname)" == "NZXT" ];
-then
-	xmodmap -e "clear Lock"
-	xmodmap -e "keycode 22 = Caps_Lock"
-	xmodmap -e "keycode 66 = BackSpace"
-else
+# Keep keyboard remaps in X startup / ~/.Xmodmap so opening a bash shell
+# does not rewrite the active keymap.
+if [ "$(hostname)" != "NZXT" ]; then
 	xrandr --dpi 150
 fi
 # Both PC/Laptop }}}

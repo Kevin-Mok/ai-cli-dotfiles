@@ -412,7 +412,7 @@ The rest of the repository is still a full desktop-dotfiles setup, not just an A
 
 ### Shells And Shared Shortcuts
 
-- **[`dot_bashrc`][dot-bashrc] and [`dot_zshrc`][dot-zshrc]:** keep the fallback shells in sync around shared aliases, `xset` repeat rate, `xmodmap`, `wal` colors, and the usual shell-framework hooks.
+- **[`dot_bashrc`][dot-bashrc] and [`dot_zshrc`][dot-zshrc]:** keep the fallback shells in sync around shared aliases, keyboard repeat rate, `wal` colors, and the usual shell-framework hooks, while dedicated X startup files own keyboard remaps.
 - **[`aliases/key_aliases.tmpl`][aliases-key-aliases], [`aliases/key_dirs.tmpl`][aliases-key-dirs], and [`aliases/key_files.tmpl`][aliases-key-files]:** form the canonical shortcut layer. [`scripts/executable_sync-shortcuts`][sync-shortcuts] regenerates shell aliases, fish abbreviations, and ranger mappings from those sources.
 - **[`dot_config/fish/config.fish.tmpl`][fish-config]:** is the main interactive shell setup. It wires in prompt and path configuration, auto-syncs shortcuts, starts X on login when appropriate, and loads the large helper set under [`dot_config/fish/functions/`][fish-functions].
 - **[`dot_config/fish/completions/`][fish-completions]:** adds project-specific and tool-specific completions for commands like `kubectl`, `minikube`, `pass`, `timetrace`, and `watson`.

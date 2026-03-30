@@ -32,6 +32,11 @@ of stacking duplicates.
   Expected: The corresponding public docs and reusable verification
   guidance stay in sync with that rule in the same change.
 
+## Keyboard And Input
+
+- Action: Start a fresh X session on a desktop host that applies this repo's shell and `Xmodmap` config, open a terminal, type a short word, and press Backspace once.
+  Expected: Exactly one character is deleted and opening a new bash shell does not rewrite the active keyboard remap.
+
 ## Fish Helpers
 
 - Action: Run `fish -c 'backup-phone-storage'` from a machine that can
