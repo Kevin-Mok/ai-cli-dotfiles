@@ -18,6 +18,7 @@ set hlsearch
 set linebreak
 set linespace=5
 set mouse=a
+set mousescroll=ver:5,hor:1
 " set mouse=c
 set nofixendofline
 " set noswapfile
@@ -366,8 +367,25 @@ colorscheme gotham256
 
 " normal mappings [[[ "
 
-nnoremap <ScrollWheelUp> <C-U>
-nnoremap <ScrollWheelDown> <C-D>
+function! JumpToNextParagraphStart()
+  let l:target = search('\v(^\s*$\n)+\zs\S', 'W')
+  if l:target > 0
+    normal! zt
+  endif
+endfunction
+
+function! JumpToPrevParagraphStart()
+  let l:target = search('\v(^\s*$\n)+\zs\S', 'bW')
+  if l:target > 0
+    normal! zt
+  elseif line('.') > 1
+    call cursor(1, 1)
+    normal! zt
+  endif
+endfunction
+
+nnoremap <ScrollWheelUp> :call JumpToPrevParagraphStart()<CR>
+nnoremap <ScrollWheelDown> :call JumpToNextParagraphStart()<CR>
 nnoremap Y yy
 
 " visual select across lines by default "

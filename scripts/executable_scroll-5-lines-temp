@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -euo pipefail
+
+imwheelrc_path="${IMWHEELRC_PATH:-$HOME/.imwheelrc}"
+restart_imwheel=true
+
+if [[ "${1:-}" == "--no-restart" ]]; then
+	restart_imwheel=false
+fi
+
+cat > "$imwheelrc_path" <<'EOF'
+"^.*"
+None, Up,   Button4, 5
+None, Down, Button5, 5
+EOF
+
+if $restart_imwheel; then
+	pkill imwheel 2>/dev/null || true
+	imwheel &
+	disown || true
+fi
