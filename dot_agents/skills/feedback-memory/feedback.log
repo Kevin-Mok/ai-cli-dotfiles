@@ -11,3 +11,10 @@
 2026-03-30 - When citing AGENTS.repo.md line numbers, round up to the nearest hundred.
 2026-03-30 - When mentioning approximate line-number amounts or file line-count magnitudes, round up to the nearest hundred rather than using exact counts.
 2026-03-30 - When mentioning approximate line-number amounts or file line-count magnitudes, use coarse rounded figures: below 1000, round up to the nearest hundred; at 1000 or above, round down to the nearest multiple of 500 and add a + suffix.
+2026-03-30 - When I ask you to run a prompt doc in this emails repo, put the generated response in the document instead of replying only inline.
+2026-03-30 - In recruiter emails about scaling or infrastructure, ground the answer in concrete Red Hat experience and mention linkable PR examples when relevant.
+2026-03-30 - Keep LinkedIn connection-request notes under 200 characters unless I explicitly ask for something longer.
+2026-03-30 - Prefer compact formatting: for short or closely related answers, keep paragraphs on consecutive lines without blank spacer lines.
+2026-03-30 - Apply compact paragraph formatting only for certain answers: short or tightly related replies; keep blank spacer lines when they improve readability for longer or more structured responses.
+2026-03-31 - For interview-doc Vim navigation, use plain unprefixed #keywords that are easy to recall from memory; avoid tag prefixes.
+2026-03-31 - For interview-doc Vim navigation, use multiple plain unprefixed #keywords when relevant, not a single tag anchor.
