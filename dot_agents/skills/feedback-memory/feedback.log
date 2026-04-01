@@ -37,3 +37,6 @@
 2026-04-01 - In /home/kevin/coding/leetcode, if I ask whether a helper or language feature is allowed, answer only that narrow question.
   Do not add solution structure, algorithm hints, or implementation direction unless I explicitly ask for them.
 2026-04-01 - When rewriting or regenerating a README, keep recruiter-facing value in one catchy opening hook instead of scattering it across multiple sections.
+2026-04-01 - Do not suggest or use git worktrees unless I explicitly ask for them.
+2026-04-01 - For README rewrites, prefer technical depth with a catchier opening hook over aggressive shortening.
+2026-04-01 - In /home/kevin/linux-config, prefer the current technical-deep root README shape: hook, hero image, stack section, table of contents, AI-layer depth before setup, then operator docs later.
