@@ -34,3 +34,5 @@
 - When validating or repairing symlinks in a script, resolve relative targets from the symlink's directory, not from the current working directory.
 - When Python-based verification in this repo generates `__pycache__` or `.pyc` artifacts, add or keep repo-level ignore rules so those local caches do not pollute commit workflows.
 - When a recruiter-facing README skill validates a README, enforce front-of-file hierarchy and hook strength, not just section presence; setup and command blocks should usually come after the repo has already sold why it matters.
+- In /home/kevin/linux-config, when I change tracked configuration, run `refresh-config` before declaring the work done unless I explicitly tell you not to.
+- In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; do not copy the live Codex config back into the repo during refresh workflows.

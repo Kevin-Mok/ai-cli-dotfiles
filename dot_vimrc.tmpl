@@ -77,8 +77,8 @@ autocmd BufNewFile,BufRead *.gql setfiletype graphql
 autocmd Filetype markdown let g:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''", "*":"*"}
 " autocmd Filetype markdown map <F8> :LivedownToggle<CR>
 autocmd Filetype markdown let g:AutoPairs={'(':')', '[':']', '{':'}','"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''","*":"*"}
-autocmd Filetype markdown map <F8> :InstantMarkdownPreview<CR>
-autocmd Filetype markdown map <F9> :InstantMarkdownStop<CR>:InstantMarkdownPreview<CR>
+autocmd Filetype markdown map <F8> :MarkdownPreview<CR>
+autocmd Filetype markdown map <F9> :MarkdownPreviewStop<CR>:MarkdownPreview<CR>
 autocmd Filetype markdown inoremap < <Esc><<A
 autocmd Filetype markdown inoremap << <
 autocmd Filetype markdown inoremap > <Esc>>>A
@@ -267,14 +267,11 @@ Plug 'terryma/vim-multiple-cursors'
 	let g:multi_cursor_exit_from_insert_mode=0
 Plug 'dag/vim-fish'
 " live preview Markdown"
-Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
-  let g:instant_markdown_autostart = 0
-  let g:instant_markdown_port = 8888
-  let g:instant_markdown_theme = 'dark'
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
-  " let g:mkdp_auto_start = 1
-  " let g:mkdp_browser = 'firefox'
-  " let g:mkdp_echo_preview_url = 1
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install', 'for': 'markdown' }
+  let g:mkdp_auto_start = 0
+  let g:mkdp_theme = 'dark'
+  let g:mkdp_echo_preview_url = 1
+  let g:mkdp_markdown_css = expand('~/.vim/markdown-preview/github-dark.css')
 " git helper
 Plug 'tpope/vim-fugitive'
 " auto reload file

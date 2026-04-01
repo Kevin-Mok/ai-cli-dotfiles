@@ -80,9 +80,10 @@ than editing live files under `$HOME` directly.
 
 1. Edit the tracked source files in this repo.
 2. Preview the resulting home-directory diff with `chezmoi -S "$PWD" diff`.
-3. Apply the changes with `chezmoi -S "$PWD" apply`.
-4. Run `codex` from the repo root when you want the tracked AGENTS chain, Codex config, local skills, and plans to shape the session.
-5. Keep the root `README.md` updated whenever the repo's public workflow changes, especially for install steps, usage, command flags, the repo-based tech stack section, and recruiter-facing positioning.
+3. Run `refresh-config` after config changes when you want the repo, the tracked Codex config, chezmoi-managed files, and generated shortcuts brought back into sync in one step. The repo-tracked `dot_codex/config.toml` is the source of truth and is reapplied to `~/.codex/config.toml`.
+4. Apply the changes with `chezmoi -S "$PWD" apply` when you want the direct chezmoi path instead of the higher-level refresh helper.
+5. Run `codex` from the repo root when you want the tracked AGENTS chain, Codex config, local skills, and plans to shape the session.
+6. Keep the root `README.md` updated whenever the repo's public workflow changes, especially for install steps, usage, command flags, the repo-based tech stack section, and recruiter-facing positioning.
 
 ## Core Command Reference
 

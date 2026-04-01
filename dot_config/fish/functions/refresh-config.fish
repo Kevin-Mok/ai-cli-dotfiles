@@ -1,6 +1,6 @@
 function refresh-config
-    cp ~/.codex/config.toml ~/linux-config/dot_codex/config.toml
-    and echo 'Synced Codex config.'
+    chezmoi apply --force ~/.codex/config.toml
+    and echo 'Applied tracked Codex config.'
     chezmoi apply
     and echo 'Applied chezmoi.'
     # and tmux source-file ~/.tmux.conf

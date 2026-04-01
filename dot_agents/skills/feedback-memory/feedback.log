@@ -27,3 +27,10 @@
 2026-04-01 - Do not use git worktrees unless I explicitly ask for them.
 2026-04-01 - When executing a multi-commit plan for this user, hold pushes until the full commit series is finished unless they explicitly ask for per-commit pushes.
 2026-04-01 - Prefer storing general workflow feedback in the canonical feedback.log rather than a repository file unless the feedback is very specific to that repository.
+2026-04-01 - In /home/kevin/coding/leetcode, keep LeetCode hints to the smallest useful nudge first; do not expand into a full explanation unless I ask for more.
+2026-04-01 - In /home/kevin/coding/leetcode, when initializing a new problem file, look for a same-name `.txt` file and use its contents to set up local test cases when available.
+2026-04-01 - When the user reports a LeetCode error, explain the cause without solving the algorithm; only say whether the issue is a stub/placeholder or a repo-side fix.
+2026-04-01 - In /home/kevin/linux-config, when I change tracked configuration, run `refresh-config` before declaring the work done unless I explicitly say not to.
+2026-04-01 - In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; `refresh-config` should overwrite `~/.codex/config.toml`, not copy the live file back into the repo.
+2026-04-01 - In /home/kevin/coding/leetcode, never give a full solution unless I explicitly ask for one.
+  Default to the smallest useful hint only, and avoid giving major solution direction unless I ask for more.

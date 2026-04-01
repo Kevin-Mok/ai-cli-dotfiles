@@ -49,3 +49,14 @@ the repository and explicitly covers:
 Never invent commands, flags, setup steps, or stack claims to satisfy
 the gate. If the README cannot be updated safely in the same change,
 stop the commit workflow instead of hand-waving past the mismatch.
+
+## Post-Change Refresh
+
+When you change this repository's configuration files or other tracked
+environment behavior, run `refresh-config` before declaring the work
+done unless the user explicitly says not to.
+
+Treat `refresh-config` as the canonical sync step because it copies the
+tracked [`dot_codex/config.toml`](dot_codex/config.toml) into
+`~/.codex/config.toml`, runs `chezmoi apply`, regenerates shortcuts with
+`sync-shortcuts`, and reloads the active fish shell state.

@@ -39,6 +39,8 @@ of stacking duplicates.
 
 ## Fish Helpers
 
+- Action: Run `fish -ic 'refresh-config'` after changing tracked repo configuration on a machine where `chezmoi` and the shell helper scripts are available.
+  Expected: The tracked `dot_codex/config.toml` overwrites `~/.codex/config.toml`, `chezmoi apply` runs, shortcuts regenerate, and fish reloads without leaving the live Codex config as the source of truth.
 - Action: Run `fish -c 'backup-phone-storage'` from a machine that can
   reach the phone over SSH on port `8022`.
   Expected: If Termux has `rsync` installed, `rsync` copies the shared
@@ -48,6 +50,13 @@ of stacking duplicates.
   progress, ETA, the current path, and rsync `xfr#/to-chk` counters;
   otherwise the helper exits early with an install hint instead of
   failing mid-transfer.
+
+## Vim
+
+- Action: Open a Markdown file in Vim, press `<F8>`, and edit headings, lists, tables, and fenced code blocks while the preview is open.
+  Expected: `markdown-preview.nvim` opens a live browser preview on a free localhost port with GitHub-like dark styling and updates as the file changes.
+- Action: With the Markdown preview already open in Vim, press `<F9>`.
+  Expected: The preview stops and restarts cleanly on the same file without falling back to the old `InstantMarkdownPreview` commands.
 
 ## Remote Access
 
