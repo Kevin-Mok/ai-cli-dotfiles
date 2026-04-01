@@ -39,3 +39,5 @@
 - Before proposing workflow isolation or branch-management steps in this repo, read and apply the canonical feedback log; do not suggest git worktrees unless the user explicitly asks for them.
 - For README rewrites in this repo, fix the opening hook before cutting technical proof; the root README should stay technically in-depth enough to feel substantial to engineers.
 - When a user approves a README structure as the repo default, encode that structure in `AGENTS.repo.md` instead of relying on memory or one-off docs edits.
+- In /home/kevin/linux-config, when executing a multi-commit series, do not push after intermediate commits; hold pushes until the full series is finished unless the user explicitly asks for per-commit pushes.
+- When a user clarifies that a workflow preference applies across repositories, record it as global guidance instead of narrowing it to the current repo.

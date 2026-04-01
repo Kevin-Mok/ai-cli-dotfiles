@@ -40,3 +40,5 @@
 2026-04-01 - Do not suggest or use git worktrees unless I explicitly ask for them.
 2026-04-01 - For README rewrites, prefer technical depth with a catchier opening hook over aggressive shortening.
 2026-04-01 - In /home/kevin/linux-config, prefer the current technical-deep root README shape: hook, hero image, stack section, table of contents, AI-layer depth before setup, then operator docs later.
+2026-04-01 - In /home/kevin/linux-config, when shipping a multi-commit series, push only after the full series is finished unless I explicitly ask for per-commit pushes.
+2026-04-01 - In any repository, when shipping a multi-commit series, push only after the full series is finished unless I explicitly ask for per-commit pushes.
