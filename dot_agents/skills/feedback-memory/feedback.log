@@ -18,3 +18,12 @@
 2026-03-30 - Apply compact paragraph formatting only for certain answers: short or tightly related replies; keep blank spacer lines when they improve readability for longer or more structured responses.
 2026-03-31 - For interview-doc Vim navigation, use plain unprefixed #keywords that are easy to recall from memory; avoid tag prefixes.
 2026-03-31 - For interview-doc Vim navigation, use multiple plain unprefixed #keywords when relevant, not a single tag anchor.
+2026-03-31 - In answers, say "over" before a number instead of "+" when describing amounts above a threshold.
+2026-03-31 - When creating interview answer documents, always include a list of five questions I can ask at the end of the interview unless I explicitly ask to omit it.
+2026-03-31 - If I remove the end-of-interview questions from a specific interview-answer document, do not add them back unless I explicitly ask for that section again.
+2026-03-31 - When I ask for a hint on a LeetCode problem, give the smallest useful hint first and avoid giving extra hints unless I ask for more.
+2026-03-31 - In /home/kevin/coding/leetcode, when I ask why code is not working, give a small hint instead of fixing the code unless I explicitly ask for a fix.
+2026-03-31 - In /home/kevin/coding/leetcode, make local `__main__` harnesses report whether actual output matches expected and print a diff when they do not.
+2026-04-01 - Do not use git worktrees unless I explicitly ask for them.
+2026-04-01 - When executing a multi-commit plan for this user, hold pushes until the full commit series is finished unless they explicitly ask for per-commit pushes.
+2026-04-01 - Prefer storing general workflow feedback in the canonical feedback.log rather than a repository file unless the feedback is very specific to that repository.
