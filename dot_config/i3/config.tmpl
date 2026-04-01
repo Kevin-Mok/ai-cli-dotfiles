@@ -696,6 +696,8 @@ bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer
 bindsym Mod4+Pause exec ~/scripts/twem
 
 #  voice dictation [[[ #
+# Keychron Q11 M1 can be remapped to F13 for the ChatGPT floating dictation helper.
+bindsym F13 exec --no-startup-id /home/kevin/scripts/chatgpt-dictation
 # Pause toggles nerd-dictation via voice.sh.
 # Log any issues but never trigger i3's nagbar.
 bindsym Pause exec --no-startup-id sh -c '$hands_free_tools/voice.sh toggle >>"$XDG_RUNTIME_DIR/voice-toggle.log" 2>&1 || true'

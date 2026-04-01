@@ -426,7 +426,7 @@ The rest of the repository is still a full desktop-dotfiles setup, not just an A
 ### Window Manager And Desktop UI
 
 - **[`dot_xinitrc.tmpl`][xinitrc], [`dot_Xresources.tmpl`][xresources], and the [`dot_Xmodmap` variants][xmodmap-family]:** control X startup, DPI and font choices, keyboard remaps, `wal` wallpaper theming, and host-specific differences between desktop, laptop, and VM setups.
-- **[`dot_config/i3/config.tmpl`][i3-config]:** is the main desktop control plane for workspace movement, app assignments, launcher bindings, display and audio shortcuts, layout control, and the external hands-free toggle binding on `Pause`.
+- **[`dot_config/i3/config.tmpl`][i3-config]:** is the main desktop control plane for workspace movement, app assignments, launcher bindings, display and audio shortcuts, layout control, the external hands-free toggle binding on `Pause`, and the floating ChatGPT dictation helper bound to `F13`.
 - **[`dot_config/i3blocks/`][i3blocks-dir] and its script directory:** provide the status bars for primary and secondary displays, with blocks for things like battery, wifi, volume, Spotify, temperature, and crypto or ticker data.
 - **[`dot_config/dunst/dunstrc`][dunst-conf] and [`dot_config/picom/picom.conf`][picom-conf]:** shape the notification and compositing layer, while other app-specific configs under [`dot_config/`][dot-config-dir] cover tools like `MangoHud`, `Vesktop`, `Code`, and `Cursor`.
 

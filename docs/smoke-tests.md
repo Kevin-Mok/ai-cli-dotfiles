@@ -36,6 +36,8 @@ of stacking duplicates.
 
 - Action: Start a fresh X session on a desktop host that applies this repo's shell and `Xmodmap` config, open a terminal, type a short word, and press Backspace once.
   Expected: Exactly one character is deleted and opening a new bash shell does not rewrite the active keyboard remap.
+- Action: Remap `Keychron Q11` `M1` to `F13`, press it once in i3, dictate into the floating ChatGPT window, manually click ChatGPT's stop checkmark, then press `F13` again.
+  Expected: The first press opens or reuses a centered floating ChatGPT window and starts voice input; the second press selects the composer text, copies it to the clipboard, and leaves the prompt unsent.
 
 ## Fish Helpers
 

@@ -1,0 +1,218 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+WINDOW_MARK="chatgpt_dictation"
+WINDOW_WIDTH=1100
+WINDOW_HEIGHT=720
+MIC_X=1030
+INPUT_X=550
+INPUT_Y=625
+CLICK_Y=625
+LAUNCH_URL="https://chatgpt.com/"
+CHROME_PROFILE="Default"
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/chatgpt-dictation"
+MODE_FILE="${STATE_DIR}/mode"
+WINDOW_ID_FILE="${STATE_DIR}/window-id"
+
+CHROME_BIN="${CHATGPT_DICTATION_CHROME:-google-chrome}"
+I3MSG_BIN="${CHATGPT_DICTATION_I3MSG:-i3-msg}"
+XDOTOOL_BIN="${CHATGPT_DICTATION_XDOTOOL:-xdotool}"
+XCLIP_BIN="${CHATGPT_DICTATION_XCLIP:-xclip}"
+NOTIFY_BIN="${CHATGPT_DICTATION_NOTIFY_SEND:-notify-send}"
+
+ensure_state_dir() {
+  mkdir -p "$STATE_DIR"
+}
+
+set_mode() {
+  ensure_state_dir
+  printf '%s\n' "$1" > "$MODE_FILE"
+}
+
+get_mode() {
+  if [ -r "$MODE_FILE" ]; then
+    head -n 1 "$MODE_FILE"
+    return 0
+  fi
+  printf 'idle\n'
+}
+
+notify_user() {
+  if command -v "$NOTIFY_BIN" >/dev/null 2>&1; then
+    "$NOTIFY_BIN" "ChatGPT dictation" "$1" >/dev/null 2>&1 || true
+  fi
+}
+
+read_tree() {
+  "$I3MSG_BIN" -t get_tree
+}
+
+get_marked_window_id() {
+  read_tree | jq -r --arg mark "$WINDOW_MARK" '
+    first(
+      .. | objects
+      | select(((.marks // []) | index($mark)) != null)
+      | .id
+    ) // empty
+  '
+}
+
+get_candidate_window_id() {
+  read_tree | jq -r '
+    first(
+      .. | objects
+      | select((.window_properties.class // "") == "Google-chrome")
+      | select((.name // "") | test("ChatGPT"; "i"))
+      | .id
+    ) // empty
+  '
+}
+
+window_exists() {
+  local window_id="$1"
+  [ -n "$window_id" ] || return 1
+  read_tree | jq -e --argjson id "$window_id" '
+    any(.. | objects; (.id? // -1) == $id)
+  ' >/dev/null
+}
+
+cache_window_id() {
+  ensure_state_dir
+  printf '%s\n' "$1" > "$WINDOW_ID_FILE"
+}
+
+mark_window() {
+  local window_id="$1"
+  "$I3MSG_BIN" "[con_id=${window_id}] mark --add ${WINDOW_MARK}" >/dev/null
+  cache_window_id "$window_id"
+}
+
+normalize_window() {
+  local window_id="$1"
+  "$I3MSG_BIN" "[con_id=${window_id}] floating enable" >/dev/null
+  "$I3MSG_BIN" "[con_id=${window_id}] resize set ${WINDOW_WIDTH} px ${WINDOW_HEIGHT} px" >/dev/null
+  "$I3MSG_BIN" "[con_id=${window_id}] move position center" >/dev/null
+  "$I3MSG_BIN" "[con_id=${window_id}] focus" >/dev/null
+  "$XDOTOOL_BIN" windowactivate "$window_id" >/dev/null 2>&1 || true
+}
+
+find_window_id() {
+  local window_id
+  window_id="$(get_marked_window_id)"
+  if [ -n "$window_id" ] && window_exists "$window_id"; then
+    printf '%s\n' "$window_id"
+    return 0
+  fi
+
+  window_id="$(get_candidate_window_id)"
+  if [ -n "$window_id" ] && window_exists "$window_id"; then
+    mark_window "$window_id"
+    printf '%s\n' "$window_id"
+    return 0
+  fi
+
+  return 1
+}
+
+wait_for_window() {
+  local attempts=0
+  local window_id=""
+
+  while [ "$attempts" -lt 20 ]; do
+    if window_id="$(find_window_id)"; then
+      printf '%s\n' "$window_id"
+      return 0
+    fi
+    attempts=$((attempts + 1))
+    sleep 0.2
+  done
+
+  return 1
+}
+
+launch_window() {
+  "$CHROME_BIN" "--profile-directory=${CHROME_PROFILE}" "--app=${LAUNCH_URL}" >/dev/null 2>&1 &
+
+  if wait_for_window; then
+    return 0
+  fi
+
+  "$CHROME_BIN" "--profile-directory=${CHROME_PROFILE}" --new-window "${LAUNCH_URL}" >/dev/null 2>&1 &
+  wait_for_window
+}
+
+ensure_window() {
+  local window_id=""
+  if window_id="$(find_window_id)"; then
+    normalize_window "$window_id"
+    printf '%s\n' "$window_id"
+    return 0
+  fi
+
+  window_id="$(launch_window)"
+  mark_window "$window_id"
+  normalize_window "$window_id"
+  printf '%s\n' "$window_id"
+}
+
+click_window() {
+  local window_id="$1"
+  local x="$2"
+  local y="$3"
+  "$XDOTOOL_BIN" mousemove --window "$window_id" "$x" "$y" click 1 >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" mousemove --window "$window_id" "$x" "$y" click 1
+}
+
+start_recording() {
+  local window_id="$1"
+  click_window "$window_id" "$MIC_X" "$CLICK_Y"
+  set_mode "recording"
+  notify_user "Recording started."
+}
+
+copy_transcript() {
+  local window_id="$1"
+  local clipboard_text
+
+  click_window "$window_id" "$INPUT_X" "$INPUT_Y"
+  "$XDOTOOL_BIN" key --clearmodifiers ctrl+a ctrl+c >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" key --clearmodifiers ctrl+a ctrl+c
+
+  sleep 0.1
+  clipboard_text="$("$XCLIP_BIN" -o -selection clipboard 2>/dev/null || true)"
+  if [ -n "${clipboard_text}" ]; then
+    set_mode "idle"
+    notify_user "Copied transcript to clipboard."
+    return 0
+  fi
+
+  set_mode "recording"
+  notify_user "Copy not ready yet. Stop dictation in ChatGPT first."
+  return 0
+}
+
+main() {
+  local current_mode window_id window_missing
+
+  window_missing=0
+  if ! find_window_id >/dev/null 2>&1; then
+    window_missing=1
+  fi
+
+  current_mode="$(get_mode)"
+  if [ "$window_missing" -eq 1 ]; then
+    current_mode="idle"
+    set_mode "idle"
+  fi
+
+  window_id="$(ensure_window)"
+  if [ "$current_mode" = "recording" ]; then
+    copy_transcript "$window_id"
+    return 0
+  fi
+
+  start_recording "$window_id"
+}
+
+main "$@"
