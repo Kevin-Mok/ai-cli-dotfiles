@@ -68,6 +68,13 @@ Codex:
 codex
 ```
 
+In this repo, `codex` resolves to a tracked wrapper installed from
+[`scripts/executable_codex`][codex-wrapper].
+It ensures the Graphiti startup command
+`uv run main.py --transport stdio --database-provider neo4j --model qwen3:14b`
+is already running in the background before it hands off to the real
+Codex CLI.
+
 If you want the Graphiti memory layer, keep Neo4j reachable on
 `localhost:7687` and follow
 [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc] for the repo-specific
@@ -82,7 +89,7 @@ than editing live files under `$HOME` directly.
 2. Preview the resulting home-directory diff with `chezmoi -S "$PWD" diff`.
 3. Run `refresh-config` after config changes when you want the repo, the tracked Codex config, chezmoi-managed files, and generated shortcuts brought back into sync in one step. The repo-tracked `dot_codex/config.toml` is the source of truth and is reapplied to `~/.codex/config.toml`.
 4. Apply the changes with `chezmoi -S "$PWD" apply` when you want the direct chezmoi path instead of the higher-level refresh helper.
-5. Run `codex` from the repo root when you want the tracked AGENTS chain, Codex config, local skills, and plans to shape the session.
+5. Run `codex` from the repo root when you want the tracked AGENTS chain, Codex config, local skills, and plans to shape the session. In this repo that launcher also makes sure the Graphiti sidecar command is already running in the background before the real Codex binary starts.
 6. Keep the root `README.md` updated whenever the repo's public workflow changes, especially for install steps, usage, command flags, the repo-based tech stack section, and recruiter-facing positioning.
 
 ## Core Command Reference
@@ -95,7 +102,7 @@ below are verified against local CLI help in this repo's environment.
 | `chezmoi -S "$PWD" diff` | Preview what the checked-out source tree would change in `$HOME`. | `-S` / `--source` points chezmoi at this clone instead of the default source directory. `--reverse` flips the diff direction when you need the comparison the other way around. |
 | `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
 | `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
-| `codex` or `codex -C /path/to/your-clone` | Start Codex in the repo so the tracked instruction chain and config take effect. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. |
+| `codex` or `codex -C /path/to/your-clone` | Start Codex in the repo so the tracked instruction chain and config take effect. The repo wrapper also ensures the Graphiti sidecar command is running first. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. |
 | `codex mcp list --json` | Verify which MCP servers Codex is loading from the tracked config. | `--json` emits machine-readable output that is easier to inspect or diff. |
 
 ## Tech Stack And Why Chosen
@@ -209,6 +216,12 @@ over `stdio` from `/home/kevin/coding/graphiti/mcp_server`, keeps
 runtime settings in that checkout's `.env`, and expects Neo4j on
 `localhost:7687`. That keeps the Codex-side config small and avoids the
 host-port `8000` collision that already exists on this machine.
+
+The repo-level `codex` wrapper also starts the same Graphiti command in
+the background before handing off to the real Codex CLI. That sidecar is
+useful for making sure the command is already alive when you launch
+Codex, but it does not replace the actual stdio MCP child that Codex
+spawns for tool communication.
 
 The detailed setup, validation steps, and troubleshooting notes live in
 [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc]. The short version is:
@@ -453,6 +466,7 @@ That broader dotfiles surface is still substantial, but the README stays centere
 [agents-repo-readme-sync]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/AGENTS.repo.md?plain=1#L9
 [codex-agents]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_codex/AGENTS.md?plain=1#L11
 [codex-config]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_codex/config.toml?plain=1#L1
+[codex-wrapper]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/scripts/executable_codex?plain=1#L1
 [graphiti-codex-doc]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/docs/graphiti-mcp-codex.md?plain=1#L1
 [skills-dir]: https://github.com/Kevin-Mok/ai-cli-dotfiles/tree/master/dot_agents/skills/
 [skills-readme]: https://github.com/Kevin-Mok/ai-cli-dotfiles/blob/master/dot_agents/skills/README.md?plain=1#L1

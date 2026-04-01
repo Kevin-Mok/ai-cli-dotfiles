@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+GRAPHITI_CWD_DEFAULT="/home/kevin/coding/graphiti/mcp_server"
+GRAPHITI_STATE_DIR_DEFAULT="${XDG_STATE_HOME:-$HOME/.local/state}/codex-launch"
+GRAPHITI_CMD=(
+  uv
+  run
+  main.py
+  --transport
+  stdio
+  --database-provider
+  neo4j
+  --model
+  qwen3:14b
+)
+GRAPHITI_CMD_MATCH="main.py --transport stdio --database-provider neo4j --model qwen3:14b"
+
+graphiti_cwd="${CODEX_WRAPPER_GRAPHITI_CWD:-$GRAPHITI_CWD_DEFAULT}"
+graphiti_state_dir="${CODEX_WRAPPER_STATE_DIR:-$GRAPHITI_STATE_DIR_DEFAULT}"
+graphiti_pidfile="${graphiti_state_dir}/graphiti.pid"
+graphiti_log="${graphiti_state_dir}/graphiti.log"
+
+usage() {
+  cat <<'EOF'
+Usage: codex [codex args...]
+
+Starts the repo's Graphiti sidecar command in the background if it is not
+already running, then execs the real Codex CLI with the original arguments.
+
+Environment overrides:
+  CODEX_WRAPPER_GRAPHITI_CWD  Override the Graphiti checkout directory.
+  CODEX_WRAPPER_STATE_DIR     Override the pid/log directory.
+EOF
+}
+
+realpath_safe() {
+  readlink -f "$1"
+}
+
+find_real_codex() {
+  local self_path path_dir candidate candidate_path
+
+  self_path="$(realpath_safe "$0")"
+
+  IFS=':'
+  for path_dir in $PATH; do
+    [ -n "$path_dir" ] || continue
+    candidate="${path_dir}/codex"
+    [ -x "$candidate" ] || continue
+    candidate_path="$(realpath_safe "$candidate")"
+    if [ "$candidate_path" = "$self_path" ]; then
+      continue
+    fi
+    printf '%s\n' "$candidate"
+    return 0
+  done
+
+  return 1
+}
+
+pid_matches_graphiti() {
+  local pid cmdline
+
+  pid="$1"
+  [ -n "$pid" ] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  [ -r "/proc/${pid}/cmdline" ] || return 1
+
+  cmdline="$(tr '\0' ' ' < "/proc/${pid}/cmdline")"
+  case "$cmdline" in
+    *"$GRAPHITI_CMD_MATCH"*)
+      return 0
+      ;;
+  esac
+
+  return 1
+}
+
+ensure_graphiti_running() {
+  local pid
+
+  if [ ! -d "$graphiti_cwd" ]; then
+    printf 'Graphiti directory does not exist: %s\n' "$graphiti_cwd" >&2
+    exit 1
+  fi
+
+  mkdir -p "$graphiti_state_dir"
+
+  if [ -f "$graphiti_pidfile" ]; then
+    pid="$(cat "$graphiti_pidfile" 2>/dev/null || true)"
+    if pid_matches_graphiti "$pid"; then
+      return 0
+    fi
+    rm -f "$graphiti_pidfile"
+  fi
+
+  (
+    cd "$graphiti_cwd"
+    nohup "${GRAPHITI_CMD[@]}" >>"$graphiti_log" 2>&1 < /dev/null &
+    printf '%s\n' "$!" > "$graphiti_pidfile"
+  )
+
+  pid="$(cat "$graphiti_pidfile")"
+  sleep 1
+  if ! kill -0 "$pid" 2>/dev/null; then
+    printf 'Failed to start Graphiti sidecar. Check %s\n' "$graphiti_log" >&2
+    exit 1
+  fi
+}
+
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  usage
+  exit 0
+fi
+
+real_codex="$(find_real_codex)" || {
+  printf 'Could not locate the real codex binary on PATH.\n' >&2
+  exit 1
+}
+
+ensure_graphiti_running
+exec "$real_codex" "$@"

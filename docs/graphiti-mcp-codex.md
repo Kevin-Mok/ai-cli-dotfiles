@@ -40,6 +40,21 @@ Why this setup works here:
 - Neo4j must already be reachable on `localhost:7687` before Codex starts the
   Graphiti server.
 
+## Codex Launch Wrapper
+
+This repo also installs `codex` as a wrapper script from
+`scripts/executable_codex`. Before it execs the real Codex CLI, it makes
+sure this same Graphiti command is already running in the background:
+
+```bash
+uv run main.py --transport stdio --database-provider neo4j --model qwen3:14b
+```
+
+That satisfies the local preference to keep the Graphiti process alive
+before a Codex session starts. It does **not** change how stdio MCP
+works: Codex still launches and owns its own Graphiti stdio child for
+actual tool communication.
+
 ## Validation
 
 1. Make sure Neo4j is running on `localhost:7687`.
@@ -55,6 +70,13 @@ uv run main.py --transport stdio --database-provider neo4j --model qwen3:14b
 ```bash
 codex mcp list
 codex mcp get graphiti --json
+```
+
+4. Optionally confirm the launch wrapper created the sidecar files:
+
+```bash
+test -f "${XDG_STATE_HOME:-$HOME/.local/state}/codex-launch/graphiti.pid"
+test -f "${XDG_STATE_HOME:-$HOME/.local/state}/codex-launch/graphiti.log"
 ```
 
 ## Troubleshooting
