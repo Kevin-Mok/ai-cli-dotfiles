@@ -34,3 +34,6 @@
 2026-04-01 - In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; `refresh-config` should overwrite `~/.codex/config.toml`, not copy the live file back into the repo.
 2026-04-01 - In /home/kevin/coding/leetcode, never give a full solution unless I explicitly ask for one.
   Default to the smallest useful hint only, and avoid giving major solution direction unless I ask for more.
+2026-04-01 - In /home/kevin/coding/leetcode, if I ask whether a helper or language feature is allowed, answer only that narrow question.
+  Do not add solution structure, algorithm hints, or implementation direction unless I explicitly ask for them.
+2026-04-01 - When rewriting or regenerating a README, keep recruiter-facing value in one catchy opening hook instead of scattering it across multiple sections.

@@ -35,7 +35,8 @@ The root `README.md` must explicitly cover all of the following:
 3. Day-to-day use of the repo.
 4. Core command-line flags or options for README-documented entrypoints.
 5. A repo-based "Tech Stack And Why Chosen" section.
-6. An explicit recruiter-facing explanation of why the repo stands out.
+6. Recruiter-facing value consolidated into the opening hook or opening
+   section rather than scattered across the document.
 
 ## Top-Of-File Hierarchy
 
@@ -43,8 +44,8 @@ Before the first setup-heavy section, fenced code block, or command
 block, the README should usually surface the repo's strongest proof:
 
 - a longer hook, not a thin one-line summary
-- an explicit recruiter-value section or equivalent "why this repo is
-  worth attention" section
+- recruiter-facing value consolidated into that opening hook or opening
+  section, not split across multiple distant sections
 - a repo-based `Tech Stack And Why Chosen` section
 
 By default, `Quick Start`, `How to run`, and dense command reference
@@ -56,8 +57,7 @@ Strict default:
 
 - If a README contains top-level `Quick Start`, `Install`, `Setup`, `How
   to run`, or a major fenced command block before both:
-  - an explicit recruiter-value section or equivalent "why it stands
-    out" section, and
+  - the opening recruiter-facing hook or opening section, and
   - `Tech Stack And Why Chosen`,
   then the README fails the gate unless the user explicitly asked for
   that ordering.
@@ -65,13 +65,15 @@ Strict default:
 Treat these as failures:
 
 - `Quick Start`, install/setup, or the first major command block appears
-  before both recruiter value and stack rationale
+  before both the opening recruiter-facing hook and stack rationale
 - the hook is generic enough that it could describe many repos
+- recruiter-facing value is repeated in multiple distant sections
+  instead of being consolidated near the top
 - the README hides stack rationale or impressiveness far below setup
 - the README is technically accurate but still front-loads instructions
   over why the repo is notable
 - a features/browse section is being treated as a substitute for a real
-  recruiter-facing value section
+  opening recruiter hook
 
 ## Tech Stack Section Rules
 

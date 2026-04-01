@@ -6,13 +6,9 @@
        width="100%">
 </p>
 
-**This is not a generic dotfiles repo.**
+This is not a generic dotfiles repo. It is a `chezmoi`-managed operating environment for AI-assisted engineering built around a **four-Codex workflow**: **exploration**, **implementation**, **review/refinement**, and **verification/docs**, with the real differentiator living above shell and editor config in tracked instructions, runtime defaults, reusable skills, and execution plans.
 
-It is a `chezmoi`-managed operating environment for AI-assisted engineering built around a **four-Codex workflow**: **exploration**, **implementation**, **review/refinement**, and **verification/docs**. The shell, editor, terminal, and desktop configuration still matter, but the distinguishing value of the repo lives higher in the stack: it version-controls **how Codex behaves**, **which defaults it boots with**, **what reusable workflows it can invoke**, and **how non-trivial work stays explicit** from start to finish.
-
-**Most dotfiles repos optimize local ergonomics.** This one also optimizes the AI engineer. Instead of relying on ad hoc prompting and machine-local state, it tracks an instruction chain, runtime defaults, reusable skills, and execution plans in source control. That turns AI usage from a personal habit into something **operational, inspectable, and repeatable**.
-
-If you are evaluating me as a software engineer or contractor, this repo is a useful proxy for how I work: I care about **leverage**, **reproducibility**, **small reversible changes**, **verification**, and **keeping hidden state to a minimum**. The repo is not just a desktop setup. It is evidence of how I structure real software work with terminal agents.
+For recruiters or clients, the hook is straightforward: this repo shows how I turn AI usage into **operational, inspectable, and repeatable** engineering work instead of ad hoc prompting. It is a concrete proxy for how I work on real software: **leverage**, **reproducibility**, **small reversible changes**, **verification**, and minimal hidden state, all version-controlled in the open.
 
 ## Table of Contents
 
@@ -20,7 +16,6 @@ If you are evaluating me as a software engineer or contractor, this repo is a us
 - [How To Use It](#how-to-use-it)
 - [Core Command Reference](#core-command-reference)
 - [Tech Stack And Why Chosen](#tech-stack-and-why-chosen)
-- [Why Recruiters Should Care](#why-recruiters-should-care)
 - [Workflow At A Glance](#workflow-at-a-glance)
 - [AI Layer Highlights](#ai-layer-highlights)
 - [Graphiti Memory Layer](#graphiti-memory-layer)
@@ -119,16 +114,6 @@ not on generic dotfiles or AI-tool boilerplate.
 | Graphiti MCP with Neo4j | [`dot_codex/config.toml`][codex-config] and [`docs/graphiti-mcp-codex.md`][graphiti-codex-doc] | It adds a retrievable memory layer for multi-session work where provenance and evolving context matter. |
 | Shell and terminal tooling | [`dot_config/fish/config.fish.tmpl`][fish-config], [`dot_tmux.conf`][tmux-conf], [`dot_config/kitty/kitty.conf`][kitty-conf], and [`dot_config/i3/config.tmpl`][i3-config] | It optimizes for terminal-first execution and multiple parallel panes instead of a single-editor workflow. |
 | Python and Bash automation | [`scripts/`][scripts-dir] and skill helper scripts under [`dot_agents/skills/`][skills-dir] | It keeps repeatable operations small, inspectable, and version-controlled instead of burying them in chat instructions or manual muscle memory. |
-
-## Why Recruiters Should Care
-
-This repo is more useful as evidence of engineering approach than as a
-generic dotfiles archive.
-
-- It shows how I turn AI usage into versioned operating infrastructure with tracked instructions, config, skills, and plans.
-- It shows process discipline: non-trivial work gets planned, commit workflows are explicit, and docs are expected to stay aligned with behavior.
-- It shows leverage without hand-waving: reusable skills, local automation, and an optional memory layer reduce repeated manual work.
-- It still demonstrates broad Linux fluency across shell, terminal, window manager, editor, and desktop tooling, but the differentiator is that the workflow itself is inspectable.
 
 ## Workflow At A Glance
 
