@@ -153,6 +153,12 @@ trust_level = "trusted"
 [projects."/home/kevin/coding"]
 trust_level = "trusted"
 
+[projects."/home/kevin/coding/leetcode"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/mcnic"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 
@@ -182,4 +188,4 @@ tool_timeout_sec = 120
 [tui]
 notifications = true
 notification_method = "osc9"
-status_line = ["model-with-reasoning", "five-hour-limit", "context-remaining", "used-tokens", "current-dir", "total-input-tokens", "total-output-tokens", "context-window-size", "session-id", "codex-version"]
+status_line = ["model-with-reasoning", "five-hour-limit", "current-dir", "weekly-limit"]
