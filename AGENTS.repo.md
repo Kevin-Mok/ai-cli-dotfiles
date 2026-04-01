@@ -24,6 +24,51 @@ When those files or directories gain meaningful new instructions,
 skills, config, or planning workflow, refresh the README to call out
 the addition and explain why it matters.
 
+When refreshing the root `README.md` by default, preserve the current
+technical-deep narrative shape instead of collapsing it into a short
+landing page.
+
+Unless the user explicitly asks for a different structure, prefer this
+order:
+
+1. Title plus a two-paragraph recruiter-facing hook
+2. The hero workflow image near the top
+3. `Tech Stack And Why Chosen`
+4. A table of contents once the README is long enough to need one
+5. Early proof sections before setup, typically:
+   - `Workflow At A Glance`
+   - `AI Layer Highlights`
+   - `Core Components`
+   - `Graphiti Memory Layer`
+6. Setup and operator sections later:
+   - `Install And Bootstrap`
+   - `How To Use It`
+   - `Core Command Reference`
+7. Broader supporting proof later, typically:
+   - `Reproducibility Through Chezmoi`
+   - `Rest Of Repo`
+8. A single `License` section at the end
+
+Treat the gate as failed if a rewrite strips the README down so far that
+it no longer feels technically substantial to an engineer skimming it.
+The goal is a catchy opening plus real technical depth, not a short
+landing page.
+
+Keep the README AI-layer-first:
+
+- restore depth around the AGENTS chain, tracked Codex config, local
+  skills, ExecPlans, Graphiti, and the four-Codex workflow before setup
+  instructions
+- keep the broader Linux environment grouped and representative rather
+  than exhaustive
+- summarize skill categories with representative examples instead of
+  inventorying every skill
+- prefer inline relative links over a large footnote-link block unless a
+  user explicitly asks for another link style
+- when the README tells readers to use a repo-wrapped external tool such
+  as `codex`, document both the repo-specific wrapper behavior and how
+  the underlying tool is obtained
+
 When the root `README.md` covers `dot_agents/skills/`, summarize
 highlights from each skill category instead of trying to inventory every
 individual skill. Keep the exhaustive catalog in
