@@ -1,11 +1,11 @@
 ---
 name: commit-push
-description: Commit and push ready working changes in the current git repository after verifying scope and running the minimum relevant checks. Use when I explicitly ask to `commit-push`, `commit and push this`, `ship these changes`, or otherwise want a real commit and push performed in the current session. Do not use for commit planning only, history rewrites, force-pushes, or ambiguous mixed diffs.
+description: Commit and push ready working changes in the current git repository after verifying scope and running the minimum relevant checks. Use when I explicitly ask to `commit-push`, `commit all dirty`, `commit and push this`, `ship these changes`, or otherwise want a real commit and push for the intended dirty worktree. Do not use for commit planning only, history rewrites, force-pushes, or ambiguous mixed diffs.
 ---
 
 # Commit Push
 
-Use this skill for explicit write requests to create a real git commit and push it from the current repository. Treat speed as secondary to shipping a coherent, verified change.
+Use this skill for explicit write requests to create a real git commit and push it from the current repository, including the "commit all dirty" case where the intended scope is the current dirty worktree. Treat speed as secondary to shipping a coherent, verified change.
 
 ## Required Workflow
 
@@ -36,6 +36,7 @@ Use this skill for explicit write requests to create a real git commit and push 
 
 ## Guardrails
 
+- Treat `commit all dirty` as "ship the full intended dirty worktree now", not as permission to bundle unrelated changes.
 - Do not use this skill when the task is only to plan commits or group dirty changes without writing. Use `commit-plan` for that case.
 - Do not use this skill when the user explicitly wants to ship only the current Codex session's changes. Use `commit-session` for that case.
 - Never bypass `readme-recruiter-sync` because the code diff looks small.

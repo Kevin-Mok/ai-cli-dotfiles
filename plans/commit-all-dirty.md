@@ -1,85 +1,59 @@
-# ExecPlan: Commit All Dirty Changes
+# ExecPlan: Commit All Dirty Skill Alias
+
+## Summary
+
+Make `commit all dirty` an explicit trigger for the existing `commit-push`
+skill instead of introducing a separate overlapping git skill. Keep the
+current verification, README gate, and push-by-default behavior unchanged.
 
 ## Checklist
 
-- [x] Inventory the current dirty files in the worktree.
-- [x] Group the changes into coherent commit boundaries.
-- [ ] Commit Codex workflow updates with partial staging.
-- [ ] Commit Codex trusted-project additions.
-- [ ] Commit shell navigation alias additions.
-- [ ] Commit the i3 monitor output fix.
-- [ ] Verify the worktree is clean after the commit sequence.
+- [x] Confirm the current git skill split and existing trigger surface.
+- [x] Verify the baseline gap: `commit-push` did not explicitly mention
+  `commit all dirty`.
+- [x] Update `commit-push` to document `commit all dirty` as an all-dirty
+  execution trigger.
+- [x] Update the skills README so the three git skills remain clearly
+  differentiated.
+- [x] Replace the stale historical `commit-all-dirty` plan content with the
+  current implementation plan.
 
-## Assumptions
+## Implementation Changes
 
-- The request is to produce a commit plan for the current dirty worktree, not to create the commits yet.
-- The dirty changes should be split by concern instead of bundled into one commit.
-- Partial staging for `dot_codex/config.toml` is acceptable so the commit-message rule and trusted-project additions can be committed separately.
+### Skill behavior
 
-## Proposed Commit Sequence
+- Extend `dot_agents/skills/commit-push/SKILL.md` trigger language to include
+  `commit all dirty`.
+- Clarify that `commit all dirty` means "commit the full intended dirty
+  worktree now" and does not relax the mixed-diff safety guardrail.
 
-### 1. Codex workflow updates
+### Repo documentation
 
-Files:
-- `dot_codex/config.toml` (stage only the `developer_instructions` hunk)
-- `aliases/key_aliases.tmpl`
-- `aliases/key_files.tmpl`
-- `plans/commit-all-dirty.md`
+- Update `dot_agents/skills/README.md` so the Git Workflow section makes the
+  split explicit:
+  - `commit-plan` for planning all dirty changes
+  - `commit-push` for committing the intended dirty worktree now
+  - `commit-session` for current-session-only shipping
 
-Why:
-- These changes all support the Codex workflow: better commit-message guidance, a shortcut to the tracked Codex config, and a file shortcut for the commit-plan document.
+### Plan artifact
 
-Suggested commit:
-- `chore(codex): tighten commit workflow guidance`
-
-Staging notes:
-- Use `git add -p dot_codex/config.toml` and stage only the hunk that adds the detailed commit-body instruction.
-- Stage `aliases/key_aliases.tmpl` and `aliases/key_files.tmpl` fully.
-- Stage `plans/commit-all-dirty.md` with this commit so the ExecPlan ships with the related Codex workflow changes.
-
-### 2. Codex trusted paths
-
-Files:
-- `dot_codex/config.toml` (stage only the trusted-project additions)
-
-Why:
-- These are separate from commit workflow behavior. They change which local paths Codex treats as trusted.
-
-Suggested commit:
-- `chore(codex): trust additional local workspaces`
-
-Staging notes:
-- Use `git add -p dot_codex/config.toml` and stage only the added `[projects."..."]` blocks for the new paths.
-
-### 3. Shell directory shortcuts
-
-Files:
-- `aliases/key_dirs.tmpl`
-
-Why:
-- This is a separate shell navigation change for new local project shortcuts.
-
-Suggested commit:
-- `feat(aliases): add shortcuts for active project directories`
-
-### 4. i3 monitor output fix
-
-Files:
-- `dot_config/i3/config.tmpl`
-
-Why:
-- This is an environment-specific display fix and should stay isolated from Codex or shell alias changes.
-
-Suggested commit:
-- `fix(i3): update nzxt output names`
+- Keep this plan file aligned with the current skill model so future readers do
+  not mistake it for a pending standalone `commit-all-dirty` implementation.
 
 ## Verification
 
-- Before committing each group, run `git diff --cached --stat` and `git diff --cached`.
-- After each commit, run `git status --short` to confirm only the remaining planned changes are still dirty.
-- After the final commit, run `git status --short` and confirm there is no output.
+- Baseline evidence:
+  - `commit-push` lacked an explicit `commit all dirty` trigger.
+  - The skills README did not name that phrase as the all-dirty execution path.
+- Post-change checks:
+  - Search for `commit all dirty` and confirm it appears in
+    `dot_agents/skills/commit-push/SKILL.md`.
+  - Read `commit-push`, `commit-session`, and the Git Workflow section of
+    `dot_agents/skills/README.md` to confirm the boundary between all-dirty and
+    session-only behavior is still unambiguous.
 
-## Risks / Notes
+## Assumptions
 
-- `aliases/key_aliases.tmpl` now includes both `cpcx` and `cpx`, both copying the same Codex config. Keep both only if that duplication is intentional.
-- The Codex config change combines behavior changes and trust-list additions in one file, so staging the right hunks matters.
+- `commit all dirty` should remain an alias on `commit-push`, not a new skill.
+- Successful execution of this workflow still pushes by default unless the user
+  explicitly says not to.

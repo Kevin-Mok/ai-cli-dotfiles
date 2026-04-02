@@ -172,8 +172,9 @@ Codex skill surface on this machine.
   assuming later execution will push after each successful commit by
   default unless the user says otherwise.
 - [`commit-push`](commit-push/SKILL.md): Verifies scope, runs the minimum
-  relevant checks, then stages, commits, and pushes ready changes in the
-  current repository immediately after each successful commit unless the
+  relevant checks, then stages, commits, and pushes the intended dirty
+  worktree in the current repository, including explicit `commit all
+  dirty` requests, immediately after each successful commit unless the
   user says otherwise.
 - [`commit-session`](commit-session/SKILL.md): Ships only the files
   dirtied during the current Codex session by combining a pre-write git
