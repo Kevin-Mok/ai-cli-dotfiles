@@ -93,5 +93,8 @@
     "[go]": { "editor.insertSpaces": false, "editor.tabSize": 4 },
     "[markdown]": { "editor.wordWrap": "wordWrapColumn", "editor.wordWrapColumn": 55 },
     "[groovy]": { "editor.wordWrap": "off" },
-    "[jenkinsfile]": { "editor.wordWrap": "off" }
+    "[jenkinsfile]": {
+        "editor.wordWrap": "off"
+    },
+    "editor.fontSize": 15
 }
