@@ -23,7 +23,7 @@ assert_contains() {
 
 assert_contains "allow_remote_control socket-only" "$kitty_config_path"
 assert_contains "listen_on unix:/tmp/kitty" "$kitty_config_path"
-assert_contains "background_opacity 0.90" "$kitty_config_path"
+assert_contains "background_opacity 0.85" "$kitty_config_path"
 assert_contains '--saturate 0.8 -e' "$script_path"
 assert_contains '"${HOME}/.cache/wal/colors-i3.Xresources"' "$script_path"
 assert_contains '"${HOME}/.cache/wal/colors.Xresources"' "$script_path"
