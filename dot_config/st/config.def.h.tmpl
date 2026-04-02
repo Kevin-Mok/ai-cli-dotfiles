@@ -8,9 +8,9 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 {{ if eq .chezmoi.hostname "x1-carbon" }}
-static char *font = "DejaVuSansMono Nerd Font Mono:pixelsize=33:antialias=true:autohint=true";
+static char *font = "Hack Nerd Font Mono:pixelsize=33:antialias=true:autohint=true";
 {{ else }}
-static char *font = "DejaVuSansMono Nerd Font Mono:pixelsize=20:antialias=true:autohint=true";
+static char *font = "Hack Nerd Font Mono:pixelsize=20:antialias=true:autohint=true";
 {{ end }}
 static int borderpx = 2;
 
@@ -47,9 +47,12 @@ static unsigned int tripleclicktimeout = 600;
 /* alt screens */
 int allowaltscreen = 1;
 
-/* frames per second st should at maximum draw to the screen */
-static unsigned int xfps = 120;
-static unsigned int actionfps = 30;
+/*
+ * Draw latency range in ms.
+ * Upstream st uses this instead of the older xfps/actionfps knobs.
+ */
+static double minlatency = 8;
+static double maxlatency = 33;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking

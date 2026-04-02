@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+search_path="${ST_TERMINAL_SEARCH_PATH:-$PATH}"
+disable_absolute_fallback="${ST_TERMINAL_DISABLE_ABSOLUTE_FALLBACK:-0}"
+
+resolve_candidate() {
+  local candidate="$1"
+  if [[ "$candidate" == */* ]]; then
+    if [ "$disable_absolute_fallback" -eq 0 ] && [ -x "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+    return 1
+  fi
+
+  if PATH="$search_path" command -v "$candidate" >/dev/null 2>&1; then
+    PATH="$search_path" command -v "$candidate"
+    return 0
+  fi
+
+  return 1
+}
+
+find_st_binary() {
+  local candidate
+  for candidate in st stterm /usr/local/bin/st /usr/bin/st; do
+    if resolve_candidate "$candidate" >/tmp/st-terminal-candidate.$$ 2>/dev/null; then
+      cat /tmp/st-terminal-candidate.$$
+      rm -f /tmp/st-terminal-candidate.$$
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+find_fallback_terminal() {
+  local candidate
+  for candidate in kitty urxvt /usr/bin/kitty /usr/bin/urxvt /usr/bin/x-terminal-emulator; do
+    if resolve_candidate "$candidate" >/tmp/st-terminal-candidate.$$ 2>/dev/null; then
+      cat /tmp/st-terminal-candidate.$$
+      rm -f /tmp/st-terminal-candidate.$$
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+if st_bin="$(find_st_binary)"; then
+  exec "$st_bin" "$@"
+fi
+
+if fallback_bin="$(find_fallback_terminal)"; then
+  if PATH="$search_path" command -v notify-send >/dev/null 2>&1; then
+    notify-send "st terminal launcher is using a fallback terminal" "Install st or stterm to restore the preferred terminal. Launching $(basename "$fallback_bin") for now."
+  fi
+  exec "$fallback_bin" "$@"
+fi
+
+if PATH="$search_path" command -v notify-send >/dev/null 2>&1; then
+  notify-send "st terminal launcher could not find a usable binary" "Install st, stterm, kitty, or urxvt, then retry the i3 binding."
+fi
+printf 'Install st, stterm, kitty, or urxvt so this launcher can open the terminal.\n' >&2
+exit 1
