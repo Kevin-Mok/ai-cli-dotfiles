@@ -43,3 +43,6 @@
 - In /home/kevin/linux-config, when executing a multi-commit series, do not push after intermediate commits; hold pushes until the full series is finished unless the user explicitly asks for per-commit pushes.
 - When a user clarifies that a workflow preference applies across repositories, record it as global guidance instead of narrowing it to the current repo.
 - When a user names a keyboard-specific macro key like `Keychron Q11 M2`, do not assume it is a standard modifier or keysym; first map it through the repo's existing hardware-remap convention or confirm the emitted key with `xev`.
+- When a user asks to keep an existing helper script, preserve that entrypoint and add a new sibling script for the new behavior instead of repurposing the original path.
+- When changing a keybinding between helper scripts, confirm the actual target app or site instead of assuming it should remain in the same product family.
+- When fixing multi-monitor floating-window placement in i3, verify the live window rect after the move command; a successful `i3-msg` exit code is not enough to prove the window landed on-screen.

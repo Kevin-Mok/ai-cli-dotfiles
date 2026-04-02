@@ -1,0 +1,274 @@
+#!/usr/bin/env bash
+
+# INCOMPLETE: retained for later debugging, but not wired into i3 right now.
+
+set -euo pipefail
+
+WINDOW_MARK="speechnotes_dictation"
+WINDOW_WIDTH=1180
+WINDOW_HEIGHT=820
+LAUNCH_URL="https://speechnotes.co/dictate/"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/speechnotes-dictation"
+PROFILE_DIR="${STATE_DIR}/profile"
+
+CHROME_BIN="${SPEECHNOTES_DICTATION_CHROME:-google-chrome}"
+I3MSG_BIN="${SPEECHNOTES_DICTATION_I3MSG:-i3-msg}"
+XDOTOOL_BIN="${SPEECHNOTES_DICTATION_XDOTOOL:-xdotool}"
+
+ensure_state_dir() {
+  mkdir -p "$PROFILE_DIR"
+}
+
+read_tree() {
+  "$I3MSG_BIN" -t get_tree
+}
+
+read_outputs() {
+  "$I3MSG_BIN" -t get_outputs
+}
+
+read_workspaces() {
+  "$I3MSG_BIN" -t get_workspaces
+}
+
+get_marked_window_id() {
+  read_tree | jq -r --arg mark "$WINDOW_MARK" '
+    first(
+      .. | objects
+      | select(((.marks // []) | index($mark)) != null)
+      | .id
+    ) // empty
+  '
+}
+
+get_candidate_window_id() {
+  read_tree | jq -r '
+    first(
+      .. | objects
+      | select((.window_properties.class // "") == "Google-chrome")
+      | select((.name // "") | test("Speechnotes"; "i"))
+      | .id
+    ) // empty
+  '
+}
+
+window_exists() {
+  local window_id="$1"
+  [ -n "$window_id" ] || return 1
+  read_tree | jq -e --argjson id "$window_id" '
+    any(.. | objects; (.id? // -1) == $id)
+  ' >/dev/null
+}
+
+window_is_offscreen() {
+  local window_id="$1"
+  [ -n "$window_id" ] || return 1
+  read_tree | jq -e --argjson id "$window_id" '
+    any(
+      .. | objects;
+      (.id? // -1) == $id
+      and (
+        (.rect.x? // 0) < 0
+        or (.rect.y? // 0) < 0
+      )
+    )
+  ' >/dev/null
+}
+
+window_is_focused() {
+  local window_id="$1"
+  [ -n "$window_id" ] || return 1
+  read_tree | jq -e --argjson id "$window_id" '
+    any(.. | objects; (.id? // -1) == $id and (.focused? // false))
+  ' >/dev/null
+}
+
+window_is_in_scratchpad() {
+  local window_id="$1"
+  [ -n "$window_id" ] || return 1
+  read_tree | jq -e --argjson id "$window_id" '
+    any(.. | objects; (.id? // -1) == $id and ((.scratchpad_state? // "none") != "none"))
+  ' >/dev/null
+}
+
+mark_window() {
+  local window_id="$1"
+  "$I3MSG_BIN" "[con_id=${window_id}] mark --add ${WINDOW_MARK}" >/dev/null
+}
+
+get_focused_output_position() {
+  local focused_output
+  focused_output="$(
+    read_workspaces | jq -r '
+      first(
+        .[]
+        | select(.focused == true)
+        | .output
+      ) // empty
+    '
+  )"
+
+  [ -n "$focused_output" ] || return 1
+
+  read_outputs | jq -r --arg output "$focused_output" '
+    first(
+      .[]
+      | select(.active == true and .name == $output)
+      | [
+          (.rect.x + (((.rect.width - '"$WINDOW_WIDTH"') / 2) | floor)),
+          (.rect.y + (((.rect.height - '"$WINDOW_HEIGHT"') / 2) | floor))
+        ]
+      | @tsv
+    ) // empty
+  '
+}
+
+normalize_window() {
+  local window_id="$1"
+  local position
+  local x_pos
+  local y_pos
+
+  "$I3MSG_BIN" "[con_id=${window_id}] floating enable" >/dev/null
+  "$I3MSG_BIN" "[con_id=${window_id}] resize set ${WINDOW_WIDTH} px ${WINDOW_HEIGHT} px" >/dev/null
+
+  if position="$(get_focused_output_position)" && [ -n "$position" ]; then
+    IFS=$'\t' read -r x_pos y_pos <<<"$position"
+    "$I3MSG_BIN" "[con_id=${window_id}] move position ${x_pos} px ${y_pos} px" >/dev/null
+  else
+    "$I3MSG_BIN" "[con_id=${window_id}] move position center" >/dev/null
+  fi
+
+  "$I3MSG_BIN" "[con_id=${window_id}] focus" >/dev/null
+  "$XDOTOOL_BIN" windowactivate "$window_id" >/dev/null 2>&1 || true
+}
+
+show_window() {
+  local window_id="$1"
+  if window_is_in_scratchpad "$window_id"; then
+    "$I3MSG_BIN" "[con_mark=${WINDOW_MARK}] scratchpad show" >/dev/null
+  fi
+  normalize_window "$window_id"
+}
+
+hide_window() {
+  local window_id="$1"
+  "$I3MSG_BIN" "[con_id=${window_id}] move scratchpad" >/dev/null
+}
+
+reset_window() {
+  local window_id="$1"
+  "$I3MSG_BIN" "[con_id=${window_id}] kill" >/dev/null
+}
+
+find_window_id() {
+  local window_id
+  window_id="$(get_marked_window_id)"
+  if [ -n "$window_id" ] && window_exists "$window_id"; then
+    if window_is_offscreen "$window_id"; then
+      reset_window "$window_id"
+      return 1
+    fi
+    printf '%s\n' "$window_id"
+    return 0
+  fi
+
+  window_id="$(get_candidate_window_id)"
+  if [ -n "$window_id" ] && window_exists "$window_id"; then
+    if window_is_offscreen "$window_id"; then
+      reset_window "$window_id"
+      return 1
+    fi
+    mark_window "$window_id"
+    printf '%s\n' "$window_id"
+    return 0
+  fi
+
+  return 1
+}
+
+wait_for_window() {
+  local attempts=0
+  local window_id=""
+
+  while [ "$attempts" -lt 20 ]; do
+    if window_id="$(find_window_id)"; then
+      printf '%s\n' "$window_id"
+      return 0
+    fi
+    attempts=$((attempts + 1))
+    sleep 0.2
+  done
+
+  return 1
+}
+
+launch_window() {
+  ensure_state_dir
+  "$CHROME_BIN" \
+    "--user-data-dir=${PROFILE_DIR}" \
+    "--app=${LAUNCH_URL}" \
+    --no-first-run \
+    --no-default-browser-check \
+    --disable-sync \
+    >/dev/null 2>&1 &
+
+  if wait_for_window; then
+    return 0
+  fi
+
+  "$CHROME_BIN" \
+    "--user-data-dir=${PROFILE_DIR}" \
+    --new-window "${LAUNCH_URL}" \
+    --no-first-run \
+    --no-default-browser-check \
+    --disable-sync \
+    >/dev/null 2>&1 &
+  wait_for_window
+}
+
+prewarm_window() {
+  local window_id="$1"
+  show_window "$window_id"
+  hide_window "$window_id"
+}
+
+toggle_window() {
+  local window_id="$1"
+  if window_is_focused "$window_id"; then
+    hide_window "$window_id"
+    return 0
+  fi
+
+  show_window "$window_id"
+}
+
+main() {
+  local window_id
+  local mode="${1:-toggle}"
+
+  case "$mode" in
+    --prewarm)
+      if ! window_id="$(find_window_id)"; then
+        window_id="$(launch_window)"
+        mark_window "$window_id"
+      fi
+      prewarm_window "$window_id"
+      ;;
+    ""|toggle)
+      if window_id="$(find_window_id)"; then
+        toggle_window "$window_id"
+      else
+        window_id="$(launch_window)"
+        mark_window "$window_id"
+        show_window "$window_id"
+      fi
+      ;;
+    *)
+      printf 'unknown mode: %s\n' "$mode" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

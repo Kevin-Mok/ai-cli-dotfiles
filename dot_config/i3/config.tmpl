@@ -23,6 +23,7 @@ exec wal -i $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editi
 exec --no-startup-id i3-msg 'workspace $ws3; exec $browser'
 exec --no-startup-id i3-msg 'workspace $ws6; exec vesktop'
 exec --no-startup-id i3-msg 'workspace $ws6; exec signal-desktop'
+exec --no-startup-id /home/kevin/scripts/speechnotes-dictation --prewarm
 # exec --no-startup-id i3-msg 'workspace $ws5; exec $term -e twitchy'
 # exec --no-startup-id i3-msg 'workspace $ws5; exec firefox -P nft'
 #exec --no-startup-id i3-msg workspace $ws6; exec discord
@@ -695,8 +696,8 @@ bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer
 bindsym Mod4+Pause exec ~/scripts/twem
 
 #  voice dictation [[[ #
-# Menu/right app key triggers the ChatGPT floating dictation helper.
-bindsym Menu exec --no-startup-id /home/kevin/scripts/chatgpt-dictation
+# Menu/right app key triggers the floating Speechnotes dictation helper.
+bindsym Menu exec --no-startup-id /home/kevin/scripts/speechnotes-dictation
 # Keychron Q11 M2 can be remapped to Print for region screenshots via scrot.
 # Pause toggles nerd-dictation via voice.sh.
 # Log any issues but never trigger i3's nagbar.
