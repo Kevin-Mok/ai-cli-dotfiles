@@ -44,3 +44,8 @@
 2026-04-01 - In any repository, when shipping a multi-commit series, push only after the full series is finished unless I explicitly ask for per-commit pushes.
 2026-04-02 - In /home/kevin/coding/leetcode, never implement or initialize a LeetCode solution unless I explicitly ask for the solution.
   Treat requests like "init <problem>" as scaffold-only or ask a clarifying question; do not fill in algorithm logic.
+2026-04-02 - When I say not to get rid of an existing script, preserve that script path and create a new sibling script for the new behavior instead.
+2026-04-02 - In /home/kevin/Documents/emails, when I ask for a response, put it in the corresponding email file instead of replying only inline.
+2026-04-02 - In /home/kevin/Documents/emails, preserve the original email text and append the drafted reply instead of replacing the file contents.
+2026-04-02 - Always keep git worktrees in a local repository directory rather than a global worktree location.
+2026-04-02 - After creating a git worktree and its directory, always switch into that worktree on its branch before continuing.
