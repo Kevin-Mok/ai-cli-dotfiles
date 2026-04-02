@@ -46,3 +46,6 @@
 - When a user asks to keep an existing helper script, preserve that entrypoint and add a new sibling script for the new behavior instead of repurposing the original path.
 - When changing a keybinding between helper scripts, confirm the actual target app or site instead of assuming it should remain in the same product family.
 - When fixing multi-monitor floating-window placement in i3, verify the live window rect after the move command; a successful `i3-msg` exit code is not enough to prove the window landed on-screen.
+- When debugging theming in this repo, verify the actual rendering surface before attributing the problem to terminal, editor, or VS Code config; similar-looking screenshots are not enough evidence on their own.
+- When the user asks for terminal transparency and the configured opacity is visually imperceptible, treat that as a real bug and choose a clearly visible opacity level instead of insisting the subtle setting is "working."
+- When the user says a Vim theme still looks plain or under-colored, do not treat “some highlight groups are non-default” as success; verify that the rendered syntax has enough visual separation to actually feel themed.

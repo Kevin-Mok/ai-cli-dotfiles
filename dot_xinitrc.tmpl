@@ -21,9 +21,9 @@ numlockx on &
 #start-pulseaudio-x11 &
 #sudo alsa force-reload
 
-# wal -i "$(/home/kevin/scripts/shuffler \"$HOME/Pictures/Backgrounds/dim/non-editing\")" && /home/kevin/st/make-st.sh &
-# wal -i $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/non-editing") &
-wal -i $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing") &
+# /home/kevin/scripts/apply-pywal-theme "$(/home/kevin/scripts/shuffler \"$HOME/Pictures/Backgrounds/dim/non-editing\")" && /home/kevin/st/make-st.sh &
+# /home/kevin/scripts/apply-pywal-theme $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/non-editing") &
+/home/kevin/scripts/apply-pywal-theme $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing") &
 
 # # Statusbar loop
 # while true; do

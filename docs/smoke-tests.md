@@ -67,7 +67,7 @@ of stacking duplicates.
 - Action: Open Vim in a terminal with the rendered config, wait idle for at least one second on an empty buffer, enter insert mode, type a few characters, then quit with `:q!`.
   Expected: Vim remains responsive after idling, accepts normal keyboard input immediately, and exits without feeling stuck in a redraw or autosave loop.
 - Action: Open Vim or Neovim in a terminal after running `wal -i <wallpaper>` and compare the editor background and accent colors against the active terminal palette.
-  Expected: Vim loads the `wal` colorscheme by default so the editor palette tracks the current `pywal` theme instead of falling back to a fixed scheme such as `nightfly` or `gotham256`.
+  Expected: Vim loads the `wal` colorscheme by default so the editor palette tracks the current `pywal` theme, and the main editing surface, line-number column, fold column, sign column, and end-of-buffer area stay opaque with the current `pywal` background color instead of showing terminal transparency or falling back to a fixed scheme such as `nightfly` or `gotham256`.
 - Action: Open Neovim in a Python project with a local `.venv` or `venv`, type `Path(` and `requests.`, and use the normal leader shortcuts on a Python symbol.
   Expected: Blink completion offers Python members and auto-import suggestions, signature help appears when typing a function call, and `<leader>do`, `<leader>g`, `<leader>rn`, and `<leader>fi` drive the Neovim LSP actions instead of the old YCM commands.
 - Action: Open a Markdown file in Vim, press `<F8>`, and edit headings, lists, tables, and fenced code blocks while the preview is open.
@@ -79,6 +79,10 @@ of stacking duplicates.
 
 - Action: Launch the primary terminal from an i3 binding that uses this repo's rendered config, then trigger the Codex launcher shortcut.
   Expected: The normal terminal windows open in `kitty`, and the Codex shortcut also launches inside `kitty` instead of a separate terminal path with different UI chrome.
+- Action: Keep one or more `kitty` windows open, run `/home/kevin/scripts/apply-pywal-theme <wallpaper>` or trigger one of the wallpaper-changing shortcuts, and then open one additional `kitty` window.
+  Expected: The already-open `kitty` windows refresh to the new vivid `pywal` palette without a manual restart, the newly opened `kitty` window uses the same updated colors, and the terminal keeps the repo-configured light translucency without falling back to the earlier heavy wallpaper bleed-through.
+- Action: Run `/home/kevin/scripts/apply-pywal-theme <wallpaper>` with a bright or high-saturation wallpaper, then inspect the i3 workspace bar and focused window chrome.
+  Expected: The bar and focused workspace/client colors still feel vivid, but text and icons remain clearly readable against the workspace backgrounds instead of landing on low-contrast combinations such as pale icons over bright yellow backgrounds.
 - Action: Open a terminal, run `./scripts/executable_setup-st.sh --skip-install`, and inspect both `~/.config/st/config.def.h` and your `st` source checkout `config.def.h`.
   Expected: The script renders the tracked template into both config locations, preserving the repo's pywal, font, copy/paste, and scrollback settings while printing the exact `sudo make -C <st-source-dir> install` command for the final compile step.
 - Action: Open `st`, run enough output to exceed one screen, then scroll upward with the mouse wheel and `Shift+PageUp`.

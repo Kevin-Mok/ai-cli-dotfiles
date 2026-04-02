@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ "$#" -eq 0 ]; then
+  printf 'Usage: %s <image-path>|<wal-args>\n' "$(basename "$0")" >&2
+  exit 1
+fi
+
+kitty_socket="${KITTY_LISTEN_ON:-unix:/tmp/kitty}"
+kitty_colors_file="${HOME}/.cache/wal/colors-kitty.conf"
+i3_colors_file="${HOME}/.cache/wal/colors-i3.Xresources"
+wal_xresources_file="${HOME}/.cache/wal/colors.Xresources"
+generate_i3_colors_script="${HOME}/scripts/generate-i3-pywal-colors"
+
+if [ "$1" = "-i" ] || [ "${1#-}" != "$1" ]; then
+  wal --saturate 0.8 -e "$@"
+else
+  wal --saturate 0.8 -e -i "$@"
+fi
+
+if [ -x "${generate_i3_colors_script}" ]; then
+  "${generate_i3_colors_script}" >/dev/null 2>&1 || true
+fi
+
+if command -v xrdb >/dev/null 2>&1; then
+  xrdb -merge "${wal_xresources_file}" >/dev/null 2>&1 || true
+  if [ -f "${i3_colors_file}" ]; then
+    xrdb -merge "${i3_colors_file}" >/dev/null 2>&1 || true
+  fi
+fi
+
+if command -v kitty >/dev/null 2>&1; then
+  kitty @ --to "${kitty_socket}" load-config >/dev/null 2>&1 || true
+  kitty @ --to "${kitty_socket}" set-colors --all --configured "${kitty_colors_file}" >/dev/null 2>&1 || true
+fi
+
+if command -v i3-msg >/dev/null 2>&1; then
+  i3-msg reload >/dev/null 2>&1 || true
+fi

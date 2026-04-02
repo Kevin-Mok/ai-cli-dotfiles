@@ -12,6 +12,6 @@ if [[ "$editing_choice" = "${EDITING_CHOICES[0]}" ]]; then
 	editing_choice=${EDITING_CHOICES[$rand]}
 fi
 bg_path="$base_bg_path/$brightness_choice/$editing_choice"
-wal_cmd="wal -i $bg_path"
+wal_cmd="/home/kevin/scripts/apply-pywal-theme $bg_path"
 eval "$wal_cmd"
 # echo "$wal_cmd"

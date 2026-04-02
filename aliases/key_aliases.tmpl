@@ -14,7 +14,7 @@ hst "history"
 nfth "printf '\033c' && neofetch"
 fi "fish"
 # reload urxvt
-ru "xrdb ~/.Xresources && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs wal -i > /dev/null"
+ru "xrdb ~/.Xresources && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs /home/kevin/scripts/apply-pywal-theme > /dev/null"
 
 dua "du -ah --apparent-size | sort -h"
 # list file sizes in megabytes with depth 1
@@ -34,8 +34,8 @@ whi "whereis"
 
 xra "xrandr --auto"
 xrs "xrandr --auto && xrandr --output HDMI-0 --right-of DVI-D-0"
-xrn "xrandr --output HDMI-0 --rotate normal && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs wal -i > /dev/null" 
-xrr "xrandr --output HDMI-0 --rotate right && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs wal -i > /dev/null" 
+xrn "xrandr --output HDMI-0 --rotate normal && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs /home/kevin/scripts/apply-pywal-theme > /dev/null" 
+xrr "xrandr --output HDMI-0 --rotate right && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs /home/kevin/scripts/apply-pywal-theme > /dev/null" 
 
 {{ if eq .chezmoi.hostname "x1-carbon" }}
 xro "xrandr --output HDMI2 --off" 
@@ -539,7 +539,7 @@ usn "usernames --num 20"
 vmd "vimdiff"
 # wg "wego"
 ytd "youtube-dl"
-wal "wal -i"
+wal "/home/kevin/scripts/apply-pywal-theme"
 wc "wc -l"
 wcw "wc -w"
 wch "weechat"
