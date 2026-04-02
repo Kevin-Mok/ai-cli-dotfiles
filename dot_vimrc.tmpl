@@ -342,107 +342,190 @@ Plug 'preservim/nerdcommenter'
 
 call plug#end()
 
-function! ApplyWalBackground() abort
-  if exists('g:colors_name') && g:colors_name ==# 'wal'
-    let l:wal_colors_path = expand('~/.cache/wal/colors-wal.vim')
-    if filereadable(l:wal_colors_path)
-      let l:wal_lines = readfile(l:wal_colors_path)
-      let l:bg = matchstr(join(l:wal_lines, "\n"), 'let color0  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:fg = matchstr(join(l:wal_lines, "\n"), 'let color7  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:const = matchstr(join(l:wal_lines, "\n"), 'let color1  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:string = matchstr(join(l:wal_lines, "\n"), 'let color2  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:type = matchstr(join(l:wal_lines, "\n"), 'let color3  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:func = matchstr(join(l:wal_lines, "\n"), 'let color4  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:keyword = matchstr(join(l:wal_lines, "\n"), 'let color5  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:special = matchstr(join(l:wal_lines, "\n"), 'let color6  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:line = matchstr(join(l:wal_lines, "\n"), 'let color8  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      let l:sign = matchstr(join(l:wal_lines, "\n"), 'let color4  = "\zs#[0-9A-Fa-f]\{6}\ze"')
-      if empty(l:bg)
-        let l:bg = '#000000'
-      endif
-      if empty(l:fg)
-        let l:fg = '#ffffff'
-      endif
-      if empty(l:line)
-        let l:line = l:fg
-      endif
-      if empty(l:sign)
-        let l:sign = l:fg
-      endif
-      if empty(l:const)
-        let l:const = l:fg
-      endif
-      if empty(l:string)
-        let l:string = l:fg
-      endif
-      if empty(l:type)
-        let l:type = l:fg
-      endif
-      if empty(l:func)
-        let l:func = l:fg
-      endif
-      if empty(l:keyword)
-        let l:keyword = l:fg
-      endif
-      if empty(l:special)
-        let l:special = l:fg
-      endif
-      execute 'highlight Normal ctermbg=0 ctermfg=7 guibg=' . l:bg . ' guifg=' . l:fg
-      execute 'highlight NormalNC ctermbg=0 ctermfg=7 guibg=' . l:bg . ' guifg=' . l:fg
-      execute 'highlight EndOfBuffer ctermbg=0 ctermfg=0 guibg=' . l:bg . ' guifg=' . l:bg
-      execute 'highlight NonText ctermbg=0 ctermfg=0 guibg=' . l:bg . ' guifg=' . l:bg
-      execute 'highlight LineNr ctermbg=0 ctermfg=8 guibg=' . l:bg . ' guifg=' . l:line
-      execute 'highlight CursorLineNr ctermbg=0 ctermfg=8 guibg=' . l:bg . ' guifg=' . l:line
-      execute 'highlight FoldColumn ctermbg=0 ctermfg=7 guibg=' . l:bg . ' guifg=' . l:fg
-      execute 'highlight SignColumn ctermbg=0 ctermfg=4 guibg=' . l:bg . ' guifg=' . l:sign
-      execute 'highlight Folded ctermbg=0 ctermfg=8 guibg=' . l:bg . ' guifg=' . l:line
-      execute 'highlight Comment ctermbg=0 ctermfg=8 guibg=' . l:bg . ' guifg=' . l:line
-      execute 'highlight Constant ctermbg=0 ctermfg=1 guibg=' . l:bg . ' guifg=' . l:const
-      execute 'highlight Number ctermbg=0 ctermfg=1 guibg=' . l:bg . ' guifg=' . l:const
-      execute 'highlight Boolean ctermbg=0 ctermfg=1 guibg=' . l:bg . ' guifg=' . l:const
-      execute 'highlight String ctermbg=0 ctermfg=2 guibg=' . l:bg . ' guifg=' . l:string
-      execute 'highlight Character ctermbg=0 ctermfg=2 guibg=' . l:bg . ' guifg=' . l:string
-      execute 'highlight Type ctermbg=0 ctermfg=3 guibg=' . l:bg . ' guifg=' . l:type
-      execute 'highlight Identifier ctermbg=0 ctermfg=4 guibg=' . l:bg . ' guifg=' . l:func
-      execute 'highlight Function ctermbg=0 ctermfg=4 guibg=' . l:bg . ' guifg=' . l:func
-      execute 'highlight Statement ctermbg=0 ctermfg=5 guibg=' . l:bg . ' guifg=' . l:keyword
-      execute 'highlight Keyword ctermbg=0 ctermfg=5 guibg=' . l:bg . ' guifg=' . l:keyword
-      execute 'highlight Conditional ctermbg=0 ctermfg=5 guibg=' . l:bg . ' guifg=' . l:keyword
-      execute 'highlight Repeat ctermbg=0 ctermfg=5 guibg=' . l:bg . ' guifg=' . l:keyword
-      execute 'highlight PreProc ctermbg=0 ctermfg=6 guibg=' . l:bg . ' guifg=' . l:special
-      execute 'highlight Special ctermbg=0 ctermfg=6 guibg=' . l:bg . ' guifg=' . l:special
-    else
-      highlight Normal ctermbg=0 ctermfg=7
-      highlight NormalNC ctermbg=0 ctermfg=7
-      highlight EndOfBuffer ctermbg=0 ctermfg=0
-      highlight NonText ctermbg=0 ctermfg=0
-      highlight LineNr ctermbg=0 ctermfg=8
-      highlight CursorLineNr ctermbg=0 ctermfg=8
-      highlight FoldColumn ctermbg=0 ctermfg=7
-      highlight SignColumn ctermbg=0 ctermfg=4
-      highlight Folded ctermbg=0 ctermfg=8
-      highlight Comment ctermbg=0 ctermfg=8
-      highlight Constant ctermbg=0 ctermfg=1
-      highlight Number ctermbg=0 ctermfg=1
-      highlight Boolean ctermbg=0 ctermfg=1
-      highlight String ctermbg=0 ctermfg=2
-      highlight Character ctermbg=0 ctermfg=2
-      highlight Type ctermbg=0 ctermfg=3
-      highlight Identifier ctermbg=0 ctermfg=4
-      highlight Function ctermbg=0 ctermfg=4
-      highlight Statement ctermbg=0 ctermfg=5
-      highlight Keyword ctermbg=0 ctermfg=5
-      highlight Conditional ctermbg=0 ctermfg=5
-      highlight Repeat ctermbg=0 ctermfg=5
-      highlight PreProc ctermbg=0 ctermfg=6
-      highlight Special ctermbg=0 ctermfg=6
-    endif
+function! LoadWalPalette() abort
+  let l:wal_colors_path = expand('~/.cache/wal/colors-wal.vim')
+  if !filereadable(l:wal_colors_path)
+    return {}
   endif
+
+  let l:wal_lines = readfile(l:wal_colors_path)
+  let l:wal_text = join(l:wal_lines, "\n")
+  let l:palette = {
+        \ 'path': l:wal_colors_path,
+        \ 'mtime': getftime(l:wal_colors_path),
+        \ 'raw': l:wal_text,
+        \ 'bg': matchstr(l:wal_text, 'let color0  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'const': matchstr(l:wal_text, 'let color1  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'string': matchstr(l:wal_text, 'let color2  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'type': matchstr(l:wal_text, 'let color3  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'func': matchstr(l:wal_text, 'let color4  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'keyword': matchstr(l:wal_text, 'let color5  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'special': matchstr(l:wal_text, 'let color6  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'fg': matchstr(l:wal_text, 'let color7  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ 'line': matchstr(l:wal_text, 'let color8  = "\zs#[0-9A-Fa-f]\{6}\ze"'),
+        \ }
+
+  if empty(l:palette.bg)
+    let l:palette.bg = '#000000'
+  endif
+  if empty(l:palette.fg)
+    let l:palette.fg = '#ffffff'
+  endif
+  for l:key in ['const', 'string', 'type', 'func', 'keyword', 'special', 'line']
+    if empty(l:palette[l:key])
+      let l:palette[l:key] = l:palette.fg
+    endif
+  endfor
+  let l:palette.sign = l:palette.func
+  let l:palette.fingerprint = sha256(l:wal_text)
+
+  return l:palette
+endfunction
+
+function! ApplyWalTheme() abort
+  if !exists('g:colors_name') || g:colors_name !=# 'wal'
+    return
+  endif
+
+  let l:palette = LoadWalPalette()
+  if empty(l:palette)
+    let g:km_wal_last_fingerprint = ''
+    highlight Normal ctermbg=0 ctermfg=7
+    highlight NormalNC ctermbg=0 ctermfg=7
+    highlight EndOfBuffer ctermbg=0 ctermfg=0
+    highlight NonText ctermbg=0 ctermfg=0
+    highlight LineNr ctermbg=0 ctermfg=8
+    highlight CursorLineNr ctermbg=0 ctermfg=8
+    highlight FoldColumn ctermbg=0 ctermfg=7
+    highlight SignColumn ctermbg=0 ctermfg=4
+    highlight Folded ctermbg=0 ctermfg=8
+    highlight Comment ctermbg=0 ctermfg=8
+    highlight Constant ctermbg=0 ctermfg=1
+    highlight Number ctermbg=0 ctermfg=1
+    highlight Boolean ctermbg=0 ctermfg=1
+    highlight String ctermbg=0 ctermfg=2
+    highlight Character ctermbg=0 ctermfg=2
+    highlight Type ctermbg=0 ctermfg=3
+    highlight StorageClass ctermbg=0 ctermfg=3
+    highlight Structure ctermbg=0 ctermfg=3
+    highlight Typedef ctermbg=0 ctermfg=3
+    highlight Identifier ctermbg=0 ctermfg=4
+    highlight Function ctermbg=0 ctermfg=4
+    highlight Statement ctermbg=0 ctermfg=5
+    highlight Keyword ctermbg=0 ctermfg=5
+    highlight Conditional ctermbg=0 ctermfg=5
+    highlight Repeat ctermbg=0 ctermfg=5
+    highlight Label ctermbg=0 ctermfg=5
+    highlight Operator ctermbg=0 ctermfg=5
+    highlight PreProc ctermbg=0 ctermfg=6
+    highlight Include ctermbg=0 ctermfg=6
+    highlight Macro ctermbg=0 ctermfg=6
+    highlight PreCondit ctermbg=0 ctermfg=6
+    highlight Special ctermbg=0 ctermfg=6
+    highlight SpecialChar ctermbg=0 ctermfg=6
+    highlight Delimiter ctermbg=0 ctermfg=6
+    highlight Tag ctermbg=0 ctermfg=6
+  else
+    let g:km_wal_last_mtime = l:palette.mtime
+    let g:km_wal_last_fingerprint = l:palette.fingerprint
+    execute 'highlight Normal ctermbg=0 ctermfg=7 guibg=' . l:palette.bg . ' guifg=' . l:palette.fg
+    execute 'highlight NormalNC ctermbg=0 ctermfg=7 guibg=' . l:palette.bg . ' guifg=' . l:palette.fg
+    execute 'highlight EndOfBuffer ctermbg=0 ctermfg=0 guibg=' . l:palette.bg . ' guifg=' . l:palette.bg
+    execute 'highlight NonText ctermbg=0 ctermfg=0 guibg=' . l:palette.bg . ' guifg=' . l:palette.bg
+    execute 'highlight LineNr ctermbg=0 ctermfg=8 guibg=' . l:palette.bg . ' guifg=' . l:palette.line
+    execute 'highlight CursorLineNr ctermbg=0 ctermfg=8 guibg=' . l:palette.bg . ' guifg=' . l:palette.line
+    execute 'highlight FoldColumn ctermbg=0 ctermfg=7 guibg=' . l:palette.bg . ' guifg=' . l:palette.fg
+    execute 'highlight SignColumn ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.sign
+    execute 'highlight Folded ctermbg=0 ctermfg=8 guibg=' . l:palette.bg . ' guifg=' . l:palette.line
+    execute 'highlight Comment ctermbg=0 ctermfg=8 guibg=' . l:palette.bg . ' guifg=' . l:palette.line
+    execute 'highlight Constant ctermbg=0 ctermfg=1 guibg=' . l:palette.bg . ' guifg=' . l:palette.const
+    execute 'highlight Number ctermbg=0 ctermfg=1 guibg=' . l:palette.bg . ' guifg=' . l:palette.const
+    execute 'highlight Boolean ctermbg=0 ctermfg=1 guibg=' . l:palette.bg . ' guifg=' . l:palette.const
+    execute 'highlight String ctermbg=0 ctermfg=2 guibg=' . l:palette.bg . ' guifg=' . l:palette.string
+    execute 'highlight Character ctermbg=0 ctermfg=2 guibg=' . l:palette.bg . ' guifg=' . l:palette.string
+    execute 'highlight Type ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
+    execute 'highlight StorageClass ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
+    execute 'highlight Structure ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
+    execute 'highlight Typedef ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
+    execute 'highlight Identifier ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func
+    execute 'highlight Function ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func
+    execute 'highlight Statement ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight Keyword ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight Conditional ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight Repeat ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight Label ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight Operator ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
+    execute 'highlight PreProc ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Include ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Macro ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight PreCondit ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Special ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight SpecialChar ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Delimiter ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Tag ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+  endif
+
+  highlight! link pythonBuiltin Identifier
+  highlight! link pythonBuiltinObj Identifier
+  highlight! link pythonBuiltinFunc Function
+  highlight! link pythonFunction Function
+  highlight! link pythonDecorator PreProc
+  highlight! link pythonInclude Include
+  highlight! link pythonImport Include
+  highlight! link pythonRun PreProc
+  highlight! link pythonStatement Statement
+  highlight! link pythonConditional Conditional
+  highlight! link pythonRepeat Repeat
+  highlight! link pythonException Statement
+  highlight! link pythonExceptions Statement
+  highlight! link pythonOperator Operator
+endfunction
+
+function! RefreshWalThemeIfChanged() abort
+  if !exists('g:colors_name') || g:colors_name !=# 'wal'
+    return
+  endif
+  if exists('g:km_wal_refreshing') && g:km_wal_refreshing
+    return
+  endif
+
+  let l:wal_colors_path = expand('~/.cache/wal/colors-wal.vim')
+  if !filereadable(l:wal_colors_path)
+    return
+  endif
+
+  let l:palette = LoadWalPalette()
+  if empty(l:palette)
+    return
+  endif
+  if exists('g:km_wal_last_fingerprint') && g:km_wal_last_fingerprint ==# l:palette.fingerprint
+    return
+  endif
+
+  let g:km_wal_refreshing = 1
+  try
+    silent! colorscheme wal
+    call ApplyWalTheme()
+  finally
+    let g:km_wal_refreshing = 0
+  endtry
+endfunction
+
+function! StartWalThemeWatcher() abort
+  if !exists('*timer_start')
+    return
+  endif
+  if exists('g:km_wal_theme_timer')
+    call timer_stop(g:km_wal_theme_timer)
+  endif
+  let g:km_wal_theme_timer = timer_start(1000, {-> RefreshWalThemeIfChanged()}, {'repeat': -1})
 endfunction
 
 augroup km_wal_background
   autocmd!
-  autocmd ColorScheme wal call ApplyWalBackground()
+  autocmd ColorScheme wal call ApplyWalTheme()
+  autocmd CursorHold,CursorHoldI,FocusGained,VimResume * call RefreshWalThemeIfChanged()
+  autocmd VimEnter * call StartWalThemeWatcher()
 augroup END
 
 {{ if .gui }}
@@ -454,7 +537,8 @@ colorscheme wal
 colorscheme wal
 {{ end }}
 
-call ApplyWalBackground()
+call ApplyWalTheme()
+call StartWalThemeWatcher()
 
 " normal mappings [[[ "
 

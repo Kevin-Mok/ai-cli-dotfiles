@@ -64,6 +64,7 @@ Run the new wrapper regression, the new Python contrast test, the existing Vim r
 - Default: `kitty` should end at `0.90` opacity so the terminal keeps a light translucent feel without obscuring the editor content.
 - Outcome: the repo-owned wrapper now runs `wal --saturate 0.8 -e`, generates `~/.cache/wal/colors-i3.Xresources`, reloads Xresources, refreshes running kitty windows, and reloads i3.
 - Outcome: i3 now consumes derived `i3wm.ui.*` colors for focused, active, and inactive workspace states so bright palettes do not produce unreadable toolbar text or icons.
+- Follow-up: the shared Vim config should also watch `~/.cache/wal/colors-wal.vim` from inside running sessions so open Vim/Neovim windows refresh stronger wal-derived syntax colors after wallpaper changes without reopening the editor.
 - Verification:
   - `bash tests/test_apply_pywal_theme.sh`
   - `python3 -m unittest tests/scripts/test_executable_generate_i3_pywal_colors.py`

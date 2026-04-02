@@ -49,3 +49,4 @@
 - When debugging theming in this repo, verify the actual rendering surface before attributing the problem to terminal, editor, or VS Code config; similar-looking screenshots are not enough evidence on their own.
 - When the user asks for terminal transparency and the configured opacity is visually imperceptible, treat that as a real bug and choose a clearly visible opacity level instead of insisting the subtle setting is "working."
 - When the user says a Vim theme still looks plain or under-colored, do not treat “some highlight groups are non-default” as success; verify that the rendered syntax has enough visual separation to actually feel themed.
+- When a user expects running Vim or Neovim sessions to react to wallpaper changes, do not assume terminal palette reloads are enough; verify and, if needed, add an editor-side wal refresh path for already-open sessions.
