@@ -83,3 +83,5 @@ of stacking duplicates.
   `60000:61000/udp` in `ufw` or `firewalld` when one is active, and
   prints whether SSH server bootstrap still needs attention before
   remote clients can connect.
+- Action: Run `sudo ./scripts/executable_update-chrome.sh` on a Debian or Ubuntu host with the Google Chrome apt repo configured.
+  Expected: The script prints the installed and candidate Chrome versions, refreshes apt metadata, upgrades `google-chrome-stable` when needed, and ends with matching installed and candidate versions.
