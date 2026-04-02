@@ -18,7 +18,9 @@ set hlsearch
 set linebreak
 set linespace=5
 set mouse=a
-set mousescroll=ver:5,hor:1
+if exists('+mousescroll')
+  set mousescroll=ver:5,hor:1
+endif
 " set mouse=c
 set nofixendofline
 " set noswapfile
@@ -37,7 +39,7 @@ set undodir=~/.vim/undo
 set undofile
 " set updatetime=1000
 " set updatetime=500
-set updatetime=0
+set updatetime=500
 
 autocmd VimResized * wincmd =
 filetype plugin on
