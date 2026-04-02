@@ -4,7 +4,7 @@
 
 **Goal:** Make the Menu-key ChatGPT shortcut use a two-press workflow: open/refresh/clear on the first press, then select/cut/close on the second press.
 
-**Architecture:** Keep the existing shell helper and i3 binding, but use a simple `idle`/`ready` shell state machine instead of coordinate-driven mic automation. The first press prepares a clean ChatGPT window, and the second press uses keyboard shortcuts with short delays before closing the window.
+**Architecture:** Keep the original shell helper intact, add a sibling sequenced helper plus i3 binding target, and use a simple `idle`/`ready` shell state machine there instead of coordinate-driven mic automation. The first press prepares a clean ChatGPT window, and the second press uses keyboard shortcuts with short delays before closing the window.
 
 **Tech Stack:** Bash, i3, xdotool, jq, repo shell tests
 
@@ -13,8 +13,8 @@
 ### Task 1: Model The Two-Press Flow In Tests
 
 **Files:**
-- Modify: `tests/test_chatgpt_dictation.sh`
-- Test: `tests/test_chatgpt_dictation.sh`
+- Create: `tests/test_chatgpt_dictation_sequenced.sh`
+- Test: `tests/test_chatgpt_dictation_sequenced.sh`
 
 - [x] **Step 1: Write the failing tests**
 
@@ -24,21 +24,21 @@ Add assertions for the two-step sequence:
 
 - [x] **Step 2: Run test to verify it fails**
 
-Run: `bash tests/test_chatgpt_dictation.sh`
+Run: `bash tests/test_chatgpt_dictation_sequenced.sh`
 Expected: FAIL because the older helper still followed the previous multi-step behavior and did not include the new preparation or timing expectations
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add tests/test_chatgpt_dictation.sh
+git add tests/test_chatgpt_dictation_sequenced.sh
 git commit -m "test: define sequenced chatgpt dictation flow"
 ```
 
 ### Task 2: Implement The Two-Press State Machine
 
 **Files:**
-- Modify: `scripts/executable_chatgpt-dictation`
-- Test: `tests/test_chatgpt_dictation.sh`
+- Create: `scripts/executable_chatgpt-dictation-sequenced`
+- Test: `tests/test_chatgpt_dictation_sequenced.sh`
 
 - [x] **Step 1: Write minimal implementation**
 
@@ -51,7 +51,7 @@ Update the helper to:
 
 - [x] **Step 2: Run tests to verify the new flow**
 
-Run: `bash tests/test_chatgpt_dictation.sh`
+Run: `bash tests/test_chatgpt_dictation_sequenced.sh`
 Expected: PASS
 
 - [x] **Step 3: Keep the Menu binding regression green**
@@ -62,14 +62,14 @@ Expected: PASS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add scripts/executable_chatgpt-dictation tests/test_chatgpt_dictation.sh
+git add scripts/executable_chatgpt-dictation-sequenced tests/test_chatgpt_dictation_sequenced.sh dot_config/i3/config.tmpl
 git commit -m "feat: sequence chatgpt dictation keypress flow"
 ```
 
 ### Task 3: Final Verification
 
 **Files:**
-- Review: `scripts/executable_chatgpt-dictation`
+- Review: `scripts/executable_chatgpt-dictation-sequenced`
 - Review: `dot_config/i3/config.tmpl`
 
 - [x] **Step 1: Run both shell tests**
@@ -77,7 +77,7 @@ git commit -m "feat: sequence chatgpt dictation keypress flow"
 Run:
 
 ```bash
-bash tests/test_chatgpt_dictation.sh
+bash tests/test_chatgpt_dictation_sequenced.sh
 bash tests/test_i3_chatgpt_dictation_binding.sh
 ```
 

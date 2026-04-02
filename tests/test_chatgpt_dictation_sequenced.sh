@@ -3,14 +3,15 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-script_path="${repo_root}/scripts/executable_chatgpt-dictation"
+script_path="${repo_root}/scripts/executable_chatgpt-dictation-sequenced"
 
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 
 mockbin="${tmpdir}/mockbin"
 runtime_dir="${tmpdir}/runtime"
-state_dir="${runtime_dir}/chatgpt-dictation"
+state_dir="${runtime_dir}/chatgpt-dictation-sequenced"
+debug_log_file="${state_dir}/debug.log"
 log_file="${tmpdir}/commands.log"
 clipboard_file="${tmpdir}/clipboard.txt"
 
@@ -46,7 +47,7 @@ fi
 if [ "${1:-}" = "-t" ] && [ "${2:-}" = "get_tree" ]; then
   if [ -n "$window_id" ]; then
     if [ "$window_marked" = "true" ]; then
-      marks='["chatgpt_dictation"]'
+      marks='["chatgpt_dictation_sequenced"]'
     else
       marks='[]'
     fi
@@ -61,11 +62,14 @@ fi
 
 printf 'i3-msg %s\n' "$*" >> "$TEST_LOG"
 case "$*" in
-  *"mark --add chatgpt_dictation"*)
+  *"mark --add chatgpt_dictation_sequenced"*)
     [ -f "$window_json" ] || exit 0
     tmp_json="${window_json}.tmp"
     jq '.marked = true' "$window_json" > "$tmp_json"
     mv "$tmp_json" "$window_json"
+    ;;
+  *"kill"*)
+    rm -f "$window_json"
     ;;
 esac
 EOF
@@ -106,10 +110,6 @@ EOF
 cat > "${mockbin}/xclip" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-if [ "${1:-}" = "-o" ]; then
-  cat "$TEST_CLIPBOARD"
-  exit 0
-fi
 printf 'xclip %s\n' "$*" >> "$TEST_LOG"
 EOF
 
@@ -159,36 +159,37 @@ assert_mode() {
   fi
 }
 
+assert_debug_contains() {
+  local needle="$1"
+  if [ ! -f "$debug_log_file" ]; then
+    printf 'expected debug log at %s\n' "$debug_log_file" >&2
+    return 1
+  fi
+  assert_contains "$needle" "$debug_log_file"
+}
+
 reset_state
 run_script
 assert_contains "google-chrome --profile-directory=Default --app=https://chatgpt.com/" "$log_file"
-assert_contains "xdotool mousemove --window 424242" "$log_file"
-assert_mode "recording"
+assert_contains "xdotool key --clearmodifiers ctrl+r" "$log_file"
+assert_contains "xdotool key --clearmodifiers ctrl+a BackSpace" "$log_file"
+assert_mode "ready"
+assert_debug_contains "set_mode: ready"
+assert_debug_contains "main: action=prepare_window"
 
-reset_state
-mkdir -p "$state_dir"
-printf 'recording\n' > "${state_dir}/mode"
-printf 'copied from chatgpt\n' > "$clipboard_file"
-cat > "${runtime_dir}/window_state.json" <<'JSON'
-{"id":"424242","name":"ChatGPT","class":"Google-chrome","marked":true}
-JSON
 run_script
-assert_contains "xdotool key --clearmodifiers ctrl+a ctrl+c" "$log_file"
+assert_contains "xdotool key --clearmodifiers ctrl+a" "$log_file"
+assert_contains "xdotool key --clearmodifiers ctrl+x" "$log_file"
+assert_contains "i3-msg [con_id=424242] kill" "$log_file"
 assert_mode "idle"
+assert_debug_contains "cut_transcript: window_id=424242"
+assert_debug_contains "cut_transcript: waited_after_select=0.12"
+assert_debug_contains "cut_transcript: waited_after_cut=0.18"
+assert_debug_contains "set_mode: idle"
 
 reset_state
 mkdir -p "$state_dir"
-printf 'recording\n' > "${state_dir}/mode"
-cat > "${runtime_dir}/window_state.json" <<'JSON'
-{"id":"424242","name":"ChatGPT","class":"Google-chrome","marked":true}
-JSON
-run_script
-assert_contains "notify-send ChatGPT dictation" "$log_file"
-assert_mode "recording"
-
-reset_state
-mkdir -p "$state_dir"
-printf 'recording\n' > "${state_dir}/mode"
+printf 'ready\n' > "${state_dir}/mode"
 run_script
 assert_contains "google-chrome --profile-directory=Default --app=https://chatgpt.com/" "$log_file"
-assert_mode "recording"
+assert_mode "ready"

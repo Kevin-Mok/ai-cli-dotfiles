@@ -2,32 +2,34 @@
 
 set -euo pipefail
 
-WINDOW_MARK="chatgpt_dictation"
+WINDOW_MARK="chatgpt_dictation_sequenced"
 WINDOW_WIDTH=1100
 WINDOW_HEIGHT=720
-MIC_X=1030
-INPUT_X=550
-INPUT_Y=625
-CLICK_Y=625
 LAUNCH_URL="https://chatgpt.com/"
 CHROME_PROFILE="Default"
-STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/chatgpt-dictation"
+STATE_DIR="${XDG_RUNTIME_DIR:-/tmp}/chatgpt-dictation-sequenced"
 MODE_FILE="${STATE_DIR}/mode"
 WINDOW_ID_FILE="${STATE_DIR}/window-id"
+DEBUG_LOG_FILE="${STATE_DIR}/debug.log"
 
 CHROME_BIN="${CHATGPT_DICTATION_CHROME:-google-chrome}"
 I3MSG_BIN="${CHATGPT_DICTATION_I3MSG:-i3-msg}"
 XDOTOOL_BIN="${CHATGPT_DICTATION_XDOTOOL:-xdotool}"
-XCLIP_BIN="${CHATGPT_DICTATION_XCLIP:-xclip}"
 NOTIFY_BIN="${CHATGPT_DICTATION_NOTIFY_SEND:-notify-send}"
 
 ensure_state_dir() {
   mkdir -p "$STATE_DIR"
 }
 
+log_debug() {
+  ensure_state_dir
+  printf '%s %s\n' "$(date '+%Y-%m-%dT%H:%M:%S%z')" "$1" >> "$DEBUG_LOG_FILE"
+}
+
 set_mode() {
   ensure_state_dir
   printf '%s\n' "$1" > "$MODE_FILE"
+  log_debug "set_mode: $1"
 }
 
 get_mode() {
@@ -86,10 +88,12 @@ mark_window() {
   local window_id="$1"
   "$I3MSG_BIN" "[con_id=${window_id}] mark --add ${WINDOW_MARK}" >/dev/null
   cache_window_id "$window_id"
+  log_debug "mark_window: window_id=${window_id}"
 }
 
 normalize_window() {
   local window_id="$1"
+  log_debug "normalize_window: window_id=${window_id} size=${WINDOW_WIDTH}x${WINDOW_HEIGHT}"
   "$I3MSG_BIN" "[con_id=${window_id}] floating enable" >/dev/null
   "$I3MSG_BIN" "[con_id=${window_id}] resize set ${WINDOW_WIDTH} px ${WINDOW_HEIGHT} px" >/dev/null
   "$I3MSG_BIN" "[con_id=${window_id}] move position center" >/dev/null
@@ -156,40 +160,39 @@ ensure_window() {
   printf '%s\n' "$window_id"
 }
 
-click_window() {
+close_window() {
   local window_id="$1"
-  local x="$2"
-  local y="$3"
-  "$XDOTOOL_BIN" mousemove --window "$window_id" "$x" "$y" click 1 >/dev/null 2>&1 || \
-    "$XDOTOOL_BIN" mousemove --window "$window_id" "$x" "$y" click 1
+  log_debug "close_window: window_id=${window_id}"
+  "$I3MSG_BIN" "[con_id=${window_id}] kill" >/dev/null
 }
 
-start_recording() {
+prepare_window() {
   local window_id="$1"
-  click_window "$window_id" "$MIC_X" "$CLICK_Y"
-  set_mode "recording"
-  notify_user "Recording started."
+  log_debug "prepare_window: window_id=${window_id}"
+  "$XDOTOOL_BIN" key --clearmodifiers ctrl+r >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" key --clearmodifiers ctrl+r
+  log_debug "prepare_window: refreshed_window=${window_id}"
+  "$XDOTOOL_BIN" key --clearmodifiers ctrl+a BackSpace >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" key --clearmodifiers ctrl+a BackSpace
+  log_debug "prepare_window: cleared_composer=${window_id}"
+  set_mode "ready"
+  notify_user "ChatGPT ready."
 }
 
-copy_transcript() {
+cut_transcript() {
   local window_id="$1"
-  local clipboard_text
-
-  click_window "$window_id" "$INPUT_X" "$INPUT_Y"
-  "$XDOTOOL_BIN" key --clearmodifiers ctrl+a ctrl+c >/dev/null 2>&1 || \
-    "$XDOTOOL_BIN" key --clearmodifiers ctrl+a ctrl+c
-
-  sleep 0.1
-  clipboard_text="$("$XCLIP_BIN" -o -selection clipboard 2>/dev/null || true)"
-  if [ -n "${clipboard_text}" ]; then
-    set_mode "idle"
-    notify_user "Copied transcript to clipboard."
-    return 0
-  fi
-
-  set_mode "recording"
-  notify_user "Copy not ready yet. Stop dictation in ChatGPT first."
-  return 0
+  log_debug "cut_transcript: window_id=${window_id}"
+  "$XDOTOOL_BIN" key --clearmodifiers ctrl+a >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" key --clearmodifiers ctrl+a
+  sleep 0.12
+  log_debug "cut_transcript: waited_after_select=0.12"
+  "$XDOTOOL_BIN" key --clearmodifiers ctrl+x >/dev/null 2>&1 || \
+    "$XDOTOOL_BIN" key --clearmodifiers ctrl+x
+  sleep 0.18
+  log_debug "cut_transcript: waited_after_cut=0.18"
+  close_window "$window_id"
+  set_mode "idle"
+  notify_user "Cut transcript and closed ChatGPT."
 }
 
 main() {
@@ -201,18 +204,29 @@ main() {
   fi
 
   current_mode="$(get_mode)"
+  log_debug "main: initial_mode=${current_mode} window_missing=${window_missing}"
   if [ "$window_missing" -eq 1 ]; then
     current_mode="idle"
     set_mode "idle"
   fi
 
   window_id="$(ensure_window)"
-  if [ "$current_mode" = "recording" ]; then
-    copy_transcript "$window_id"
-    return 0
-  fi
-
-  start_recording "$window_id"
+  log_debug "main: resolved_window_id=${window_id}"
+  case "$current_mode" in
+    idle)
+      log_debug "main: action=prepare_window"
+      prepare_window "$window_id"
+      ;;
+    ready)
+      log_debug "main: action=cut_transcript"
+      cut_transcript "$window_id"
+      ;;
+    *)
+      log_debug "main: action=reset_unknown_mode value=${current_mode}"
+      set_mode "ready"
+      notify_user "Resetting dictation state."
+      ;;
+  esac
 }
 
 main "$@"

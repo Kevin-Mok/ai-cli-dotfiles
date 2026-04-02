@@ -6,7 +6,7 @@ Make repeated presses of the Menu key advance a simple two-step ChatGPT text-cap
 
 ## Current Behavior
 
-- The i3 binding launches `/home/kevin/scripts/chatgpt-dictation`.
+- The i3 binding should launch `/home/kevin/scripts/chatgpt-dictation-sequenced`.
 - The helper originally relied on stale click coordinates and an older voice-dictation flow.
 - Refresh alone is not enough to clear stale draft text because ChatGPT can restore the composer after reload.
 
