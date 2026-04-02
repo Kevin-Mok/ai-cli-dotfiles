@@ -200,20 +200,11 @@ Plug 'lervag/vimtex'
         \}
         " \ 'continuous' : 0,
 
-{{ if not (eq .chezmoi.username "root") }}
-" auto-completion for various languages
-" arc
-Plug 'Valloric/YouCompleteMe'
-let g:ycm_filetype_blacklist = {
-      \ 'tagbar': 1,
-      \ 'qf': 1,
-      \ 'notes': 1,
-      \ 'unite': 1,
-      \ 'vimwiki': 1,
-      \ 'pandoc': 1,
-      \ 'infolog': 1,
-      \ 'mail': 1
-      \}
+{{ if and (not (eq .chezmoi.username "root")) (eq .chezmoi.username "kevin") }}
+if has('nvim')
+Plug 'neovim/nvim-lspconfig'
+Plug 'Saghen/blink.cmp', { 'tag': 'v1.*' }
+endif
 {{ end }}
 
 " wrote short bits of text that expand into whatever you want
@@ -231,11 +222,6 @@ Plug 'SirVer/ultisnips'
 
 " custom snippets
 Plug 'Kevin-Mok/vim-snippets'
-
-" to make YouCompleteMe work with UltiSnips (both use Tab)
-Plug 'ervandew/supertab'
-	" make YCM compatible with UltiSnips (using supertab)
-	let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
     let g:airline_powerline_fonts = 1
     let g:airline_theme='supernova'
 
@@ -419,8 +405,10 @@ nnoremap <leader>dl 0d$
 " delete lines matching pattern
 " nnoremap <leader>dls :g//d<left><left>
 nnoremap <leader>dls q:ig//d<left><left>
-" show docstring for cur word
-nnoremap <leader>do :YcmCompleter GetDoc<CR>
+" show docs for cur word
+if has('nvim')
+nnoremap <leader>do :KMHover<CR>
+endif
 " delete line into system clipboard
 nnoremap <leader>D "+dd
 " delete entire buffer into system clipboard
@@ -432,14 +420,18 @@ nnoremap <leader>fc /[<>=\|]\{7\}<CR>
 " reload folds
 nnoremap <leader>fmi :set foldmethod=indent<CR> zM
 nnoremap <leader>fmm :set foldmethod=marker<CR> zM
-" add marker foldmethod modeline
-nnoremap <leader>fi :YcmCompleter FixIt<CR>
+" code action
+if has('nvim')
+nnoremap <leader>fi :KMCodeAction<CR>
+endif
 " check filetype
 nnoremap <leader>ft :se ft?<CR>
 " check todo's
 nnoremap <leader>ftd /TODO<CR>
-" nnoremap <leader>g :YcmCompleter GoTo<CR>
-nnoremap <leader>g :vs \| YcmCompleter GoTo<CR>
+" go to definition
+if has('nvim')
+nnoremap <leader>g :KMDefinitionSplit<CR>
+endif
 " nnoremap <leader>gb <C-O>
 nnoremap <leader>gb :Git blame<CR>
 " vimdiff split
@@ -500,7 +492,9 @@ vnoremap <leader>r q:is///g<ESC>3ha
 nnoremap <leader>ra q:i%s///g<ESC>2F/i
 " remove italics tags
 nnoremap <leader>rmi :%s/<\/\?i>//g<CR>
-nnoremap <leader>rn :YcmCompleter RefactorRename 
+if has('nvim')
+nnoremap <leader>rn :KMRename<CR>
+endif
 nnoremap <leader>rs :res 
 " reload vim config
 nnoremap <leader>rv :source $MYVIMRC<CR>

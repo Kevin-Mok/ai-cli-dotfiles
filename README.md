@@ -400,6 +400,7 @@ source in this repo.
 | `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
 | `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
 | `refresh-config` | Reapply tracked repo configuration after changes to the environment layer. | No user-facing flags. It reapplies the tracked Codex config, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
+| `sudo ./scripts/executable_setup-neovim-python-completion.sh` | Upgrade Neovim from Ubuntu's older package, install the repo's Neovim plugin stack, and install the Python language server used for strong completion and signature help. | `--neovim-version` pins a different official release. `--skip-plugins` skips `vim-plug` bootstrap and `PlugInstall`. `--skip-lsp` skips `uv tool install --upgrade basedpyright`. |
 | `"$HOME/scripts/codex"` or `codex` when that wrapper wins on `PATH` | Start Codex in the repo so the tracked instruction chain and config take effect. The repo wrapper also ensures the Graphiti sidecar command is running first. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. `CODEX_WRAPPER_GRAPHITI_CWD` and `CODEX_WRAPPER_STATE_DIR` override the wrapper's Graphiti checkout path and state directory. |
 | `codex mcp list --json` | Verify which MCP servers Codex is loading from the tracked config. | `--json` emits machine-readable output that is easier to inspect or diff. |
 
@@ -460,7 +461,9 @@ this.
   mappings that push selections to `xclip`.
 - [`dot_vimrc.tmpl`](dot_vimrc.tmpl) plus
   [`dot_config/nvim/init.vim`](dot_config/nvim/init.vim) define the main
-  editing environment across Vim and Neovim.
+  editing environment across Vim and Neovim. Vim keeps the shared
+  editing defaults and snippet workflow, while Neovim layers a
+  Python-first Blink completion and `basedpyright` LSP stack on top.
 - [`dot_config/mpv/`](dot_config/mpv/),
   [`dot_config/zathura/`](dot_config/zathura/), and
   [`dot_config/neofetch/`](dot_config/neofetch/) round out the
