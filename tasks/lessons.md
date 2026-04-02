@@ -35,9 +35,11 @@
 - When Python-based verification in this repo generates `__pycache__` or `.pyc` artifacts, add or keep repo-level ignore rules so those local caches do not pollute commit workflows.
 - When a recruiter-facing README skill validates a README, enforce front-of-file hierarchy and hook strength, not just section presence; setup and command blocks should usually come after the repo has already sold why it matters.
 - In /home/kevin/linux-config, when I change tracked configuration, run `refresh-config` before declaring the work done unless I explicitly tell you not to.
+- In /home/kevin/linux-config, always edit the repo-tracked source first and then run `refresh-config` to apply it; do not treat live installed copies under `$HOME` as the primary edit target.
 - In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; do not copy the live Codex config back into the repo during refresh workflows.
 - Before proposing workflow isolation or branch-management steps in this repo, read and apply the canonical feedback log; do not suggest git worktrees unless the user explicitly asks for them.
 - For README rewrites in this repo, fix the opening hook before cutting technical proof; the root README should stay technically in-depth enough to feel substantial to engineers.
 - When a user approves a README structure as the repo default, encode that structure in `AGENTS.repo.md` instead of relying on memory or one-off docs edits.
 - In /home/kevin/linux-config, when executing a multi-commit series, do not push after intermediate commits; hold pushes until the full series is finished unless the user explicitly asks for per-commit pushes.
 - When a user clarifies that a workflow preference applies across repositories, record it as global guidance instead of narrowing it to the current repo.
+- When a user names a keyboard-specific macro key like `Keychron Q11 M2`, do not assume it is a standard modifier or keysym; first map it through the repo's existing hardware-remap convention or confirm the emitted key with `xev`.
