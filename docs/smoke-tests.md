@@ -62,6 +62,8 @@ of stacking duplicates.
 
 ## Vim
 
+- Action: Open Vim or Neovim in a terminal after running `wal -i <wallpaper>` and compare the editor background and accent colors against the active terminal palette.
+  Expected: Vim loads the `wal` colorscheme by default so the editor palette tracks the current `pywal` theme instead of falling back to a fixed scheme such as `nightfly` or `gotham256`.
 - Action: Open a Markdown file in Vim, press `<F8>`, and edit headings, lists, tables, and fenced code blocks while the preview is open.
   Expected: `markdown-preview.nvim` opens a live browser preview on a free localhost port with GitHub-like dark styling and updates as the file changes.
 - Action: With the Markdown preview already open in Vim, press `<F9>`.
