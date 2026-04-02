@@ -27,7 +27,7 @@ is done.
 | AGENTS instruction chain | [`AGENTS.md`](AGENTS.md), [`AGENTS.repo.md`](AGENTS.repo.md), and [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) | Turns planning, verification, commit hygiene, and docs sync into inspectable workflow rules. |
 | Local skills | [`dot_agents/skills/`](dot_agents/skills/) and [`dot_agents/skills/README.md`](dot_agents/skills/README.md) | Packages recurring jobs into reusable local capabilities instead of re-explaining the same workflows in every session. |
 | Graphiti MCP with Neo4j | [`dot_codex/config.toml`](dot_codex/config.toml), [`scripts/executable_codex`](scripts/executable_codex), and [`docs/graphiti-mcp-codex.md`](docs/graphiti-mcp-codex.md) | Adds a retrievable memory layer for multi-session work where provenance and evolving context matter. |
-| Shell and terminal tooling | [`dot_config/fish/config.fish.tmpl`](dot_config/fish/config.fish.tmpl), [`dot_tmux.conf`](dot_tmux.conf), [`dot_config/kitty/kitty.conf`](dot_config/kitty/kitty.conf), and [`dot_config/i3/config.tmpl`](dot_config/i3/config.tmpl) | Optimizes for terminal-first execution and multiple parallel panes instead of a single-editor workflow. |
+| Shell and terminal tooling | [`dot_config/fish/config.fish.tmpl`](dot_config/fish/config.fish.tmpl), [`dot_tmux.conf`](dot_tmux.conf), [`dot_config/st/config.def.h.tmpl`](dot_config/st/config.def.h.tmpl), [`dot_config/kitty/kitty.conf`](dot_config/kitty/kitty.conf), and [`dot_config/i3/config.tmpl`](dot_config/i3/config.tmpl) | Optimizes for terminal-first execution and multiple parallel panes, with `kitty` as the default terminal, `st` kept ready as the low-friction alternate, and tmux handling the heavier session workflow. |
 | Python and Bash automation | [`scripts/`](scripts/) and [`dot_config/fish/functions/refresh-config.fish`](dot_config/fish/functions/refresh-config.fish) | Keeps repeatable operations small, inspectable, and version-controlled instead of burying them in chat or muscle memory. |
 
 ## Table Of Contents
@@ -400,6 +400,7 @@ source in this repo.
 | `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
 | `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
 | `refresh-config` | Reapply tracked repo configuration after changes to the environment layer. | No user-facing flags. It reapplies the tracked Codex config, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
+| `./scripts/executable_setup-st.sh` | Render the tracked `st` config, sync it into your `st` source checkout, and install the compiled terminal you actually want to use. | `--source-dir` points the script at a non-default `st` checkout path. `--skip-install` only refreshes `~/.config/st/config.def.h` plus the source-tree `config.def.h` and prints the exact `sudo make -C ... install` command instead of running it. `--clone-if-missing` clones the official upstream source from `https://git.suckless.org/st` into the target checkout path before syncing and building. |
 | `sudo ./scripts/executable_setup-neovim-python-completion.sh` | Upgrade Neovim from Ubuntu's older package, install the repo's Neovim plugin stack, and install the Python language server used for strong completion and signature help. | `--neovim-version` pins a different official release. `--skip-plugins` skips `vim-plug` bootstrap and `PlugInstall`. `--skip-lsp` skips `uv tool install --upgrade basedpyright`. |
 | `sudo ./scripts/executable_update-chrome.sh` | Check the installed Google Chrome apt package version and upgrade it when the Google repo has a newer build. | `--check` prints the installed and candidate versions without modifying the system. With no flags, the script refreshes apt metadata and upgrades only `google-chrome-stable` when needed. |
 | `"$HOME/scripts/codex"` or `codex` when that wrapper wins on `PATH` | Start Codex in the repo so the tracked instruction chain and config take effect. The repo wrapper also ensures the Graphiti sidecar command is running first. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. `CODEX_WRAPPER_GRAPHITI_CWD` and `CODEX_WRAPPER_STATE_DIR` override the wrapper's Graphiti checkout path and state directory. |
@@ -453,10 +454,15 @@ this.
 
 ### Editor, Terminal, And Media
 
-- [`dot_config/kitty/kitty.conf`](dot_config/kitty/kitty.conf) and
-  [`dot_config/st/config.def.h.tmpl`](dot_config/st/config.def.h.tmpl)
-  share the themed terminal layer, including font choices, `wal` color
-  integration, opacity, and clipboard behavior.
+- [`dot_config/kitty/kitty.conf`](dot_config/kitty/kitty.conf)
+  is the default terminal config, and the i3 bindings now open `kitty`
+  first so normal shells plus the Codex launcher use the feature-rich
+  terminal path by default. [`dot_config/st/config.def.h.tmpl`](dot_config/st/config.def.h.tmpl)
+  remains the alternate `st` template with the repo-preferred font,
+  `wal` colors, opacity, clipboard shortcuts, and selectable local
+  scrollback, while the repo-owned `st-terminal` launcher still
+  resolves `st` or `stterm` at runtime on hosts where the binary name
+  differs.
 - [`dot_tmux.conf`](dot_tmux.conf) is the multiplexing layer with a
   custom prefix, mouse mode, TPM plugins, a status line, and copy-mode
   mappings that push selections to `xclip`.

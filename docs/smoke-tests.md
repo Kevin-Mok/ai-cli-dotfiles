@@ -75,6 +75,17 @@ of stacking duplicates.
 - Action: With the Markdown preview already open in Vim, press `<F9>`.
   Expected: The preview stops and restarts cleanly on the same file without falling back to the old `InstantMarkdownPreview` commands.
 
+## Terminal
+
+- Action: Launch the primary terminal from an i3 binding that uses this repo's rendered config, then trigger the Codex launcher shortcut.
+  Expected: The normal terminal windows open in `kitty`, and the Codex shortcut also launches inside `kitty` instead of a separate terminal path with different UI chrome.
+- Action: Open a terminal, run `./scripts/executable_setup-st.sh --skip-install`, and inspect both `~/.config/st/config.def.h` and your `st` source checkout `config.def.h`.
+  Expected: The script renders the tracked template into both config locations, preserving the repo's pywal, font, copy/paste, and scrollback settings while printing the exact `sudo make -C <st-source-dir> install` command for the final compile step.
+- Action: Open `st`, run enough output to exceed one screen, then scroll upward with the mouse wheel and `Shift+PageUp`.
+  Expected: `st` keeps a deep local scrollback buffer so you can continue moving upward through old output instead of stopping after one screen.
+- Action: While still scrolled up in `st`, drag-select older output, press `Ctrl+Shift+C`, then paste it elsewhere with `Ctrl+Shift+V`.
+  Expected: The copied text comes from the scrolled-back output, and the copy/paste shortcuts match the normal terminal habit without forcing tmux copy mode for basic selection.
+
 ## Remote Access
 
 - Action: Run `sudo ./scripts/executable_setup-mosh.sh` on a Linux host

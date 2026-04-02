@@ -2,12 +2,11 @@
 
 set $term kitty
 #set $term gnome-terminal
-# set $term st
-# set $term_alt urxvt
+# set $term kitty
+set $term_alt /home/kevin/scripts/st-terminal
 {{ if eq .chezmoi.hostname "x1-carbon" }}
-set $term urxvt
-# set $term_alt kitty
-set $term_alt st
+set $term kitty
+set $term_alt /home/kevin/scripts/st-terminal
 # set $term_alt urxvt
 #exec dunst
 exec /usr/lib/notification-daemon-1.0/notification-daemon
@@ -51,7 +50,7 @@ set $sch_dir "$HOME/Documents/School"
 set $type_delay_cmd sleep .3
 
 bindsym Control+Return exec $term
-bindsym Control+Shift+Return exec st -A1
+bindsym Control+Shift+Return exec $term -A1
 bindsym Control+$mod+Return exec $term_alt
 # bindsym Control+$mod+Return exec st
 # PROTIP: You can also dynamically set dmenu's colors this way:
@@ -66,7 +65,7 @@ bindsym Mod4+Return exec /home/kevin/scripts/dmenu-history -nb "$fg" -nf "$bg" -
 # bindsym Mod4+c exec $browser
 # bindsym Mod4+$mod+c exec chatterino
 #bindsym Mod4+c exec chatterino
-bindsym Mod4+c exec "kitty --directory /home/kevin/linux-config /home/kevin/.local/share/fnm/aliases/default/bin/node /home/kevin/.local/share/fnm/aliases/default/lib/node_modules/@openai/codex/bin/codex.js"
+bindsym Mod4+c exec "$term -e sh -lc 'cd /home/kevin/linux-config && exec /home/kevin/.local/share/fnm/aliases/default/bin/node /home/kevin/.local/share/fnm/aliases/default/lib/node_modules/@openai/codex/bin/codex.js'"
 bindsym Mod4+$mod+c exec $browser
 # bindsym Mod4+e exec notify-send "HPS Word Count" "$(pdftotext /home/kevin/school/latex-notes/hps/essay.pdf - | wc -w)"
 # bindsym Mod4+e exec emacs
