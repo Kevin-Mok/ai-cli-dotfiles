@@ -36,8 +36,10 @@ of stacking duplicates.
 
 - Action: Start a fresh X session on a desktop host that applies this repo's shell and `Xmodmap` config, open a terminal, type a short word, and press Backspace once.
   Expected: Exactly one character is deleted and opening a new bash shell does not rewrite the active keyboard remap.
-- Action: Remap `Keychron Q11` `M1` to `F13`, press it once in i3, dictate into the floating ChatGPT window, manually click ChatGPT's stop checkmark, then press `F13` again.
-  Expected: The first press opens or reuses a centered floating ChatGPT window and starts voice input; the second press selects the composer text, copies it to the clipboard, and leaves the prompt unsent.
+- Action: Remap `Keychron Q11` `M2` to `Print`, start a fresh i3 session on a desktop host with the external keyboard config enabled, press `Print`, drag a screenshot region, and paste into an image-capable app.
+  Expected: `scrot` captures the selected region, saves it under `~/Pictures/screenshots/desktop/unsorted/`, and the pasted clipboard contents match the captured image.
+- Action: Remap `Keychron Q11` `M1` to the Menu/right-app key, press it once in i3 to open the floating ChatGPT window, let the page refresh and clear the composer, place text focus in the ChatGPT composer, then press the key again.
+  Expected: The first press opens or reuses a centered floating ChatGPT window, sends a refresh, then sends `Ctrl+A` and `BackSpace` to clear leftover composer text; the second press sends `Ctrl+A`, pauses briefly, sends `Ctrl+X`, pauses briefly, closes the ChatGPT window, and resets the helper back to its initial state.
 
 ## Fish Helpers
 
