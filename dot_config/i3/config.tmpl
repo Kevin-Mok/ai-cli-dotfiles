@@ -122,7 +122,7 @@ bindsym Mod4+x exec notify-send "xmodmap" "$(~/scripts/xmodmap-custom)"
 # bindsym Mod4+e exec notify-send "HPS Word Count" "$(pdftotext /home/kevin/school/latex-notes/hps/essay.pdf - | wc -w)"
  #bindsym Print --release exec "scrot -s $screenshot_folder/screenshot-$(date +%F_%T).png -e 'xclip -selection c -t image/png < $f'"
 #bindsym Print --release exec --no-startup-id scrot -s "/home/kevin/Pictures/screenshots/desktop/unsorted/screenshot-$(date +%F_%T).png" -e 'xclip -selection c -t image/png < $f'
-bindsym Print --release exec "maim -su | tee ~/Pictures/screenshots/desktop/unsorted/screenshot-$(date +%F_%T).png | xclip -selection clipboard -t image/png"
+bindsym Print --release exec "scrot -s ~/Pictures/screenshots/desktop/unsorted/screenshot-$(date +%F_%T).png -e 'xclip -selection c -t image/png < $f'"
 bindsym Control+Print --release exec "scrot -u ~/Pictures/screenshots/desktop/unsorted/screenshot-$(date +%F_%T).png -e 'xclip -selection c -t image/png < $f'"
 {{ else }}
 bindsym Mod4+x exec xmodmap ~/.Xmodmap-laptop && xset r rate $XSET_DELAY $XSET_RATE
@@ -696,8 +696,9 @@ bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer
 bindsym Mod4+Pause exec ~/scripts/twem
 
 #  voice dictation [[[ #
-# Keychron Q11 M1 can be remapped to F13 for the ChatGPT floating dictation helper.
-bindsym F13 exec --no-startup-id /home/kevin/scripts/chatgpt-dictation
+# Menu/right app key triggers the ChatGPT floating dictation helper.
+bindsym Menu exec --no-startup-id /home/kevin/scripts/chatgpt-dictation
+# Keychron Q11 M2 can be remapped to Print for region screenshots via scrot.
 # Pause toggles nerd-dictation via voice.sh.
 # Log any issues but never trigger i3's nagbar.
 bindsym Pause exec --no-startup-id sh -c '$hands_free_tools/voice.sh toggle >>"$XDG_RUNTIME_DIR/voice-toggle.log" 2>&1 || true'
