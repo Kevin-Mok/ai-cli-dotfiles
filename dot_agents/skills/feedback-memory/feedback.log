@@ -56,3 +56,6 @@
   Do not rely on chat-only hints when a short code-adjacent comment would work.
 2026-04-03 - In /home/kevin/coding/leetcode, refresh inline `Hint:` comments when I ask for help again.
   Delete stale or superseded hints instead of stacking old and new guidance together.
+2026-04-03 - Do not propose or use git worktrees unless I explicitly ask for them.
+2026-04-03 - In /home/kevin/coding/leetcode, when I ask for a hint, give only the next minimal hint.
+  Do not include a broader explanation or multiple steps unless I explicitly ask for more.
