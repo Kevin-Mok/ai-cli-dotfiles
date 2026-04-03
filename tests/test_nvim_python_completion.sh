@@ -46,6 +46,8 @@ assert_not_contains ":YcmCompleter" "$vimrc_path"
 
 assert_contains "blink.setup({" "$lua_path"
 assert_contains "signature = { enabled = true }" "$lua_path"
+assert_contains "['<Down>'] = { 'select_next', 'fallback' }" "$lua_path"
+assert_contains "['<Up>'] = { 'select_prev', 'fallback' }" "$lua_path"
 assert_contains "['<Tab>'] = { 'accept', 'fallback' }" "$lua_path"
 assert_contains "['<S-Tab>'] = { 'select_prev', 'fallback' }" "$lua_path"
 assert_contains "basedpyright" "$lua_path"
