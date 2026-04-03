@@ -1,0 +1,4 @@
+interface:
+  display_name: "LeetCode Init"
+  short_description: "Scaffold LeetCode Python problem harnesses"
+  default_prompt: "Use $leetcode-init to scaffold a LeetCode Python problem from a same-name .txt and .py pair, keeping the solution body empty while generating runnable examples and unittest coverage from the copied prompt text."

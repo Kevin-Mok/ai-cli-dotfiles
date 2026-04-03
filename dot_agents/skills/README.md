@@ -186,6 +186,14 @@ Codex skill surface on this machine.
   PR checks with `gh`, summarizes the real failure context, and drafts a
   fix plan before implementation.
 
+## Coding Practice And Scaffolding
+
+- [`leetcode-init`](leetcode-init/SKILL.md): Turns a same-name LeetCode
+  `.txt` prompt dump and `.py` stub into a local Python scaffold with a
+  `__main__` harness, inline `unittest` coverage, runtime diffs, and
+  structure helpers when needed, without generating the algorithmic
+  solution.
+
 ## Docs, Knowledge, And Output Control
 
 - [`feedback-memory`](feedback-memory/SKILL.md): Stores durable user

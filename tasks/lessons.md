@@ -37,6 +37,7 @@
 - In /home/kevin/linux-config, when I change tracked configuration, run `refresh-config` before declaring the work done unless I explicitly tell you not to.
 - In /home/kevin/linux-config, always edit the repo-tracked source first and then run `refresh-config` to apply it; do not treat live installed copies under `$HOME` as the primary edit target.
 - In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; do not copy the live Codex config back into the repo during refresh workflows.
+- In /home/kevin/linux-config, `refresh-config` now snapshots the live `~/.codex/config.toml` into `dot_codex/config.toml` before `chezmoi apply`; do not describe it as repo-to-home sync.
 - Before proposing workflow isolation or branch-management steps in this repo, read and apply the canonical feedback log; do not suggest git worktrees unless the user explicitly asks for them.
 - For README rewrites in this repo, fix the opening hook before cutting technical proof; the root README should stay technically in-depth enough to feel substantial to engineers.
 - When a user approves a README structure as the repo default, encode that structure in `AGENTS.repo.md` instead of relying on memory or one-off docs edits.
@@ -50,3 +51,5 @@
 - When the user asks for terminal transparency and the configured opacity is visually imperceptible, treat that as a real bug and choose a clearly visible opacity level instead of insisting the subtle setting is "working."
 - When the user says a Vim theme still looks plain or under-colored, do not treat “some highlight groups are non-default” as success; verify that the rendered syntax has enough visual separation to actually feel themed.
 - When a user expects running Vim or Neovim sessions to react to wallpaper changes, do not assume terminal palette reloads are enough; verify and, if needed, add an editor-side wal refresh path for already-open sessions.
+- When the user reiterates that git worktrees are opt-in, do not suggest or use them unless they explicitly ask for them.
+- When generating docstrings for LeetCode scaffolds, wrap every docstring line to a Vim-friendly maximum width instead of leaving long prompt sentences unwrapped.
