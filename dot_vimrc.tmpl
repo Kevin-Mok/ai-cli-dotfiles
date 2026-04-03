@@ -224,8 +224,21 @@ Plug 'SirVer/ultisnips'
 
 " custom snippets
 Plug 'Kevin-Mok/vim-snippets'
+Plug 'vim-airline/vim-airline'
     let g:airline_powerline_fonts = 1
-    let g:airline_theme='supernova'
+    let g:airline_theme='kmwal'
+    let g:airline_skip_empty_sections = 1
+    let g:airline#extensions#whitespace#enabled = 0
+    let g:km_airline_path_style = get(g:, 'km_airline_path_style', 'context')
+    let g:km_airline_show_file_flags = get(g:, 'km_airline_show_file_flags', 1)
+    let g:km_airline_show_cursor_info = get(g:, 'km_airline_show_cursor_info', 1)
+    let g:airline_section_error = ''
+    let g:airline_section_warning = ''
+    let g:airline_section_b = ''
+    let g:airline_section_c = '%{KmAirlinePath()}'
+    let g:airline_section_x = '%{KmAirlineFileFlags()}'
+    let g:airline_section_y = ''
+    let g:airline_section_z = '%{KmAirlineCursorInfo()}'
 
 " continue Markdown lists when started
 " arc
@@ -382,6 +395,128 @@ function! LoadWalPalette() abort
   return l:palette
 endfunction
 
+function! KmAirlinePathVariants(full_path) abort
+  if empty(a:full_path)
+    return ['[No Name]']
+  endif
+
+  let l:path = a:full_path
+  if empty(l:path)
+    return ['[No Name]']
+  endif
+
+  if stridx(l:path, '~/') == 0
+    let l:prefix = '~/'
+    let l:segments = split(l:path[2:], '/')
+  elseif l:path ==# '~'
+    return ['~']
+  elseif stridx(l:path, '/') == 0
+    let l:prefix = '/'
+    let l:segments = split(l:path[1:], '/')
+  else
+    let l:prefix = ''
+    let l:segments = split(l:path, '/')
+  endif
+
+  if empty(l:segments)
+    return [l:path]
+  endif
+
+  let l:variants = [l:path]
+  if len(l:segments) > 2
+    let l:short_segments = copy(l:segments)
+    for l:index in range(0, len(l:segments) - 3)
+      let l:short_segments[l:index] = strcharpart(l:short_segments[l:index], 0, 1)
+    endfor
+    call add(l:variants, l:prefix . join(l:short_segments, '/'))
+  endif
+  if len(l:segments) >= 2
+    call add(l:variants, join(l:segments[-2:], '/'))
+  endif
+  call add(l:variants, l:segments[-1])
+
+  let l:unique = []
+  for l:variant in l:variants
+    if index(l:unique, l:variant) < 0
+      call add(l:unique, l:variant)
+    endif
+  endfor
+  return l:unique
+endfunction
+
+function! KmAirlinePath() abort
+  let l:full_path = expand('%:p:~')
+  if empty(l:full_path)
+    return '[No Name]'
+  endif
+
+  if get(g:, 'km_airline_path_style', 'context') !=# 'context'
+    return substitute(l:full_path, '^'. escape($HOME, '\') , '~', '')
+  endif
+
+  let l:variants = KmAirlinePathVariants(l:full_path)
+  let l:width = min([max([1, winwidth(0)]), max([1, &columns])])
+  if l:width >= 72 || len(l:variants) == 1
+    return l:variants[0]
+  endif
+  if l:width >= 56 && len(l:variants) >= 2
+    return l:variants[1]
+  endif
+  if l:width >= 32 && len(l:variants) >= 3
+    return l:variants[2]
+  endif
+  return l:variants[-1]
+endfunction
+
+function! KmAirlineFileFlags() abort
+  if !get(g:, 'km_airline_show_file_flags', 1)
+    return ''
+  endif
+
+  let l:flags = []
+  if &modified
+    call add(l:flags, '+')
+  endif
+  if &readonly
+    call add(l:flags, 'RO')
+  endif
+  if &buftype ==# 'help'
+    call add(l:flags, 'H')
+  endif
+  if &previewwindow
+    call add(l:flags, 'PV')
+  endif
+
+  return join(l:flags, ' ')
+endfunction
+
+function! KmAirlineCursorInfo() abort
+  if !get(g:, 'km_airline_show_cursor_info', 1)
+    return ''
+  endif
+  return printf('%d:%d %d%%', line('.'), col('.'), float2nr((line('.') * 100.0) / max([1, line('$')])))
+endfunction
+
+function! ApplyWalAirlineTheme() abort
+  if !exists('g:loaded_airline')
+    return
+  endif
+
+  let g:airline_theme = 'kmwal'
+  unlet! g:airline#themes#kmwal#palette
+
+  if exists('*airline#themes#kmwal#refresh')
+    call airline#themes#kmwal#refresh()
+  endif
+  if exists('*airline#switch_theme')
+    call airline#switch_theme('kmwal')
+  endif
+  if exists(':AirlineRefresh') == 2
+    silent! AirlineRefresh
+  endif
+  redrawstatus
+endfunction
+
 function! ApplyWalTheme() abort
   if !exists('g:colors_name') || g:colors_name !=# 'wal'
     return
@@ -479,6 +614,8 @@ function! ApplyWalTheme() abort
   highlight! link pythonException Statement
   highlight! link pythonExceptions Statement
   highlight! link pythonOperator Operator
+
+  call ApplyWalAirlineTheme()
 endfunction
 
 function! RefreshWalThemeIfChanged() abort
@@ -506,6 +643,7 @@ function! RefreshWalThemeIfChanged() abort
   try
     silent! colorscheme wal
     call ApplyWalTheme()
+    call ApplyWalAirlineTheme()
   finally
     let g:km_wal_refreshing = 0
   endtry
@@ -538,6 +676,7 @@ colorscheme wal
 {{ end }}
 
 call ApplyWalTheme()
+call ApplyWalAirlineTheme()
 call StartWalThemeWatcher()
 
 " normal mappings [[[ "
