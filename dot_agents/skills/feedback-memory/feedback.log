@@ -49,3 +49,9 @@
 2026-04-02 - In /home/kevin/Documents/emails, preserve the original email text and append the drafted reply instead of replacing the file contents.
 2026-04-02 - Always keep git worktrees in a local repository directory rather than a global worktree location.
 2026-04-02 - After creating a git worktree and its directory, always switch into that worktree on its branch before continuing.
+2026-04-03 - In /home/kevin/coding/leetcode, treat prompts like "am I close?" or "what am I missing?" as requests for evaluation only.
+  Do not provide the solution or a clean replacement implementation unless I explicitly ask for it.
+2026-04-03 - In /home/kevin/coding/leetcode, when I ask for help on an existing solution file, prefer updating inline `Hint:` comments in the file.
+  Do not rely on chat-only hints when a short code-adjacent comment would work.
+2026-04-03 - In /home/kevin/coding/leetcode, refresh inline `Hint:` comments when I ask for help again.
+  Delete stale or superseded hints instead of stacking old and new guidance together.
