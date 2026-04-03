@@ -395,6 +395,128 @@ function! LoadWalPalette() abort
   return l:palette
 endfunction
 
+let s:km_wal_terminal_opacity = 0.9
+
+function! KmWalHexToRgb(color) abort
+  let l:color = substitute(a:color, '^#', '', '')
+  if strlen(l:color) != 6
+    return [0, 0, 0]
+  endif
+  return [
+        \ str2nr(l:color[0:1], 16),
+        \ str2nr(l:color[2:3], 16),
+        \ str2nr(l:color[4:5], 16),
+        \ ]
+endfunction
+
+function! KmWalBlend(color_a, color_b, weight) abort
+  let l:weight = a:weight + 0.0
+  if l:weight < 0.0
+    let l:weight = 0.0
+  elseif l:weight > 1.0
+    let l:weight = 1.0
+  endif
+  let l:rgb_a = KmWalHexToRgb(a:color_a)
+  let l:rgb_b = KmWalHexToRgb(a:color_b)
+  let l:blended = []
+  for l:index in range(0, 2)
+    call add(l:blended, float2nr(round(l:rgb_a[l:index] * (1.0 - l:weight) + l:rgb_b[l:index] * l:weight)))
+  endfor
+  return printf('#%02X%02X%02X', l:blended[0], l:blended[1], l:blended[2])
+endfunction
+
+function! KmWalRelativeLuminance(color) abort
+  let l:rgb = KmWalHexToRgb(a:color)
+  let l:channels = []
+  for l:channel in l:rgb
+    let l:normalized = l:channel / 255.0
+    if l:normalized <= 0.03928
+      call add(l:channels, l:normalized / 12.92)
+    else
+      call add(l:channels, pow((l:normalized + 0.055) / 1.055, 2.4))
+    endif
+  endfor
+  return 0.2126 * l:channels[0] + 0.7152 * l:channels[1] + 0.0722 * l:channels[2]
+endfunction
+
+function! KmWalContrastRatio(color_a, color_b) abort
+  let l:luminance_a = KmWalRelativeLuminance(a:color_a)
+  let l:luminance_b = KmWalRelativeLuminance(a:color_b)
+  if l:luminance_a >= l:luminance_b
+    let l:lighter = l:luminance_a
+    let l:darker = l:luminance_b
+  else
+    let l:lighter = l:luminance_b
+    let l:darker = l:luminance_a
+  endif
+  return (l:lighter + 0.05) / (l:darker + 0.05)
+endfunction
+
+function! KmWalEffectiveBackground(bg) abort
+  return KmWalBlend(a:bg, '#FFFFFF', 1.0 - s:km_wal_terminal_opacity)
+endfunction
+
+function! KmWalCompareAccentCandidates(left, right) abort
+  if a:left.contrast > a:right.contrast
+    return -1
+  endif
+  if a:left.contrast < a:right.contrast
+    return 1
+  endif
+  if a:left.spread > a:right.spread
+    return -1
+  endif
+  if a:left.spread < a:right.spread
+    return 1
+  endif
+  if a:left.value < a:right.value
+    return -1
+  endif
+  if a:left.value > a:right.value
+    return 1
+  endif
+  return 0
+endfunction
+
+function! KmWalReadableAccentLanes(palette) abort
+  let l:effective_bg = KmWalEffectiveBackground(a:palette.bg)
+  let l:seen = {}
+  let l:candidates = []
+  for l:key in ['const', 'string', 'type', 'func', 'keyword', 'special']
+    let l:accent = toupper(get(a:palette, l:key, a:palette.fg))
+    if has_key(l:seen, l:accent)
+      continue
+    endif
+    let l:seen[l:accent] = 1
+    let l:rgb = KmWalHexToRgb(l:accent)
+    call add(l:candidates, {
+          \ 'value': l:accent,
+          \ 'contrast': KmWalContrastRatio(l:accent, l:effective_bg),
+          \ 'spread': max(l:rgb) - min(l:rgb),
+          \ })
+  endfor
+
+  if empty(l:candidates)
+    return [a:palette.fg, a:palette.fg, a:palette.fg]
+  endif
+
+  call sort(l:candidates, 'KmWalCompareAccentCandidates')
+
+  let l:lanes = []
+  for l:candidate in l:candidates
+    call add(l:lanes, l:candidate.value)
+    if len(l:lanes) == 3
+      break
+    endif
+  endfor
+
+  while len(l:lanes) < 3
+    call add(l:lanes, l:lanes[-1])
+  endwhile
+
+  return l:lanes
+endfunction
+
 function! KmAirlinePathVariants(full_path) abort
   if empty(a:full_path)
     return ['[No Name]']
@@ -563,6 +685,11 @@ function! ApplyWalTheme() abort
   else
     let g:km_wal_last_mtime = l:palette.mtime
     let g:km_wal_last_fingerprint = l:palette.fingerprint
+    let l:accent_lanes = KmWalReadableAccentLanes(l:palette)
+    let l:palette.func_lane = l:accent_lanes[0]
+    let l:palette.keyword_lane = l:accent_lanes[1]
+    let l:palette.special_lane = l:accent_lanes[2]
+    let l:palette.sign = l:palette.func_lane
     execute 'highlight Normal ctermbg=0 ctermfg=7 guibg=' . l:palette.bg . ' guifg=' . l:palette.fg
     execute 'highlight NormalNC ctermbg=0 ctermfg=7 guibg=' . l:palette.bg . ' guifg=' . l:palette.fg
     execute 'highlight EndOfBuffer ctermbg=0 ctermfg=0 guibg=' . l:palette.bg . ' guifg=' . l:palette.bg
@@ -582,22 +709,22 @@ function! ApplyWalTheme() abort
     execute 'highlight StorageClass ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
     execute 'highlight Structure ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
     execute 'highlight Typedef ctermbg=0 ctermfg=3 guibg=' . l:palette.bg . ' guifg=' . l:palette.type
-    execute 'highlight Identifier ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func
-    execute 'highlight Function ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func
-    execute 'highlight Statement ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight Keyword ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight Conditional ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight Repeat ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight Label ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight Operator ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword
-    execute 'highlight PreProc ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight Include ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight Macro ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight PreCondit ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight Special ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight SpecialChar ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight Delimiter ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
-    execute 'highlight Tag ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special
+    execute 'highlight Identifier ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func_lane
+    execute 'highlight Function ctermbg=0 ctermfg=4 guibg=' . l:palette.bg . ' guifg=' . l:palette.func_lane
+    execute 'highlight Statement ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight Keyword ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight Conditional ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight Repeat ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight Label ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight Operator ctermbg=0 ctermfg=5 guibg=' . l:palette.bg . ' guifg=' . l:palette.keyword_lane
+    execute 'highlight PreProc ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight Include ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight Macro ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight PreCondit ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight Special ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight SpecialChar ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight Delimiter ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
+    execute 'highlight Tag ctermbg=0 ctermfg=6 guibg=' . l:palette.bg . ' guifg=' . l:palette.special_lane
   endif
 
   highlight! link pythonBuiltin Identifier
