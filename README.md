@@ -402,7 +402,7 @@ source in this repo.
 | `refresh-config` | Reapply tracked repo configuration after changes to the environment layer. | No user-facing flags. It reapplies the tracked Codex config, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
 | `./scripts/executable_apply-pywal-theme <wallpaper>` | Regenerate the active `pywal` theme through the repo-owned wrapper so wallpaper changes also refresh kitty and the i3 color resources this repo depends on. | Pass an image path directly, or pass raw `wal` flags when you need that lower-level control. The wrapper runs `wal --saturate 0.8 -e`, reloads Xresources, refreshes running kitty windows when the socket is available, and regenerates the derived i3 palette file. |
 | `./scripts/executable_setup-st.sh` | Render the tracked `st` config, sync it into your `st` source checkout, and install the compiled terminal you actually want to use. | `--source-dir` points the script at a non-default `st` checkout path. `--skip-install` only refreshes `~/.config/st/config.def.h` plus the source-tree `config.def.h` and prints the exact `sudo make -C ... install` command instead of running it. `--clone-if-missing` clones the official upstream source from `https://git.suckless.org/st` into the target checkout path before syncing and building. |
-| `sudo ./scripts/executable_setup-neovim-python-completion.sh` | Upgrade Neovim from Ubuntu's older package, install the repo's Neovim plugin stack, and install the Python language server used for strong completion and signature help. | `--neovim-version` pins a different official release. `--skip-plugins` skips `vim-plug` bootstrap and `PlugInstall`. `--skip-lsp` skips `uv tool install --upgrade basedpyright`. |
+| `sudo ./scripts/executable_setup-neovim-python-completion.sh` | Upgrade Neovim from Ubuntu's older package, install the repo's `vim-plug` Neovim stack including `nvim-lspconfig`, and install the Python language server used for strong completion and signature help. | `--neovim-version` pins a different official release. `--skip-plugins` skips `vim-plug` bootstrap and `PlugInstall`. `--skip-lsp` skips `uv tool install --upgrade basedpyright`. |
 | `sudo ./scripts/executable_update-chrome.sh` | Check the installed Google Chrome apt package version and upgrade it when the Google repo has a newer build. | `--check` prints the installed and candidate versions without modifying the system. With no flags, the script refreshes apt metadata and upgrades only `google-chrome-stable` when needed. |
 | `"$HOME/scripts/codex"` or `codex` when that wrapper wins on `PATH` | Start Codex in the repo so the tracked instruction chain and config take effect. The repo wrapper also ensures the Graphiti sidecar command is running first. | `-C` / `--cd` sets the repo root when you launch from another directory. `--search` enables live web search for tasks that need current external information. `CODEX_WRAPPER_GRAPHITI_CWD` and `CODEX_WRAPPER_STATE_DIR` override the wrapper's Graphiti checkout path and state directory. |
 | `codex mcp list --json` | Verify which MCP servers Codex is loading from the tracked config. | `--json` emits machine-readable output that is easier to inspect or diff. |
@@ -477,7 +477,8 @@ this.
   [`dot_config/nvim/init.vim`](dot_config/nvim/init.vim) define the main
   editing environment across Vim and Neovim. Vim keeps the shared
   editing defaults and snippet workflow, while Neovim layers a
-  Python-first Blink completion and `basedpyright` LSP stack on top.
+  Python-first Blink completion and `basedpyright` LSP stack on top via
+  `nvim-lspconfig`.
 - [`dot_config/mpv/`](dot_config/mpv/),
   [`dot_config/zathura/`](dot_config/zathura/), and
   [`dot_config/neofetch/`](dot_config/neofetch/) round out the

@@ -109,6 +109,8 @@ local function setup_python_lsp(capabilities)
   vim.lsp.config('basedpyright', {
     capabilities = capabilities,
     cmd = { 'basedpyright-langserver', '--stdio' },
+    filetypes = { 'python' },
+    single_file_support = true,
     before_init = function(_, config)
       config.settings = config.settings or {}
       config.settings.python = config.settings.python or {}
