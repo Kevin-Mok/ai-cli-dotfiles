@@ -370,6 +370,87 @@ class LeetCodeInitScriptTestCase(unittest.TestCase):
         self.assertNotEqual(0, result.returncode)
         self.assertIn("No examples found", result.stderr)
 
+    def test_generated_runner_prints_traceback_with_line_numbers(self):
+        """Show the full traceback when user code raises during example execution."""
+        python_path = self.write_pair(
+            "traceback-example",
+            ARRAY_PROBLEM_TEXT,
+            textwrap.dedent(
+                """
+                from typing import List
+
+                class Solution:
+                    def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
+
+                """
+            ).lstrip(),
+        )
+
+        init_result = self.run_script(python_path)
+        self.assertEqual(0, init_result.returncode, msg=init_result.stderr or init_result.stdout)
+
+        generated = python_path.read_text(encoding="utf-8")
+        updated = generated.replace(
+            '        raise NotImplementedError("Implement answerQueries before running this scaffold.")',
+            "        crash_here = len(nums) / 0\n        return [crash_here] * len(queries)",
+        )
+        python_path.write_text(updated + "\n", encoding="utf-8")
+
+        run_result = subprocess.run(
+            [sys.executable, str(python_path)],
+            capture_output=True,
+            text=True,
+            cwd=self.workspace,
+        )
+
+        self.assertEqual(0, run_result.returncode, msg=run_result.stderr)
+        self.assertIn("Traceback:", run_result.stdout)
+        self.assertIn("Traceback (most recent call last):", run_result.stdout)
+        self.assertIn('File "', run_result.stdout)
+        self.assertRegex(run_result.stdout, r"line \d+, in run_case")
+        self.assertRegex(run_result.stdout, r"line \d+, in answerQueries")
+        self.assertIn("ZeroDivisionError: division by zero", run_result.stdout)
+
+    def test_generated_unittest_failure_includes_traceback_details(self):
+        """Include traceback details in unittest mode when the solution raises."""
+        python_path = self.write_pair(
+            "traceback-test-mode",
+            ARRAY_PROBLEM_TEXT,
+            textwrap.dedent(
+                """
+                from typing import List
+
+                class Solution:
+                    def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
+
+                """
+            ).lstrip(),
+        )
+
+        init_result = self.run_script(python_path)
+        self.assertEqual(0, init_result.returncode, msg=init_result.stderr or init_result.stdout)
+
+        generated = python_path.read_text(encoding="utf-8")
+        updated = generated.replace(
+            '        raise NotImplementedError("Implement answerQueries before running this scaffold.")',
+            '        raise ValueError("boom")',
+        )
+        python_path.write_text(updated + "\n", encoding="utf-8")
+
+        test_result = subprocess.run(
+            [sys.executable, str(python_path), "--test"],
+            capture_output=True,
+            text=True,
+            cwd=self.workspace,
+        )
+
+        self.assertNotEqual(0, test_result.returncode)
+        failure_output = test_result.stderr or test_result.stdout
+        self.assertIn("Traceback (most recent call last):", failure_output)
+        self.assertRegex(failure_output, r"line \d+, in run_case")
+        self.assertRegex(failure_output, r"line \d+, in answerQueries")
+        self.assertIn('ValueError: boom', failure_output)
+
 
 if __name__ == "__main__":
     unittest.main()

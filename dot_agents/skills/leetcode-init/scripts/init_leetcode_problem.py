@@ -11,6 +11,7 @@ import pprint
 import re
 import sys
 import textwrap
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -683,6 +684,8 @@ def build_generated_source(
         "import copy",
         "import difflib",
         "import pprint",
+        "import sys",
+        "import traceback",
         "import unittest",
     ]
     if needs_tree:
@@ -762,30 +765,38 @@ def format_diff(expected: Any, actual: Any) -> str:
     return "\\n".join(diff) if diff else "No diff."
 
 
-def run_case(case: dict[str, Any]) -> tuple[Any, Any, str | None]:
+def run_case(case: dict[str, Any]) -> tuple[Any, Any, str | None, str | None]:
     \"\"\"Execute one example case and capture any failure mode.\"\"\"
     solution = Solution()
     prepared_args = [prepare_argument(name, case["input"][name]) for name in PARAM_ORDER]
     try:
         actual = solution.{signature.method_name}(*prepared_args)
     except NotImplementedError as exc:
-        return case["expected"], f"<not implemented: {{exc}}>", "not_implemented"
+        return case["expected"], f"<not implemented: {{exc}}>", "not_implemented", None
     except Exception as exc:  # pragma: no cover - surfaced to the caller for debugging.
         label = f"{{exc.__class__.__name__}}: {{exc}}"
-        return case["expected"], f"<exception: {{label}}>", "exception"
-    return case["expected"], normalize_result(actual), None
+        return (
+            case["expected"],
+            f"<exception: {{label}}>",
+            "exception",
+            "".join(traceback.format_exception(exc)).rstrip(),
+        )
+    return case["expected"], normalize_result(actual), None, None
 
 
 def run_examples() -> None:
     \"\"\"Print each parsed example and compare it against the current solution.\"\"\"
     for case in EXAMPLES:
-        expected, actual, error = run_case(case)
+        expected, actual, error, trace = run_case(case)
         matched = error is None and actual == expected
         print(case["name"])
         print(f"Input: {{case['input']!r}}")
         print(f"Expected: {{expected!r}}")
         print(f"Actual: {{actual!r}}")
         print(f"Matches expected: {{matched}}")
+        if trace:
+            print("Traceback:")
+            print(trace)
         if error is not None or not matched:
             print("Diff:")
             print(format_diff(expected, actual))
@@ -797,11 +808,14 @@ class GeneratedExampleTests(unittest.TestCase):
         \"\"\"Assert that every parsed example matches the current solution output.\"\"\"
         for case in EXAMPLES:
             with self.subTest(example=case["name"]):
-                expected, actual, error = run_case(case)
+                expected, actual, error, trace = run_case(case)
                 if error == "not_implemented":
                     self.fail(f"Solution not implemented for {{case['name']}}: {{actual}}")
                 if error == "exception":
-                    self.fail(f"Solution raised an exception for {{case['name']}}: {{actual}}")
+                    message = f"Solution raised an exception for {{case['name']}}: {{actual}}"
+                    if trace:
+                        message = f"{{message}}\\n{{trace}}"
+                    self.fail(message)
                 self.assertEqual(expected, actual, format_diff(expected, actual))
 
 

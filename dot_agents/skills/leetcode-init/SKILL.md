@@ -34,6 +34,8 @@ not solve the algorithm for them.
 - A self-contained problem file with a `__main__` example runner
 - Inline `unittest` coverage generated from the prompt examples
 - Runtime actual-vs-expected diff output when examples do not match
+- Full Python stack traces with line numbers when the current solution
+  raises at runtime
 - Inline `TreeNode` and `ListNode` helpers only when the method
   signature needs them
 
