@@ -383,15 +383,18 @@ Codex CLI.
 
 ## How To Use It
 
-Treat this repository as the source of truth for the environment rather
-than editing live files under `$HOME` directly.
+Treat this repository as the source of truth for most of the environment
+layer, with one explicit exception: `refresh-config` snapshots the live
+Codex config back into the repo before running `chezmoi apply`.
 
-1. Edit the tracked source files in this repo.
+1. Edit the tracked source files in this repo when the repo-managed copy
+   is meant to stay authoritative.
 2. Preview the resulting home-directory diff with
    `chezmoi -S "$PWD" diff`.
-3. Run `refresh-config` after config changes when you want the repo, the
-   tracked Codex config, chezmoi-managed files, and generated shortcuts
-   brought back into sync in one step.
+3. Run `refresh-config` when you want to capture the current live
+   `~/.codex/config.toml` into `dot_codex/config.toml`, then reapply the
+   rest of the chezmoi-managed environment and generated shortcuts in
+   one step.
 4. Apply changes with `chezmoi -S "$PWD" apply` when you want the direct
    chezmoi path instead of the higher-level refresh helper.
 5. Run the repo-managed `codex` wrapper from the repo root when you want
@@ -412,7 +415,7 @@ source in this repo.
 | `chezmoi -S "$PWD" diff` | Preview what the checked-out source tree would change in `$HOME`. | `-S` / `--source` points chezmoi at this clone instead of the default source directory. `--reverse` flips the diff direction when you need the comparison the other way around. |
 | `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
 | `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
-| `refresh-config` | Reapply tracked repo configuration after changes to the environment layer. | No user-facing flags. It reapplies the tracked Codex config, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
+| `refresh-config` | Snapshot the live Codex config into the repo, then reapply the chezmoi-managed environment layer. | No user-facing flags. It copies `~/.codex/config.toml` into `dot_codex/config.toml`, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
 | `./scripts/executable_apply-pywal-theme <wallpaper>` | Regenerate the active `pywal` theme through the repo-owned wrapper so wallpaper changes also refresh kitty and the i3 color resources this repo depends on. | Pass an image path directly, or pass raw `wal` flags when you need that lower-level control. The wrapper runs `wal --saturate 0.8 -e`, reloads Xresources, refreshes running kitty windows when the socket is available, and regenerates the derived i3 palette file. |
 | `./scripts/executable_setup-st.sh` | Render the tracked `st` config, sync it into your `st` source checkout, and install the compiled terminal you actually want to use. | `--source-dir` points the script at a non-default `st` checkout path. `--skip-install` only refreshes `~/.config/st/config.def.h` plus the source-tree `config.def.h` and prints the exact `sudo make -C ... install` command instead of running it. `--clone-if-missing` clones the official upstream source from `https://git.suckless.org/st` into the target checkout path before syncing and building. |
 | `sudo ./scripts/executable_setup-neovim-python-completion.sh` | Upgrade Neovim from Ubuntu's older package, install the repo's `vim-plug` Neovim stack including `nvim-lspconfig`, and install the Python language server used for strong completion and signature help. | `--neovim-version` pins a different official release. `--skip-plugins` skips `vim-plug` bootstrap and `PlugInstall`. `--skip-lsp` skips `uv tool install --upgrade basedpyright`. |

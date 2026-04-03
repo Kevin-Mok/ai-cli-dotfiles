@@ -1,6 +1,7 @@
 function refresh-config
-    chezmoi apply --force ~/.codex/config.toml
-    and echo 'Applied tracked Codex config.'
+    set codex_source_path (chezmoi source-path ~/.codex/config.toml)
+    and cp ~/.codex/config.toml $codex_source_path
+    and echo 'Copied local Codex config into repo source.'
     chezmoi apply
     and echo 'Applied chezmoi.'
     # and tmux source-file ~/.tmux.conf

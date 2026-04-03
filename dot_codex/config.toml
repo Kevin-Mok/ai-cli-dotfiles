@@ -188,4 +188,4 @@ tool_timeout_sec = 120
 [tui]
 notifications = true
 notification_method = "osc9"
-status_line = ["model-with-reasoning", "five-hour-limit", "current-dir", "weekly-limit"]
+status_line = ["model-with-reasoning", "five-hour-limit", "current-dir", "weekly-limit", "total-input-tokens", "total-output-tokens"]

@@ -32,6 +32,7 @@
 2026-04-01 - When the user reports a LeetCode error, explain the cause without solving the algorithm; only say whether the issue is a stub/placeholder or a repo-side fix.
 2026-04-01 - In /home/kevin/linux-config, when I change tracked configuration, run `refresh-config` before declaring the work done unless I explicitly say not to.
 2026-04-01 - In /home/kevin/linux-config, treat the repo-tracked `dot_codex/config.toml` as the source of truth; `refresh-config` should overwrite `~/.codex/config.toml`, not copy the live file back into the repo.
+2026-04-03 - In /home/kevin/linux-config, `refresh-config` should copy the live `~/.codex/config.toml` into `dot_codex/config.toml` before running `chezmoi apply`.
 2026-04-01 - In /home/kevin/coding/leetcode, never give a full solution unless I explicitly ask for one.
   Default to the smallest useful hint only, and avoid giving major solution direction unless I ask for more.
 2026-04-01 - In /home/kevin/coding/leetcode, if I ask whether a helper or language feature is allowed, answer only that narrow question.

@@ -46,7 +46,7 @@ of stacking duplicates.
 ## Fish Helpers
 
 - Action: Run `fish -ic 'refresh-config'` after changing tracked repo configuration on a machine where `chezmoi` and the shell helper scripts are available.
-  Expected: The tracked `dot_codex/config.toml` overwrites `~/.codex/config.toml`, `chezmoi apply` runs, shortcuts regenerate, and fish reloads without leaving the live Codex config as the source of truth.
+  Expected: The live `~/.codex/config.toml` overwrites tracked `dot_codex/config.toml`, `chezmoi apply` runs, shortcuts regenerate, and fish reloads with the refreshed repo copy now matching the live Codex config.
 - Action: Run `fish -c 'backup-phone-storage'` from a machine that can
   reach the phone over SSH on port `8022`.
   Expected: If Termux has `rsync` installed, `rsync` copies the shared

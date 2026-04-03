@@ -102,6 +102,7 @@ environment behavior, run `refresh-config` before declaring the work
 done unless the user explicitly says not to.
 
 Treat `refresh-config` as the canonical sync step because it copies the
-tracked [`dot_codex/config.toml`](dot_codex/config.toml) into
-`~/.codex/config.toml`, runs `chezmoi apply`, regenerates shortcuts with
-`sync-shortcuts`, and reloads the active fish shell state.
+live `~/.codex/config.toml` into the tracked
+[`dot_codex/config.toml`](dot_codex/config.toml), runs `chezmoi apply`,
+regenerates shortcuts with `sync-shortcuts`, and reloads the active
+fish shell state.
