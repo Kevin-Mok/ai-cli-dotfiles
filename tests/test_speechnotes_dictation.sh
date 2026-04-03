@@ -104,10 +104,10 @@ case "$*" in
     jq '.scratchpad_state = "none" | .focused = true' "$window_json" > "$tmp_json"
     mv "$tmp_json" "$window_json"
     ;;
-  *"move position 2418 px 130 px"*)
+  *"move position 2518 px 280 px"*)
     [ -f "$window_json" ] || exit 0
     tmp_json="${window_json}.tmp"
-    jq '.x = 2418 | .y = 130' "$window_json" > "$tmp_json"
+    jq '.x = 2518 | .y = 280' "$window_json" > "$tmp_json"
     mv "$tmp_json" "$window_json"
     ;;
   *"] kill"*)
@@ -150,7 +150,7 @@ assert_contains() {
 run_script
 assert_contains "google-chrome --user-data-dir=${profile_dir} --app=https://speechnotes.co/dictate/ --no-first-run --no-default-browser-check --disable-sync" "$log_file"
 assert_contains "i3-msg [con_id=31337] mark --add speechnotes_dictation" "$log_file"
-assert_contains "i3-msg [con_id=31337] move position 2418 px 130 px" "$log_file"
+assert_contains "i3-msg [con_id=31337] move position 2518 px 280 px" "$log_file"
 if rg -F "i3-msg [con_id=31337] move scratchpad" "$log_file" >/dev/null; then
   printf 'did not expect fresh toggle launch to hide the new Speechnotes window\n' >&2
   exit 1
@@ -162,8 +162,8 @@ run_script --prewarm
 assert_contains "google-chrome --user-data-dir=${profile_dir} --app=https://speechnotes.co/dictate/ --no-first-run --no-default-browser-check --disable-sync" "$log_file"
 assert_contains "i3-msg [con_id=31337] mark --add speechnotes_dictation" "$log_file"
 assert_contains "i3-msg [con_id=31337] floating enable" "$log_file"
-assert_contains "i3-msg [con_id=31337] resize set 1180 px 820 px" "$log_file"
-assert_contains "i3-msg [con_id=31337] move position 2418 px 130 px" "$log_file"
+assert_contains "i3-msg [con_id=31337] resize set 980 px 520 px" "$log_file"
+assert_contains "i3-msg [con_id=31337] move position 2518 px 280 px" "$log_file"
 assert_contains "i3-msg [con_id=31337] focus" "$log_file"
 assert_contains "i3-msg [con_id=31337] move scratchpad" "$log_file"
 
@@ -171,7 +171,7 @@ assert_contains "i3-msg [con_id=31337] move scratchpad" "$log_file"
 run_script
 assert_contains "i3-msg [con_id=31337] kill" "$log_file"
 assert_contains "google-chrome --user-data-dir=${profile_dir} --app=https://speechnotes.co/dictate/ --no-first-run --no-default-browser-check --disable-sync" "$log_file"
-assert_contains "i3-msg [con_id=31337] move position 2418 px 130 px" "$log_file"
+assert_contains "i3-msg [con_id=31337] move position 2518 px 280 px" "$log_file"
 
 cat > "${runtime_dir}/window_state.json" <<'JSON'
 {"id":"42424","name":"free speech to text - Google Search","class":"Google-chrome","marked":false,"focused":false,"scratchpad_state":"none","x":0,"y":0}

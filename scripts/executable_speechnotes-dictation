@@ -5,8 +5,8 @@
 set -euo pipefail
 
 WINDOW_MARK="speechnotes_dictation"
-WINDOW_WIDTH=1180
-WINDOW_HEIGHT=820
+WINDOW_WIDTH=980
+WINDOW_HEIGHT=520
 LAUNCH_URL="https://speechnotes.co/dictate/"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/speechnotes-dictation"
 PROFILE_DIR="${STATE_DIR}/profile"
@@ -130,6 +130,7 @@ normalize_window() {
   local y_pos
 
   "$I3MSG_BIN" "[con_id=${window_id}] floating enable" >/dev/null
+
   "$I3MSG_BIN" "[con_id=${window_id}] resize set ${WINDOW_WIDTH} px ${WINDOW_HEIGHT} px" >/dev/null
 
   if position="$(get_focused_output_position)" && [ -n "$position" ]; then
