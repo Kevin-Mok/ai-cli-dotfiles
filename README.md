@@ -192,6 +192,19 @@ Representative highlights:
 This category matters because it turns design direction into a
 repeatable local capability instead of a one-off prompting exercise.
 
+#### Coding Practice And Scaffolding
+
+Representative highlights:
+
+- [`leetcode-init`](dot_agents/skills/leetcode-init/SKILL.md) turns a
+  copied LeetCode `.txt` prompt dump and matching `.py` stub into a
+  local runner and inline `unittest` scaffold without filling in the
+  actual solution.
+
+This category matters because it preserves the repo's preference for
+practice scaffolding and verification without turning every LeetCode
+request into solution leakage.
+
 #### Research And Output Control
 
 Representative highlights:
