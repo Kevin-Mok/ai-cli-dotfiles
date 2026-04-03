@@ -171,11 +171,11 @@ Codex skill surface on this machine.
   all dirty git changes without staging, committing, or pushing, while
   assuming later execution will push after each successful commit by
   default unless the user says otherwise.
-- [`commit-push`](commit-push/SKILL.md): Verifies scope, runs the minimum
-  relevant checks, then stages, commits, and pushes the intended dirty
-  worktree in the current repository, including explicit `commit all
-  dirty` requests, immediately after each successful commit unless the
-  user says otherwise.
+- [`commit-dirty`](commit-dirty/SKILL.md): Verifies scope, runs the
+  minimum relevant checks, then stages, commits, and pushes the
+  intended dirty worktree in the current repository, including explicit
+  `commit dirty` and `commit all dirty` requests, immediately after each
+  successful commit unless the user says otherwise.
 - [`commit-session`](commit-session/SKILL.md): Ships only the files
   dirtied during the current Codex session by combining a pre-write git
   baseline with direct session-touch evidence, including an

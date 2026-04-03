@@ -1,11 +1,11 @@
 ---
-name: commit-push
-description: Commit and push ready working changes in the current git repository after verifying scope and running the minimum relevant checks. Use when I explicitly ask to `commit-push`, `commit all dirty`, `commit and push this`, `ship these changes`, or otherwise want a real commit and push for the intended dirty worktree. Do not use for commit planning only, history rewrites, force-pushes, or ambiguous mixed diffs.
+name: commit-dirty
+description: Use when I explicitly want the current intended dirty git worktree committed and pushed now, including requests like `commit dirty`, `commit all dirty`, `commit and push this`, or `ship these changes`, after verifying scope and running the minimum relevant checks. Do not use for commit planning only, history rewrites, force-pushes, or ambiguous mixed diffs.
 ---
 
-# Commit Push
+# Commit Dirty
 
-Use this skill for explicit write requests to create a real git commit and push it from the current repository, including the "commit all dirty" case where the intended scope is the current dirty worktree. Treat speed as secondary to shipping a coherent, verified change.
+Use this skill for explicit write requests to create a real git commit and push it from the current repository, including the "commit dirty" and "commit all dirty" cases where the intended scope is the current dirty worktree. Treat speed as secondary to shipping a coherent, verified change.
 
 ## Required Workflow
 
