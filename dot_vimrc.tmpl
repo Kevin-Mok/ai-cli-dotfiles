@@ -45,7 +45,7 @@ autocmd VimResized * wincmd =
 filetype plugin on
 filetype indent on
 syntax on
-autocmd CursorHold * if !bufexists("[Command Line]") | checktime | endif
+autocmd CursorHold * if getcmdwintype() == '' | checktime | endif
 
 " cursor indicator [[[ "
 
