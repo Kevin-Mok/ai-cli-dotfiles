@@ -159,6 +159,9 @@ trust_level = "trusted"
 [projects."/home/kevin/coding/mcnic"]
 trust_level = "trusted"
 
+[projects."/home/kevin/coding/track-a-seal"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 
