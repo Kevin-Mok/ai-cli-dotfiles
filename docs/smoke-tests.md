@@ -57,6 +57,17 @@ of stacking duplicates.
   otherwise the helper exits early with an install hint instead of
   failing mid-transfer.
 
+## Claude Code
+
+- Action: Run `chezmoi apply` (or `refresh-config`) on a machine with this repo applied, then check `~/.claude/CLAUDE.md`.
+  Expected: `~/.claude/CLAUDE.md` exists and contains a single `@/home/kevin/linux-config/dot_codex/AGENTS.md` import line, confirming Claude Code will load the shared instruction document globally.
+- Action: After `chezmoi apply`, check `~/.claude/skills/` for skill symlinks.
+  Expected: `~/.claude/skills/` exists and contains one `.md` symlink per skill directory found under `~/.agents/skills/` (e.g. `~/.claude/skills/commit-dirty.md -> ~/.agents/skills/commit-dirty/SKILL.md`). No symlinks are created for `README.md` or the `superpowers` entry because those have no top-level `SKILL.md`.
+- Action: Launch Claude Code in any project directory and run `/commit-dirty` (or another tracked skill).
+  Expected: Claude Code resolves the skill from `~/.claude/skills/commit-dirty.md` and follows the workflow defined in the shared `dot_agents/skills/commit-dirty/SKILL.md` source.
+- Action: After applying this repo, launch Codex and verify `/commit-dirty` still works.
+  Expected: `~/.agents/skills/commit-dirty/SKILL.md` is unchanged and Codex resolves the skill normally — the Claude skill wiring adds symlinks only and does not touch the Codex skill surface.
+
 ## Codex And Graphiti
 
 - Action: Launch `codex` from a shell where `~/scripts` shadows the real Codex binary and Graphiti is installed at `/home/kevin/coding/graphiti/mcp_server`.

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Wire repo-tracked skills from ~/.agents/skills into ~/.claude/skills so
+# Claude Code discovers the same shared skill surface as Codex.
+# Safe to run every chezmoi apply — ln -sf is idempotent.
+set -euo pipefail
+mkdir -p "{{ .chezmoi.homeDir }}/.claude/skills"
+for skill_dir in "{{ .chezmoi.homeDir }}/.agents/skills"/*/; do
+    [ -d "$skill_dir" ] || continue
+    skill_name=$(basename "$skill_dir")
+    skill_file="${skill_dir}SKILL.md"
+    if [ -f "$skill_file" ]; then
+        ln -sf "$skill_file" "{{ .chezmoi.homeDir }}/.claude/skills/${skill_name}.md"
+    fi
+done

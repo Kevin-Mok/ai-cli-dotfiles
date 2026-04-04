@@ -25,7 +25,8 @@ is done.
 | `chezmoi` | [`dot_config/chezmoi/chezmoi-template.toml.tmpl`](dot_config/chezmoi/chezmoi-template.toml.tmpl) | Keeps the environment reproducible across machines instead of trapping setup inside one laptop. |
 | Codex CLI and tracked config | [`dot_codex/config.toml`](dot_codex/config.toml) | Versions model, reasoning, trust, MCP, and session defaults so new Codex panes start from repo policy instead of memory. |
 | AGENTS instruction chain | [`AGENTS.md`](AGENTS.md), [`AGENTS.repo.md`](AGENTS.repo.md), and [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) | Turns planning, verification, commit hygiene, and docs sync into inspectable workflow rules. |
-| Local skills | [`dot_agents/skills/`](dot_agents/skills/) and [`dot_agents/skills/README.md`](dot_agents/skills/README.md) | Packages recurring jobs into reusable local capabilities instead of re-explaining the same workflows in every session. |
+| Claude Code global config | [`dot_claude/CLAUDE.md`](dot_claude/CLAUDE.md.tmpl) and [`dot_claude/settings.json`](dot_claude/settings.json) | Wires `dot_codex/AGENTS.md` into Claude Code globally via `@path` import so both Codex and Claude share the same behavioral baseline without a separate copy. |
+| Local skills | [`dot_agents/skills/`](dot_agents/skills/) and [`dot_agents/skills/README.md`](dot_agents/skills/README.md) | Packages recurring jobs into reusable local capabilities shared across Codex (`~/.agents/skills/`) and Claude Code (`~/.claude/skills/` symlinks) via a post-apply chezmoi script. |
 | Graphiti MCP with Neo4j | [`dot_codex/config.toml`](dot_codex/config.toml), [`scripts/executable_codex`](scripts/executable_codex), and [`docs/graphiti-mcp-codex.md`](docs/graphiti-mcp-codex.md) | Adds a retrievable memory layer for multi-session work where provenance and evolving context matter. |
 | Shell and terminal tooling | [`dot_config/fish/config.fish.tmpl`](dot_config/fish/config.fish.tmpl), [`dot_tmux.conf`](dot_tmux.conf), [`dot_config/st/config.def.h.tmpl`](dot_config/st/config.def.h.tmpl), [`dot_config/kitty/kitty.conf`](dot_config/kitty/kitty.conf), and [`dot_config/i3/config.tmpl`](dot_config/i3/config.tmpl) | Optimizes for terminal-first execution and multiple parallel panes, with `kitty` as the default terminal, `st` kept ready as the low-friction alternate, and tmux handling the heavier session workflow. |
 | Python and Bash automation | [`scripts/`](scripts/) and [`dot_config/fish/functions/refresh-config.fish`](dot_config/fish/functions/refresh-config.fish) | Keeps repeatable operations small, inspectable, and version-controlled instead of burying them in chat or muscle memory. |
@@ -100,7 +101,7 @@ high-leverage properties:
 
 [`AGENTS.md`](AGENTS.md), [`AGENTS.repo.md`](AGENTS.repo.md), and
 [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) are the behavioral
-backbone.
+backbone, shared across both Codex and Claude Code.
 
 - [`AGENTS.md`](AGENTS.md) holds the shared baseline.
 - [`AGENTS.repo.md`](AGENTS.repo.md) says
@@ -108,6 +109,9 @@ backbone.
   Codex in this repo.
 - [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) is the canonical working
   document for this codebase.
+- [`dot_claude/CLAUDE.md`](dot_claude/CLAUDE.md.tmpl) wires that same
+  canonical document into Claude Code globally via an `@path` import.
+  No separate Claude-specific copy is maintained.
 
 That canonical document is not generic philosophy. It encodes concrete
 engineering behavior:
@@ -154,7 +158,10 @@ setup and validation workflow lives in
 ### 3. Reusable Local Skills
 
 [`dot_agents/skills/`](dot_agents/skills/) turns repeated prompting into
-reusable capabilities. The full inventory lives in
+reusable capabilities shared across Codex and Claude Code. Each skill is
+installed to `~/.agents/skills/<name>/SKILL.md` for Codex and symlinked
+to `~/.claude/skills/<name>.md` for Claude Code via a post-apply chezmoi
+script. The full inventory lives in
 [`dot_agents/skills/README.md`](dot_agents/skills/README.md), but the
 main categories are more interesting than a flat list.
 

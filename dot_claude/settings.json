@@ -1,4 +1,8 @@
 {
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
   "permissions": {
     "allow": [
       "Read(**)",
@@ -33,10 +37,12 @@
       "Bash(do)",
       "Bash(done)"
     ],
-    "additionalDirectories": ["~/"],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "~/"
+    ]
   },
-  "model": "opus",
+  "model": "sonnet",
   "enabledPlugins": {
     "claude-mem@thedotmack": true,
     "typescript-lsp@claude-plugins-official": true,
