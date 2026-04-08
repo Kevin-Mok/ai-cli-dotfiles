@@ -83,6 +83,8 @@ of stacking duplicates.
   Expected: Vim loads the `wal` colorscheme by default so the editor palette tracks the current `pywal` theme, the main editing surface, line-number column, fold column, sign column, and end-of-buffer area stay opaque with the current `pywal` background color, and Python syntax looks intentionally color-separated instead of collapsing into a nearly monochrome editor.
 - Action: Keep terminal Vim or Neovim open on a Python file, run `/home/kevin/scripts/apply-pywal-theme <wallpaper>` from another shell, then idle briefly in the editor or refocus the window.
   Expected: The running editor picks up the new `pywal` colors without reopening, including both the background surfaces and the stronger syntax colors.
+- Action: Open Vim or Neovim on a Python file that contains nested calls and colon-terminated block headers such as `async def`, `if`, `try`, or `async with`, then scroll the mouse wheel up and down.
+  Expected: Scroll-down from a block header enters the first indented statement in that block, while scrolling from ordinary statements jumps to the next or previous nonblank line whose indentation is the same or lower.
 - Action: Open Neovim in a Python project with a local `.venv` or `venv`, type `Path(` and `requests.`, and use the normal leader shortcuts on a Python symbol.
   Expected: Blink completion offers Python members and auto-import suggestions, `Up` and `Down` move between suggestions, signature help appears when typing a function call, and `<leader>do`, `<leader>g`, `<leader>rn`, and `<leader>fi` drive the Neovim LSP actions instead of the old YCM commands.
 - Action: Open a Markdown file in Vim, press `<F8>`, and edit headings, lists, tables, and fenced code blocks while the preview is open.

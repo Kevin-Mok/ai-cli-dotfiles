@@ -808,18 +808,68 @@ call StartWalThemeWatcher()
 
 " normal mappings [[[ "
 
-function! JumpToNextParagraphStart()
-  let l:target = search('\v(^\s*$\n)+\zs\S', 'W')
-  if l:target > 0
-    normal! zt
+function! JumpScrollIndent() abort
+  if getline('.') =~# '\S'
+    return indent('.')
   endif
+
+  let l:fallback_line = prevnonblank(line('.'))
+  if l:fallback_line > 0
+    return indent(l:fallback_line)
+  endif
+
+  let l:fallback_line = nextnonblank(line('.'))
+  if l:fallback_line > 0
+    return indent(l:fallback_line)
+  endif
+
+  return 0
 endfunction
 
-function! JumpToPrevParagraphStart()
-  let l:target = search('\v(^\s*$\n)+\zs\S', 'bW')
-  if l:target > 0
-    normal! zt
-  elseif line('.') > 1
+function! JumpToNextIndentedChild() abort
+  let l:base_indent = indent('.')
+
+  for l:line_number in range(line('.') + 1, line('$'))
+    if getline(l:line_number) =~# '\S' && indent(l:line_number) > l:base_indent
+      call cursor(l:line_number, 1)
+      normal! zt
+      return v:true
+    endif
+  endfor
+
+  return v:false
+endfunction
+
+function! JumpToNextParagraphStart() abort
+  if getline('.') =~# ':\s*\($\|#\)'
+    if JumpToNextIndentedChild()
+      return
+    endif
+  endif
+
+  let l:max_indent = JumpScrollIndent()
+
+  for l:line_number in range(line('.') + 1, line('$'))
+    if getline(l:line_number) =~# '\S' && indent(l:line_number) <= l:max_indent
+      call cursor(l:line_number, 1)
+      normal! zt
+      return
+    endif
+  endfor
+endfunction
+
+function! JumpToPrevParagraphStart() abort
+  let l:max_indent = JumpScrollIndent()
+
+  for l:line_number in range(line('.') - 1, 1, -1)
+    if getline(l:line_number) =~# '\S' && indent(l:line_number) <= l:max_indent
+      call cursor(l:line_number, 1)
+      normal! zt
+      return
+    endif
+  endfor
+
+  if line('.') > 1
     call cursor(1, 1)
     normal! zt
   endif
