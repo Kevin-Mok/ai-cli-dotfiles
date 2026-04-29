@@ -1,18 +1,74 @@
 #!/bin/bash
 
-picom &
-imwheel
-xmodmap ~/.Xmodmap
+start_command() {
+  local command_name="$1"
+  shift
 
-redshift -O 3000
-xset r rate $XSET_DELAY $XSET_RATE
-/usr/lib/notification-daemon-1.0/notification-daemon &
-picom &
-imwheel &
-numlockx on &
+  if command -v "${command_name}" >/dev/null 2>&1; then
+    "$@"
+  fi
+}
+
+if command -v picom >/dev/null 2>&1; then
+  if ! command -v pgrep >/dev/null 2>&1 || ! pgrep -x picom >/dev/null 2>&1; then
+    picom &
+  fi
+fi
+
+if command -v imwheel >/dev/null 2>&1; then
+  imwheel &
+fi
+
+if [ -f "${HOME}/.Xmodmap" ]; then
+  start_command xmodmap xmodmap "${HOME}/.Xmodmap"
+fi
+
+start_command redshift redshift -m randr -O 3000
+if [ -n "${XSET_DELAY:-}" ] && [ -n "${XSET_RATE:-}" ]; then
+  start_command xset xset r rate "${XSET_DELAY}" "${XSET_RATE}"
+fi
+if command -v dunst >/dev/null 2>&1; then
+  if ! command -v pgrep >/dev/null 2>&1 || ! pgrep -x dunst >/dev/null 2>&1; then
+    dunst &
+  fi
+else
+  start_command notification-daemon notification-daemon &
+fi
+start_command numlockx numlockx on &
+
+# Graphiti MCP bootstrap: mount local data volume before wallpaper and MCP startup.
+GRAPHITI_CHECKOUT="${HOME}/coding/graphiti/mcp_server"
+GRAPHITI_VOLUME_DEVICE="/dev/sdc1"
+GRAPHITI_VOLUME_MOUNT="/mnt/linux-files-3"
+GRAPHITI_COMPOSE_FILE="${GRAPHITI_CHECKOUT}/docker/docker-compose-neo4j.yml"
+
+if command -v mountpoint >/dev/null 2>&1 && command -v mount >/dev/null 2>&1; then
+  if [ ! -d "${GRAPHITI_VOLUME_MOUNT}" ]; then
+    mkdir -p "${GRAPHITI_VOLUME_MOUNT}"
+  fi
+
+  if [ ! -b "${GRAPHITI_VOLUME_DEVICE}" ] || mountpoint -q "${GRAPHITI_VOLUME_MOUNT}"; then
+    :
+  else
+    sudo mount "${GRAPHITI_VOLUME_DEVICE}" "${GRAPHITI_VOLUME_MOUNT}" ||
+      printf 'Graphiti mount failed for %s -> %s.\n' "${GRAPHITI_VOLUME_DEVICE}" "${GRAPHITI_VOLUME_MOUNT}" >&2
+  fi
+fi
 
 #start-pulseaudio-x11 &
 #sudo alsa force-reload
 #pulseaudio --start
 
-wal -i $(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing") &
+wallpaper="$(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing" 2>/dev/null)"
+if [ -n "${wallpaper}" ] && [ -f "${wallpaper}" ]; then
+  /home/kevin/scripts/apply-pywal-theme "${wallpaper}" &
+else
+  printf 'Skipping pywal startup: no wallpaper found in %s.\n' "${HOME}/Pictures/Backgrounds/dim/editing" >&2
+fi
+
+if [ -f "${GRAPHITI_COMPOSE_FILE}" ] && command -v docker >/dev/null 2>&1; then
+  (
+    cd "${GRAPHITI_CHECKOUT}" &&
+    docker compose -f docker/docker-compose-neo4j.yml up -d neo4j
+  ) || printf 'Graphiti docker startup failed; check docker logs for details.\n' >&2
+fi

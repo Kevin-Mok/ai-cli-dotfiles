@@ -70,6 +70,19 @@ of stacking duplicates.
 
 ## Codex And Graphiti
 
+- Action: Start a fresh Ubuntu/i3 session on the desktop host where
+  `/dev/sdc1` is present and Graphiti is checked out at
+  `/home/kevin/coding/graphiti/mcp_server`.
+  Expected: `ubuntu-start` mounts `/dev/sdc1` at `/mnt/linux-files-3`
+  using `sudo` when elevation is needed, allowing the operator to enter
+  a password instead of silently skipping the mount. It does this before
+  applying the wallpaper through `/home/kevin/scripts/apply-pywal-theme`,
+  starts at most one `picom` compositor, starts `dunst` for notifications
+  when available, applies the full 20-button X pointer map without the
+  partial-button warning, skips missing optional helpers such as `numlockx`
+  without shell errors, then starts the compose Neo4j service with `docker compose -f
+  docker/docker-compose-neo4j.yml up -d neo4j`; startup does not try to
+  bind Graphiti MCP to host port `8000`.
 - Action: Launch `codex` from a shell where `~/scripts` shadows the real Codex binary and Graphiti is installed at `/home/kevin/coding/graphiti/mcp_server`.
   Expected: The wrapper creates or reuses `${XDG_STATE_HOME:-$HOME/.local/state}/codex-launch/graphiti.pid`, appends Graphiti startup output to `graphiti.log`, and then hands off to the real Codex CLI with the original arguments intact.
 
