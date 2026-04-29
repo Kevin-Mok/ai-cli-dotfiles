@@ -18,7 +18,8 @@ Use this skill for explicit write requests to create a real git commit and push 
    - Run the smallest relevant automated checks.
    - Add or run a failing reproducer first for bug fixes when practical.
    - Do not commit failing or unverified work just because the user asked for a quick push.
-5. Run `readme-recruiter-sync` against the root `README.md`.
+5. Run the `readme-recruiter-sync` skill check against the root `README.md`.
+   For a shell-only path, run `./scripts/executable_readme-recruiter-sync`.
    - Treat the gate as mandatory before staging or committing.
    - If the README is stale or missing required install or bootstrap, usage, core command flag, repo-based tech stack rationale, or recruiter-facing coverage, update it in the same change before continuing.
    - If satisfying the gate would require mixing unrelated dirty README work or other user changes, stop and ask instead of guessing.

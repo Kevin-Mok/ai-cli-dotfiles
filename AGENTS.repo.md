@@ -76,7 +76,8 @@ individual skill. Keep the exhaustive catalog in
 examples plus why the categories matter.
 
 Before any commit or push workflow finalizes work in this repo, run the
-`readme-recruiter-sync` skill against the root `README.md`.
+`readme-recruiter-sync` skill against the root `README.md`. If a shell-only
+path is needed, run `./scripts/executable_readme-recruiter-sync`.
 
 When a workflow in this repo creates one or more commits, push the
 active branch after each successful commit by default unless the user

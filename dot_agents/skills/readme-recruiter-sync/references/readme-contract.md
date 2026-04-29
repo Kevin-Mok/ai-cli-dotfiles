@@ -1,84 +1,76 @@
 # README Contract
 
-Use this file to decide whether the root `README.md` is ready to ship
-with the current repo state.
+Use this file to decide whether the root `README.md` is ready to ship with
+the current repo state.
 
 ## Scope
 
 - Check only the repository root `README.md`.
 - Ground every requirement in tracked repo evidence.
-- Treat the README as a public operator and recruiter surface, not as
-  optional marketing copy.
+- Treat the README as a public operator and recruiter-facing surface.
 
 ## Hard Rules
 
 - Default to recruiter-first ordering unless the user explicitly asks
-  for a different README structure.
-- Never invent commands, flags, prerequisites, setup steps, or
-  capabilities that the repo does not support.
-- Verify command flags from local `--help`, usage output, or the relevant
-  script source before documenting them.
-- Document only the commands the README explicitly tells readers to run.
-- If a documented command has no meaningful flags to explain, say so
-  plainly instead of fabricating options.
-- If the README cannot be aligned safely in the same change, fail the
-  gate and stop the commit workflow.
+  for a different structure.
+- Never invent commands, flags, prerequisites, setup steps, or capabilities
+  that the repo does not support.
+- Verify command flags from local `--help`, usage output, or relevant script
+  source before documenting them.
+- Document only commands the README explicitly tells readers to run.
+- If a documented command has no meaningful flags to explain, say that plainly.
+- If the README cannot be aligned safely in the same change, return `blocked`.
 
 ## Required Coverage
 
 The root `README.md` must explicitly cover all of the following:
 
-1. A substantive opening hook, usually at least two sentences or one
-   short paragraph, that explains what the repo is, why it matters, and
-   why it is worth reviewing.
-2. Install or bootstrap from the checked-out source.
+1. A substantive opening hook (usually two short paragraphs or a paragraph of ~35+ words)
+   explaining:
+   - what the repo is,
+   - who should care,
+   - and why it is worth reading/reviewing.
+2. Install or bootstrap from checked-out source.
 3. Day-to-day use of the repo.
 4. Core command-line flags or options for README-documented entrypoints.
 5. A repo-based "Tech Stack And Why Chosen" section.
-6. Recruiter-facing value consolidated into the opening hook or opening
-   section rather than scattered across the document.
+6. Recruiter-facing value consolidated into the opening hook rather than
+   scattered.
 
-## Top-Of-File Hierarchy
+## Top-of-File Hierarchy (Hard)
 
-Before the first setup-heavy section, fenced code block, or command
-block, the README should usually surface the repo's strongest proof:
+Before setup-heavy sections or the first major command block, the README
+should normally surface proof that this repo is worth attention:
 
-- a longer hook, not a thin one-line summary
-- recruiter-facing value consolidated into that opening hook or opening
-  section, not split across multiple distant sections
-- a repo-based `Tech Stack And Why Chosen` section
+- opening hook with problem/impact framing,
+- explicit recruiter-facing value consolidated near the top,
+- `Tech Stack And Why Chosen`.
 
-By default, `Quick Start`, `How to run`, and dense command reference
-sections belong later in the document. Only keep them near the top when
-the user explicitly requests an operator-first README or the repo's
-audience is clearly operator-first.
+Default behavior (unless operator-first is explicitly requested):
 
-Strict default:
-
-- If a README contains top-level `Quick Start`, `Install`, `Setup`, `How
-  to run`, or a major fenced command block before both:
-  - the opening recruiter-facing hook or opening section, and
+- If a README has top-level `Quick Start`, `Install`, `Setup`, `How to run`,
+  or a major fenced command block before both:
+  - a substantive opening hook, and
   - `Tech Stack And Why Chosen`,
-  then the README fails the gate unless the user explicitly asked for
-  that ordering.
+  it fails the gate.
+- If the opening hook is generic and could describe any project, it fails.
+- If the strongest proof is buried in a feature list without a clear opening
+  value section, it fails.
+- If setup or command-heavy sections precede evidence and positioning, it fails.
 
-Treat these as failures:
+Treat these as hard failures:
 
-- `Quick Start`, install/setup, or the first major command block appears
-  before both the opening recruiter-facing hook and stack rationale
-- the hook is generic enough that it could describe many repos
-- recruiter-facing value is repeated in multiple distant sections
-  instead of being consolidated near the top
-- the README hides stack rationale or impressiveness far below setup
-- the README is technically accurate but still front-loads instructions
-  over why the repo is notable
-- a features/browse section is being treated as a substitute for a real
-  opening recruiter hook
+- command-heavy content before the opening hook and stack rationale,
+- recruiter-facing value repeated in multiple distant sections instead of being
+  consolidated up-front,
+- repo stack rationale hidden below setup and bootstrap,
+- a browse/features section pretending to be a hook.
 
 ## Tech Stack Section Rules
 
-Derive the stack section from the repository, not from generic dotfiles
-or AI-tool assumptions. Center it on the layers clearly evidenced here:
+Derive the stack section from the repository, not generic assumptions.
+For each major layer present in this repo, include concrete evidence + one
+concise rationale:
 
 - `chezmoi`
 - Codex CLI and tracked Codex config
@@ -88,17 +80,10 @@ or AI-tool assumptions. Center it on the layers clearly evidenced here:
 - shell and terminal tooling
 - Python and Bash automation
 
-For each major layer:
-
-- point to concrete repo evidence
-- give one concise "why chosen" rationale
-- keep the focus on reproducibility, leverage, verification, memory, or
-  terminal ergonomics
+Focus rationale around reproducibility, leverage, verification, and ergonomics.
 
 ## Outcome States
 
-- `pass_no_change`: The README already satisfies the contract.
-- `update_in_same_change`: The README can be brought into alignment in
-  the current change and must be included before commit.
-- `blocked`: The README needs work that cannot be added safely in the
-  current commit scope.
+- `pass_no_change`: README already satisfies the contract.
+- `update_in_same_change`: README can be fixed in current change.
+- `blocked`: README changes cannot be safely added in this scope.

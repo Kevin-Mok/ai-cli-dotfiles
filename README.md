@@ -33,18 +33,18 @@ is done.
 
 ## Table Of Contents
 
-- [Workflow At A Glance](#workflow-at-a-glance)
+- [Operating Model At A Glance](#operating-model-at-a-glance)
 - [AI Layer Highlights](#ai-layer-highlights)
 - [Core Components](#core-components)
 - [Graphiti Memory Layer](#graphiti-memory-layer)
 - [Install And Bootstrap](#install-and-bootstrap)
-- [How To Use It](#how-to-use-it)
+- [Day-to-Day Use](#day-to-day-use)
 - [Core Command Reference](#core-command-reference)
 - [Reproducibility Through Chezmoi](#reproducibility-through-chezmoi)
 - [Rest Of Repo](#rest-of-repo)
 - [License](#license)
 
-## Workflow At A Glance
+## Operating Model At A Glance
 
 The screenshot above is the workflow. The most distinctive part of this
 repo is the tracked operating surface highlighted by the left-side tree:
@@ -87,6 +87,11 @@ high-leverage properties:
 - Skill growth in [`dot_agents/skills/`](dot_agents/skills/) turns
   repeated prompting into reusable local tools for shipping, research,
   browser automation, design work, docs lookup, and media tasks.
+- [`commit-plan`](dot_agents/skills/commit-plan/SKILL.md) makes commit
+  hygiene inspectable: before anything is staged, it can review a dirty
+  worktree the way a senior SWE would review a PR draft, separating
+  concerns, flagging risky mixed changes, and turning messy local work
+  into a coherent commit sequence.
 - The Graphiti MCP layer gives Codex a local temporal memory surface
   for longer-running, multi-session work.
 - The README gate itself is versioned: the repo includes a
@@ -170,8 +175,11 @@ main categories are more interesting than a flat list.
 Representative highlights:
 
 - [`commit-plan`](dot_agents/skills/commit-plan/SKILL.md) turns a dirty
-  worktree into a clean commit plan without staging or rewriting
-  history.
+  worktree into something closer to a senior engineer's pre-PR pass. It
+  inspects staged, unstaged, and untracked changes, groups them into
+  the smallest coherent commits, calls out risky mixes like README
+  drift or suspicious artifacts, and gives execution-ready commands
+  without staging, committing, or rewriting history.
 - [`commit-session`](dot_agents/skills/commit-session/SKILL.md) ships
   only the files owned by the current Codex session, with fallback logic
   when a session missed its pre-write baseline.
@@ -388,7 +396,7 @@ Graphiti startup command
 is already running in the background before it hands off to the real
 Codex CLI.
 
-## How To Use It
+## Day-to-Day Use
 
 Treat this repository as the source of truth for most of the environment
 layer, with one explicit exception: `refresh-config` snapshots the live

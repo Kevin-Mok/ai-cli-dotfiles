@@ -22,7 +22,8 @@ Use this skill for explicit write requests that should ship only the files dirti
    - `commitable` can include directly observed edits, including files that were already dirty at the session baseline, and files that became dirty after the session baseline.
    - If any `commitable` file still looks mixed or suspicious, stop instead of guessing.
 6. Run the smallest relevant automated checks for the scoped change.
-7. Run `readme-recruiter-sync` against the root `README.md`.
+7. Run the `readme-recruiter-sync` skill check against the root `README.md`.
+   For a shell-only path, run `./scripts/executable_readme-recruiter-sync`.
    - Treat the gate as mandatory before staging or committing.
    - If the gate passes without README changes, continue.
    - If the gate requires `README.md` edits, continue only when `README.md` is already present in `commitable`, including via a direct current-session touch.

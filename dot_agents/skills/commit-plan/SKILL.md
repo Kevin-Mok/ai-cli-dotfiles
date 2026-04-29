@@ -57,6 +57,7 @@ For this skill, "dirty changes" include:
    - vendor or cache artifacts
 6. Identify whether `readme-recruiter-sync` will likely require a root `README.md` update before any commit is safe.
    - Pay extra attention when changes touch `AGENTS.md`, `AGENTS.repo.md`, `dot_codex/`, `dot_agents/`, `plans/`, the root `README.md`, onboarding or setup flows, or any command the README currently documents.
+   - If dirty changes include files under `plans/`, `docs/`, or any other local documentation, ensure the plan explicitly groups each doc update with its corresponding feature/config change so they land in the same commit.
 7. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
 8. Assume that when the plan is later executed in this repo, each successful commit will be pushed to the active branch by default unless the user explicitly says not to.
 9. Do not run any write action unless I explicitly ask for it.

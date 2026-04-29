@@ -1,0 +1,233 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  cat <<'USAGE'
+Usage: executable_readme-recruiter-sync [REPO_ROOT]
+
+Runs the repo-local README recruiter-sync gate contract checks and reports one of:
+- pass_no_change
+- update_in_same_change
+- blocked
+
+Exit status: 0 for pass_no_change, 1 for update_in_same_change, 2 for blocked.
+USAGE
+  exit 0
+fi
+
+find_repo_root() {
+  local dir="$1"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/README.md" ]]; then
+      echo "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  return 1
+}
+
+resolve_skill_dir() {
+  local repo_root="$1"
+
+  if [[ -n "${READMERECRUITERSYNC_SKILL_DIR:-}" && -d "$READMERECRUITERSYNC_SKILL_DIR" ]]; then
+    echo "$READMERECRUITERSYNC_SKILL_DIR"
+    return 0
+  fi
+
+  if [[ -d "$repo_root/dot_agents/skills/readme-recruiter-sync" ]]; then
+    echo "$repo_root/dot_agents/skills/readme-recruiter-sync"
+    return 0
+  fi
+
+  if [[ -d "$repo_root/.agents/skills/readme-recruiter-sync" ]]; then
+    echo "$repo_root/.agents/skills/readme-recruiter-sync"
+    return 0
+  fi
+
+  if [[ -d "$HOME/.agents/skills/readme-recruiter-sync" ]]; then
+    echo "$HOME/.agents/skills/readme-recruiter-sync"
+    return 0
+  fi
+
+  return 1
+}
+
+if [[ $# -ge 1 ]]; then
+  if ! REPO_ROOT="$(cd "$1" && pwd)"; then
+    echo "blocked"
+    echo "Reasons:"
+    echo "  - blocked: provided path is not a readable directory: $1"
+    exit 2
+  fi
+else
+  if ! REPO_ROOT="$(find_repo_root "$(pwd)")"; then
+    echo "blocked"
+    echo "Reasons:"
+    echo "  - blocked: could not locate a README.md in current path or any parent directory"
+    exit 2
+  fi
+fi
+
+README_PATH="$REPO_ROOT/README.md"
+SKILL_DIR="$(resolve_skill_dir "$REPO_ROOT" || true)"
+
+if [[ -z "$SKILL_DIR" ]]; then
+  echo "blocked"
+  echo "Reasons:"
+  echo "  - blocked: readme-recruiter-sync skill metadata is missing in repo dot_agents, repo .agents, environment override, and ~/.agents"
+  exit 2
+fi
+
+SKILL_FILE="$SKILL_DIR/SKILL.md"
+OPENAI_YAML="$SKILL_DIR/agents/openai.yaml"
+CONTRACT_FILE="$SKILL_DIR/references/readme-contract.md"
+
+heading_line() {
+  local pattern=$1
+  rg -n -m1 -e "$pattern" "$README_PATH" | awk -F: 'NR == 1 {print $1}' || true
+}
+
+add_issue() {
+  local level=$1
+  local message=$2
+  local evidence=$3
+  status="update_in_same_change"
+  issues+=("${level}: ${message} (evidence: ${evidence})")
+}
+
+status="pass_no_change"
+issues=()
+
+if [[ ! -f "$README_PATH" ]]; then
+  status="blocked"
+  issues+=("blocked: README.md missing")
+fi
+
+if [[ ! -f "$SKILL_FILE" ]]; then
+  status="blocked"
+  issues+=("blocked: readme-recruiter-sync SKILL.md missing")
+fi
+
+if [[ ! -f "$OPENAI_YAML" ]]; then
+  status="blocked"
+  issues+=("blocked: readme-recruiter-sync agents/openai.yaml missing")
+fi
+
+if [[ ! -f "$CONTRACT_FILE" ]]; then
+  status="blocked"
+  issues+=("blocked: readme-recruiter-sync references/readme-contract.md missing")
+fi
+
+if [[ "$status" == "pass_no_change" ]]; then
+  first_section_line="$(rg -n '^## ' "$README_PATH" | awk -F: 'NR == 1 {print $1}' || true)"
+  first_fenced_code_line="$(rg -n '^```' "$README_PATH" | awk -F: 'NR == 1 {print $1}' || true)"
+
+  if [[ -z "$first_section_line" ]]; then
+    add_issue "coverage" "README has no second-level sections" "no /^## / heading"
+  fi
+
+  opening_hook="$(awk '
+    /^## / { exit }
+    /^# / { next }
+    /^\s*$/ { next }
+    /^<img[[:space:]]/ { next }
+    {
+      if (line_count < 10) {
+        print
+        line_count++
+      }
+    }
+  ' "$README_PATH" | head -n 10)"
+
+  hook_line_count="$(printf '%s\n' "$opening_hook" | awk 'NF { count += 1 } END { print count + 0 }')"
+  hook_word_count="$(printf '%s\n' "$opening_hook" | wc -w | awk '{ print $1 }')"
+
+  if [[ "$hook_line_count" -lt 2 || "$hook_word_count" -lt 35 ]]; then
+    add_issue "coverage" "Opening hook is too short or generic for recruiter-facing proof" "hook lines=${hook_line_count}, words=${hook_word_count}"
+  fi
+
+  if ! printf '%s\n' "$opening_hook" | rg -qi '(problem|impact|because|help[s]?|enable[s]?|reduce|improve|automate|deploy|ship|build|outcome|for teams|for engineers|for recruiters|measur|scale|value|decision|tradeoff|reduce risk)'; then
+    add_issue "coverage" "Opening hook does not state what the repo solves and why it matters" "opening hook text: ${opening_hook//$'\n'/ }"
+  fi
+
+  tech_stack_line="$(heading_line '^## .*Tech Stack.*Why.*Chosen|^## .*Tech Stack')"
+  install_line="$(heading_line '^## .*Install|^## .*Bootstrap|^## .*Setup|^## .*Get Started|^## .*Bootstrapp')"
+  day_to_day_line="$(heading_line '^## .*Day.?to.?Day|^## .*How ?to ?use|^## .*Usage|^## .*Workflow|^## .*Daily')"
+  command_ref_line="$(heading_line '^## .*Core Command Reference|^## .*Command Reference|^## .*CLI|^## .*Commands|^## .*Command Options')"
+  setup_heading_line="$(heading_line '^## .*Quick Start|^## .*Install|^## .*Setup|^## .*How ?to ?run|^## .*Get Started|^## .*Bootstrap|^## .*Bootstrapp')"
+
+  if [[ -z "$tech_stack_line" ]]; then
+    add_issue "coverage" "Missing tech-stack-and-why-chosen section" "no heading matching Tech Stack"
+  fi
+
+  if [[ -z "$install_line" ]]; then
+    add_issue "coverage" "Missing install/bootstrap section" "no heading matching Install or Bootstrap"
+  fi
+
+  if [[ -z "$day_to_day_line" ]]; then
+    add_issue "coverage" "Missing day-to-day usage section" "no heading matching day-to-day or usage"
+  fi
+
+  if [[ -z "$command_ref_line" ]]; then
+    if rg -qi '(no project-?defined command flags|no meaningful flags|no command.?line flags|project.?defined command flags|flags are not)' "$README_PATH"; then
+      true
+    else
+      add_issue "coverage" "Missing core command reference section" "no heading matching command/reference/CLI"
+    fi
+  fi
+
+  if [[ -n "$setup_heading_line" && -n "$tech_stack_line" && "$setup_heading_line" -lt "$tech_stack_line" ]]; then
+    add_issue "hierarchy" "Setup-style section appears before repo stack rationale" "setup-like heading line ${setup_heading_line}; tech stack line ${tech_stack_line}"
+  fi
+
+  if [[ -n "$first_section_line" && -n "$tech_stack_line" && "$first_section_line" -lt "$tech_stack_line" ]]; then
+    add_issue "hierarchy" "First second-level section starts before stack rationale is introduced" "first section line ${first_section_line}; tech stack line ${tech_stack_line}"
+  fi
+
+  if [[ -n "$first_fenced_code_line" && -n "$tech_stack_line" && "$first_fenced_code_line" -lt "$tech_stack_line" ]]; then
+    add_issue "hierarchy" "First fenced code block appears before recruiter-value proof and stack rationale" "first fence line ${first_fenced_code_line}; tech stack line ${tech_stack_line}"
+  fi
+
+  if [[ -n "$first_fenced_code_line" && -n "$first_section_line" && "$first_fenced_code_line" -lt "$first_section_line" ]]; then
+    add_issue "hierarchy" "README starts with a code block before opening hook sections" "first fenced block line ${first_fenced_code_line}"
+  fi
+
+  if [[ -n "$day_to_day_line" && -n "$install_line" && "$day_to_day_line" -lt "$install_line" ]]; then
+    add_issue "hierarchy" "Day-to-day section appears before install/bootstrap section" "day-to-day line ${day_to_day_line}; install line ${install_line}"
+  fi
+
+  if [[ -n "$install_line" && -n "$tech_stack_line" && "$install_line" -lt "$tech_stack_line" ]]; then
+    add_issue "hierarchy" "Install/bootstrap appears before explicit stack rationale" "install line ${install_line}; tech stack line ${tech_stack_line}"
+  fi
+fi
+
+if [[ -f "$CONTRACT_FILE" && ! -s "$CONTRACT_FILE" ]]; then
+  status="blocked"
+  issues+=("blocked: README contract file is empty")
+fi
+
+if [[ ${#issues[@]} -gt 0 ]]; then
+  status="${status:-update_in_same_change}"
+fi
+
+printf '%s\n' "${status}"
+if [[ ${#issues[@]} -gt 0 ]]; then
+  printf '%s\n' 'Reasons:'
+  for issue in "${issues[@]}"; do
+    printf '  - %s\n' "$issue"
+  done
+fi
+
+case "$status" in
+  pass_no_change)
+    exit 0
+    ;;
+  update_in_same_change)
+    exit 1
+    ;;
+  blocked)
+    exit 2
+    ;;
+esac

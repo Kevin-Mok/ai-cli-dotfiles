@@ -296,6 +296,7 @@ Before merging:
 - [ ] Tested manually or via automated tests
 - [ ] Conventional commit message used
 - [ ] No unnecessary churn or drive-by refactors
+- [ ] If merging from a work tree, push to `main` immediately after the merge succeeds.
 
 PR sections to include in output:
 
