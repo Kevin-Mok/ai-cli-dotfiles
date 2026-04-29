@@ -1,7 +1,7 @@
 function fn-progress
-    # --- Season Dates (Fortnite Chapter 7 Season 1) ---
-    set SEASON_START "2025-11-29 00:00:00"
-    set SEASON_END "2026-03-04 00:00:00"
+    # --- Season Dates (Fortnite Chapter 7 Season 2) ---
+    set SEASON_START "2026-03-19 00:00:00"
+    set SEASON_END "2026-06-05 00:00:00"
 
     # --- Calculate Unix Timestamps ---
     set START_SECONDS (date -d "$SEASON_START" +%s)
@@ -11,12 +11,12 @@ function fn-progress
 
     # --- Check if the season is over or hasn't started ---
     if test "$CURRENT_SECONDS" -lt "$START_SECONDS"
-        echo "🎯 Fortnite C7S1 hasn't started yet! (Starts on $SEASON_START)"
+        echo "🎯 Fortnite C7S2 hasn't started yet! (Starts on $SEASON_START)"
         return
     end
 
     if test "$CURRENT_SECONDS" -ge "$END_SECONDS"
-        echo "🎉 Fortnite C7S1 has ended! (Ended on $SEASON_END)"
+        echo "🎉 Fortnite C7S2 has ended! (Ended on $SEASON_END)"
         return
     end
 
@@ -34,6 +34,6 @@ function fn-progress
     echo "🚀 Season Start: $SEASON_START"
     echo "🛑 Season End: $SEASON_END"
     echo "---"
-    echo "✅ Fortnite C7S1 is **$PROGRESS_PERCENT%** complete!"
+    echo "✅ Fortnite C7S2 is **$PROGRESS_PERCENT%** complete!"
     echo "---"
 end
