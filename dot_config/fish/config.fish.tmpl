@@ -75,6 +75,7 @@ set -x GOPATH ~/go
 set -Ux ANDROID_HOME $HOME/Android/Sdk
 set --export BUN_INSTALL "$HOME/.bun"
 set -x PATH $PATH ~/.local/bin ~/scripts ~/scripts/colors $GOPATH/bin ~/.minetest/minetest/bin ~/.gem/ruby/*/bin ~/.yarn/bin ~/.linuxbrew/bin ~/.fnm/current/bin ~/.nimble/bin ~/miniconda3/bin $ANDROID_HOME/platform-tools $ANDROID_HOME/emulator $BUN_INSTALL/bin ~/.maestro/bin
+set -gx PATH "/home/kevin/.local/share/fnm/node-versions/v22.15.0/installation/bin" $PATH
 set -x PKG_CONFIG_PATH $PKG_CONFIG_PATH /usr/lib/pkgconfig
 set -Ux PATH $PATH 
 
