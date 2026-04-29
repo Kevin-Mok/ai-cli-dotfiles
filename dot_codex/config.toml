@@ -1,12 +1,15 @@
-personality = "pragmatic"
-model = "gpt-5.4"
-model_reasoning_effort = "low"
-plan_mode_reasoning_effort = "high"
+personality = "friendly"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+plan_mode_reasoning_effort = "xhigh"
 developer_instructions = """
 When a task uses an ExecPlan or updates documentation under `plans/`, keep those plan document changes in the same commit(s) as the related implementation or documentation work. Do not leave relevant plan files out of the commit unless the user explicitly asks.
 When writing git commit messages, use a concise Conventional Commit-style subject line. In the commit body, keep the summary minimal but clear, using only as many bullet points as needed to describe the concrete changes.
 Before the first command or patch that can modify repo-tracked files in a git repository, capture the current `git status --short` so session-scoped commit workflows can distinguish pre-existing dirty files from current-session work.
 """
+approvals_reviewer = "guardian_subagent"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
 
 [features]
 multi_agent = true
@@ -14,6 +17,7 @@ js_repl = true
 apps = true
 guardian_approval = true
 prevent_idle_sleep = true
+use_linux_sandbox_bwrap = true
 
 [projects."/home/kevin/coding/quit-weed"]
 trust_level = "trusted"
@@ -162,6 +166,69 @@ trust_level = "trusted"
 [projects."/home/kevin/coding/track-a-seal"]
 trust_level = "trusted"
 
+[projects."/home/kevin/coding/mcnic/New folder"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/stb-thief"]
+trust_level = "trusted"
+
+[projects."/home/kevin/Documents/coachella-sched"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/obs/coachella/26"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/all-rise"]
+trust_level = "trusted"
+
+[projects."/home/kevin/Documents/chat"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/graphiti"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/odd-chefs"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/obsidian"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/Pictures/all-rise"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/github-repos/ME-sniper-frontend"]
+trust_level = "trusted"
+
+[projects."/home/kevin/Documents/expenses"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/sekto"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/auction-bot-trx"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/reaction-role-cog"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/sliding-window"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/maxfield"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/stb-casino"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/difference-arrays"]
+trust_level = "trusted"
+
+[projects."/home/kevin"]
+trust_level = "trusted"
+
+[notice]
+fast_default_opt_out = true
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 
@@ -192,3 +259,6 @@ tool_timeout_sec = 120
 notifications = true
 notification_method = "osc9"
 status_line = ["model-with-reasoning", "five-hour-limit", "current-dir", "weekly-limit", "total-input-tokens", "total-output-tokens"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
