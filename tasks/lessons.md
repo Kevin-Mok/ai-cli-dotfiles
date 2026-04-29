@@ -53,3 +53,8 @@
 - When a user expects running Vim or Neovim sessions to react to wallpaper changes, do not assume terminal palette reloads are enough; verify and, if needed, add an editor-side wal refresh path for already-open sessions.
 - When the user reiterates that git worktrees are opt-in, do not suggest or use them unless they explicitly ask for them.
 - When generating docstrings for LeetCode scaffolds, wrap every docstring line to a Vim-friendly maximum width instead of leaving long prompt sentences unwrapped.
+2026-04-10 - When asked to merge from a work tree, always push to `main` afterwards before proceeding.
+- In /home/kevin/linux-config, when a README check passes structural headings but fails recruiter-first positioning, run the gate against opening-hook substance, hierarchy, and stack-vs-setup ordering before reporting it as acceptable.
+
+- 2026-04-16: Fixed `readme-recruiter-sync` to resolve metadata repo-agnostically (`dot_agents/` first, then repo `.agents`, then `$HOME/.agents`, plus optional `READMERECRUITERSYNC_SKILL_DIR`) and derive repo root by walking up to nearest README. This prevents terminal-specific false failures in repos without local skill copy.
+- 2026-04-27: When Graphiti MCP needs to be available on login, mount `/dev/sdc1` to `/mnt/linux-files-3` only when the device exists and start `docker compose -f ~/coding/graphiti/mcp_server/docker/docker-compose-neo4j.yml up -d`; skip startup cleanly if host port 8000 is already bound so startup can continue.

@@ -59,3 +59,22 @@
 2026-04-03 - Do not propose or use git worktrees unless I explicitly ask for them.
 2026-04-03 - In /home/kevin/coding/leetcode, when I ask for a hint, give only the next minimal hint.
   Do not include a broader explanation or multiple steps unless I explicitly ask for more.
+2026-04-10 - When I explicitly request git worktrees, create them under the target repository's `.worktrees/` directory.
+  Treat this as a cross-repo default instead of using a global worktree location.
+2026-04-10 - When I explicitly request git worktrees, create them under the target repository's `.worktrees/` directory.
+  Treat this as a cross-repo default instead of using a global worktree location.
+2026-04-10 - When merging from a work tree, always push to `main` afterwards.
+2026-04-12 - In smoke-test docs for this repo, format command actions as plain single-line commands with no backtick wrapping for easy one-line yanking.
+2026-04-22 - In /home/kevin/coding/maxfield, ignore readme-recruiter-sync unless I explicitly ask for it.
+2026-04-22 - In /home/kevin/coding/maxfield, do not require recruiter-facing README structure or any README gate unless I explicitly ask for README work or that gate.
+2026-04-22 - When preparing or making commits, keep relevant docs in the same commit as the related dirty implementation or config work.
+  Do not split matching docs into a separate cleanup/docs commit when they belong to the same change.
+2026-04-23 Remember: user requested dual-mode Java/Python explanation walkthroughs with inline comments/implementation for the Problem 3 / Problem 2 timeline sections; keep changes scoped to existing lesson/problem UI and data files.
+2026-04-28 - When expanding lesson-slide bullets, include a concrete example for each bullet point instead of leaving concepts abstract.
+2026-04-28 - When I ask for a split commit plan and then say cmt/commit, execute the planned split commits; do not collapse them into one commit unless I explicitly approve that change.
+2026-04-28 - When showing range-update changes in lesson bullet points, always include the start and end values, and delta when relevant, before showing boundary marks or running totals.
+2026-04-28 - When introducing an `update` array in lesson content, define the shape `[start, end, delta]` before using a concrete update like `[1, 3, 3]`.
+2026-04-28 - Avoid vague verbs like "write" in beginner algorithm lessons; use exact operations and targets such as "add +3 to `diff[1]`."
+2026-04-28 - When a lesson bullet uses `end + 1`, restate that `end` is the last included index in the range inside that same bullet.
+2026-04-28 - When explaining algorithm efficiency in lesson content, include operation counts that compare the direct approach against the optimized approach.
+2026-04-28 - When moving between lesson problems, explicitly state the bridge: what idea stays the same, what changes, and how the previous problem's artifact is reused.
