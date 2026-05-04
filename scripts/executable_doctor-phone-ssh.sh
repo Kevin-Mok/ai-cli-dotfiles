@@ -131,7 +131,7 @@ fi
 
 print_section "Effective sshd Settings"
 if command -v sshd >/dev/null 2>&1; then
-  sshd -T | grep -E '^(port|passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication|permitrootlogin|allowtcpforwarding) ' || true
+  sshd -T | grep -E '^(port|authenticationmethods|passwordauthentication|kbdinteractiveauthentication|pubkeyauthentication|permitrootlogin|allowtcpforwarding) ' || true
 else
   print_fail "sshd is not installed"
   exit 1

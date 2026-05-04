@@ -40,6 +40,7 @@ What this does:
   - Installs /etc/ssh/sshd_config.d/81-phone-ssh-hardening.conf
   - Restricts SSH login to the chosen user
   - Forces public-key auth as the only allowed authentication method
+  - Refuses to apply unless the chosen user already has an authorized public key
   - Tightens auth and connection limits to reduce spam noise and abuse
   - Validates sshd config before applying it
 
@@ -78,6 +79,24 @@ detect_ssh_service() {
   fi
 
   return 1
+}
+
+count_authorized_keys() {
+  local auth_keys="$1"
+
+  if ! "${sudo_cmd[@]}" test -f "$auth_keys"; then
+    printf '0\n'
+    return 0
+  fi
+
+  "${sudo_cmd[@]}" awk '
+    /^[[:space:]]*(ssh-(ed25519|rsa|dss)|ecdsa-sha2-nistp(256|384|521)|sk-ssh-ed25519@openssh.com|sk-ecdsa-sha2-nistp256@openssh.com)[[:space:]]+/ {
+      count++
+    }
+    END {
+      print count + 0
+    }
+  ' "$auth_keys"
 }
 
 ssh_socket_unit_exists() {
@@ -176,6 +195,23 @@ if [ -z "$sshd_bin" ]; then
   print_fail "sshd is not installed or not on PATH. Install OpenSSH server first."
   exit 1
 fi
+
+target_home="$(getent passwd "$target_user" | cut -d: -f6)"
+if [ -z "$target_home" ] || [ ! -d "$target_home" ]; then
+  print_fail "Could not resolve a home directory for user: $target_user"
+  exit 1
+fi
+
+auth_keys="$target_home/.ssh/authorized_keys"
+authorized_key_count="$(count_authorized_keys "$auth_keys")"
+if [ "$authorized_key_count" -lt 1 ]; then
+  print_fail "Refusing to force key-only SSH because $auth_keys does not contain a valid public key."
+  print_note "Add your SSH public key first or run scripts/executable_setup-phone-ssh.sh with --public-key."
+  exit 1
+fi
+
+print_section "Authorized Keys"
+print_note "Valid public keys found in $auth_keys: $authorized_key_count"
 
 ssh_service="$(detect_ssh_service || true)"
 if [ -z "$ssh_service" ]; then

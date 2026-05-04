@@ -102,6 +102,8 @@ What it tightens:
 - restricts SSH login to the chosen user with `AllowUsers`
 - forces `AuthenticationMethods publickey`
 - keeps password and keyboard-interactive auth disabled
+- refuses to apply if the chosen user has no valid public key in
+  `~/.ssh/authorized_keys`
 - lowers `MaxAuthTries`
 - shortens `LoginGraceTime`
 - limits unauthenticated connection bursts with `MaxStartups`
@@ -135,6 +137,7 @@ Run the host-side doctor:
 What it tells you:
 
 - whether `sshd` is effectively configured for `22229`
+- whether key-only authentication is active in effective `sshd` settings
 - whether `ssh.socket` is still forcing the listener to port `22`
 - whether the host is actually listening on `22229`
 - whether `ufw` or `firewalld` appears to allow the port

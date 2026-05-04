@@ -165,6 +165,7 @@ set --erase DB_NAME
 set -x OPENCLAW_CONFIG_PATH /home/kevin/coding/openclaw/.openclaw-dev/openclaw.json
 set -x OPENCLAW_STATE_DIR /home/kevin/coding/openclaw/.openclaw-dev
 if command -sq pass
+      set -lx PASSWORD_STORE_GPG_OPTS $PASSWORD_STORE_GPG_OPTS --batch --pinentry-mode=cancel
       set -l openai_key (pass show career/openai-openclaw 2>/dev/null | head -n1)
       if test -n "$openai_key"
           set -gx OPENAI_API_KEY $openai_key
