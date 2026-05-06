@@ -13,6 +13,10 @@ of stacking duplicates.
   Expected: The skill definition, `dot_agents/skills/README.md`, and the
   root `README.md` stay aligned with the new workflow the skill adds or
   changes.
+- Action: Run `commit-plan` on a dirty tree whose changes clearly include
+  an older prerequisite change and a newer follow-up change.
+  Expected: The proposed commits, optional manual commands, and commit
+  message summary all list the older change before the newer follow-up.
 - Action: Finish a task that introduced a reusable manual verification
   step or exposed a missing smoke check.
   Expected: This document gains or updates a grouped `Action` +

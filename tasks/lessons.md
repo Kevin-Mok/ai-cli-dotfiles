@@ -53,6 +53,7 @@
 - When a user expects running Vim or Neovim sessions to react to wallpaper changes, do not assume terminal palette reloads are enough; verify and, if needed, add an editor-side wal refresh path for already-open sessions.
 - When the user reiterates that git worktrees are opt-in, do not suggest or use them unless they explicitly ask for them.
 - When generating docstrings for LeetCode scaffolds, wrap every docstring line to a Vim-friendly maximum width instead of leaving long prompt sentences unwrapped.
+- When maintaining `commit-plan`, treat oldest-to-newest commit order as an execution invariant across the plan, manual commands, and message summary.
 2026-04-10 - When asked to merge from a work tree, always push to `main` afterwards before proceeding.
 - In /home/kevin/linux-config, when a README check passes structural headings but fails recruiter-first positioning, run the gate against opening-hook substance, hierarchy, and stack-vs-setup ordering before reporting it as acceptable.
 

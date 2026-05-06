@@ -58,7 +58,10 @@ For this skill, "dirty changes" include:
 6. Identify whether `readme-recruiter-sync` will likely require a root `README.md` update before any commit is safe.
    - Pay extra attention when changes touch `AGENTS.md`, `AGENTS.repo.md`, `dot_codex/`, `dot_agents/`, `plans/`, the root `README.md`, onboarding or setup flows, or any command the README currently documents.
    - If dirty changes include files under `plans/`, `docs/`, or any other local documentation, ensure the plan explicitly groups each doc update with its corresponding feature/config change so they land in the same commit.
-7. Produce a commit plan that covers all dirty changes, ordered from the oldest changes to the newest changes.
+7. Produce a commit plan that covers all dirty changes in chronological order: oldest changes first, newest changes last.
+   - Treat this as an execution invariant, not a presentation preference.
+   - Use evidence from file history, existing plan notes, related docs, diff context, and user-provided timing to infer chronology.
+   - If chronology is ambiguous, say what is ambiguous and choose the safest order that does not place clearly newer follow-up work before older prerequisite work.
 8. Assume that when the plan is later executed in this repo, each successful commit will be pushed to the active branch by default unless the user explicitly says not to.
 9. Do not run any write action unless I explicitly ask for it.
 
@@ -84,7 +87,7 @@ Return the result in this structure:
 - one short sentence about the overall shape of the change
 
 ### 2) Proposed commit plan
-List the proposed commits in execution order from oldest to newest.
+List the proposed commits in execution order from oldest to newest. Do not sort by convenience, file path, or perceived importance when that would invert the chronology of the work.
 
 For each proposed commit:
 - commit number
@@ -103,12 +106,12 @@ For each proposed commit:
 Call out anything that should probably be excluded, split out, double-checked, or cleaned up first.
 
 ### 4) Optional manual commands
-Provide manual `git add ...`, `git commit ...`, and `git push ...` commands I can run myself if useful.
+Provide manual `git add ...`, `git commit ...`, and `git push ...` commands I can run myself if useful. Commands must preserve the same oldest-to-newest order as the proposed commit plan.
 
 ### 5) Commit message summary
 End the response with a compact summary of the suggested commit message subjects:
 - put this section at the very bottom of the response
-- list one subject line per proposed commit, in commit order
+- list one subject line per proposed commit, in oldest-to-newest commit order
 - keep each line to the concise Conventional Commit-style subject only
 - if there is only one proposed commit, still include the one-line summary
 
@@ -149,7 +152,7 @@ feat: add retry handling for webhook delivery
 ## Decision rules
 
 - Prefer multiple small coherent commits over one giant mixed commit.
-- Order proposed commits from the oldest changes to the newest changes.
+- Order proposed commits from the oldest changes to the newest changes; never put a newer follow-up commit before the older change it depends on.
 - If all dirty changes clearly belong together, say so and propose a single commit.
 - If the diff is messy, propose a cleanup or split strategy before proposing final commits.
 - If a file is ambiguous, call out the ambiguity instead of guessing.
