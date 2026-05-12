@@ -65,6 +65,25 @@ These repo-local instructions apply in addition to the merged guidance below.
 - Keep smoke-test entries grouped by area and written as an `Action` plus `Expected` result.
 - Update or replace stale smoke-test entries instead of appending duplicates or one-off debugging notes.
 
+### System Design References
+
+Use `~/.agents/system-design/` as the shared domain reference pack for
+LessonOps-style product, platform, UI, AI workflow, source-lineage, or
+education-system design tasks. These docs are contextual references; they do
+not override active-session instructions or the AGENTS precedence chain.
+
+- Read `~/.agents/system-design/architecture.md` for platform
+  architecture, hosting, tenancy, data flow, AI validation, source library,
+  assignments, analytics, security, observability, or CI/CD work.
+- Read `~/.agents/system-design/coding-standards.md` before
+  implementing LessonOps-style app, API, database, frontend, AI workflow,
+  testing, security, review, or documentation changes.
+- Read `~/.agents/system-design/ui-design.md` before LessonOps
+  Teacher/Admin Portal or Student Portal UI work.
+- Read the narrower references when tasks mention their topic:
+  `knowledge-base.md`, `student-practice-packages.md`,
+  `trusted-sources.md`, or `business-strategy.md`.
+
 ## Source Order
 
 1. `upwork`

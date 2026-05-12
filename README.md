@@ -94,6 +94,10 @@ high-leverage properties:
   into a coherent commit sequence.
 - The Graphiti MCP layer gives Codex a local temporal memory surface
   for longer-running, multi-session work.
+- [`dot_agents/system-design/`](dot_agents/system-design/) keeps a
+  chezmoi-managed `~/.agents/system-design/` reference pack for
+  LessonOps-style architecture, coding, UI, source-lineage, Knowledge
+  Base, and education-platform decisions.
 - The README gate itself is versioned: the repo includes a
   recruiter-first sync skill that forces the public docs to keep pace
   with setup, usage, command flags, and repo positioning.
@@ -149,7 +153,7 @@ It tracks:
 - the default model and reasoning effort
 - trusted local project paths
 - MCP servers
-- notification and status-line preferences
+- notification, status-line, TUI keymap, and default Vim-mode preferences
 - repo-specific developer instructions for plan and commit hygiene
 
 That matters because a new Codex pane inherits the same defaults

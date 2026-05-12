@@ -26,6 +26,26 @@ For non-trivial tasks (3+ steps, multi-file changes, or architecture decisions):
 - Create and maintain an ExecPlan per `.agent/PLANS.md` (or `PLANS.md` where that is canonical).
 - Store ExecPlans at `plans/<task-slug>.md` unless instructed otherwise.
 
+## Shared System Design References
+
+When available, use `~/.agents/system-design/` as a shared domain reference
+pack for LessonOps-style product, platform, UI, AI workflow, source-lineage,
+or education-system design tasks. These docs are contextual references; they
+do not override active-session instructions, repository AGENTS files, or
+narrower local constraints.
+
+- Read `~/.agents/system-design/architecture.md` for platform architecture,
+  hosting, tenancy, data flow, AI validation, source library, assignments,
+  analytics, security, observability, or CI/CD work.
+- Read `~/.agents/system-design/coding-standards.md` before implementing
+  LessonOps-style app, API, database, frontend, AI workflow, testing,
+  security, review, or documentation changes.
+- Read `~/.agents/system-design/ui-design.md` before LessonOps Teacher/Admin
+  Portal or Student Portal UI work.
+- Read the narrower references when tasks mention their topic:
+  `knowledge-base.md`, `student-practice-packages.md`, `trusted-sources.md`,
+  or `business-strategy.md`.
+
 ---
 
 ## 0) Prime Directive

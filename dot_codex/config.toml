@@ -1,6 +1,6 @@
 personality = "friendly"
 model = "gpt-5.5"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 plan_mode_reasoning_effort = "xhigh"
 developer_instructions = """
 When a task uses an ExecPlan or updates documentation under `plans/`, keep those plan document changes in the same commit(s) as the related implementation or documentation work. Do not leave relevant plan files out of the commit unless the user explicitly asks.
@@ -224,6 +224,33 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/kevin"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/ai-summer-camp"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/Pictures/tattoo"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/mm-bot"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/mm-bot-old"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/fiverr"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/gauss-app"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/rims"]
+trust_level = "trusted"
+
+[projects."/tmp/cindy-workflow-smoke/smoke-gauss8"]
+trust_level = "trusted"
+
+[projects."/home/kevin/coding/lesson-ops"]
 trust_level = "trusted"
 
 [notice]

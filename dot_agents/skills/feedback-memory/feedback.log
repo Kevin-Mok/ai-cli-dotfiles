@@ -78,3 +78,15 @@
 2026-04-28 - When a lesson bullet uses `end + 1`, restate that `end` is the last included index in the range inside that same bullet.
 2026-04-28 - When explaining algorithm efficiency in lesson content, include operation counts that compare the direct approach against the optimized approach.
 2026-04-28 - When moving between lesson problems, explicitly state the bridge: what idea stays the same, what changes, and how the previous problem's artifact is reused.
+2026-04-29 - When committing image or video assets, always ensure they are tracked through Git LFS before committing.
+2026-05-03 - Always add a focused regression test with bug fixes when the behavior can be covered by automated tests; do not hand off a code-only bug fix.
+2026-05-05 - When updating or creating repo-local skills, always update docs/smoke-tests.md in the same change with the latest skill expected inputs and expected outputs.
+2026-05-05 - In smoke-test docs, make command-based Action entries exact one-line shell commands, not prose descriptions; keep expected inputs and output artifacts explicit nearby.
+2026-05-05 - In /home/kevin/coding/gauss-app, treat E2E regression tests and reproducible pipeline handoffs as crucial repo guidance.
+  Record this in AGENTS.repo.md when repo workflow rules are updated, and do not ship Cindy workflow changes without automated reproducibility coverage to the current handoff point.
+2026-05-06 - When maintaining or using `commit-plan`, preserve chronological commit order: oldest dirty changes first, newest follow-ups last.
+2026-05-06 - Never show RTP, house return, or similar return-rate math in player-facing game commands or player docs across any game; keep that math admin/internal only unless explicitly requested.
+2026-05-10 - In /home/kevin/coding/lesson-ops, do not use `readme-recruiter-sync`.
+  Do not rewrite `README.md` for this repo unless I explicitly ask.
+2026-05-11 - In /home/kevin/coding/lesson-ops, when I ask for a new branch, create a PR doc with title and description as part of the branch setup.
+2026-05-11 - In new branch/PR workflows, prefer GitHub CLI (`gh`) for PR creation, PR status, and CI/check inspection when available; create/update the repo PR doc and then use `gh pr create` or `gh pr view` to verify the workflow.
