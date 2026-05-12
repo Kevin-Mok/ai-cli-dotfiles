@@ -78,8 +78,7 @@ not override active-session instructions or the AGENTS precedence chain.
 - Read `~/.agents/system-design/coding-standards.md` before
   implementing LessonOps-style app, API, database, frontend, AI workflow,
   testing, security, review, or documentation changes.
-- Read `~/.agents/system-design/ui-design.md` before LessonOps
-  Teacher/Admin Portal or Student Portal UI work.
+- Read `~/.agents/system-design/ui-design.md` before all UI work.
 - Read the narrower references when tasks mention their topic:
   `knowledge-base.md`, `student-practice-packages.md`,
   `trusted-sources.md`, or `business-strategy.md`.
