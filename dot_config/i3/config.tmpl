@@ -50,8 +50,10 @@ set $sch_dir "$HOME/Documents/School"
 
 set $type_delay_cmd sleep .3
 
-bindsym Control+Return exec $term
-bindsym Control+Shift+Return exec $term -A1
+#bindsym Control+Return exec $term
+bindsym Control+Return exec $term --override font_size=19
+bindsym Control+Shift+Return exec $term
+#bindsym Control+Shift+Return exec $term --override font_size=19
 bindsym Control+$mod+Return exec $term_alt
 # bindsym Control+$mod+Return exec st
 # PROTIP: You can also dynamically set dmenu's colors this way:
@@ -600,7 +602,7 @@ bar {
   # font pango:$sb_font 17
   #font pango:$sb_font 16:pixelsize=5
   #font pango:$sb_font 16
-  font pango:$sb_font 30
+  font pango:$sb_font 50
   {{ end }}
   colors {
     # 0 (transparent) -> 255 (opaque) in hex
