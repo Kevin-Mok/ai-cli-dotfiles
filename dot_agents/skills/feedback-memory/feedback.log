@@ -90,3 +90,7 @@
   Do not rewrite `README.md` for this repo unless I explicitly ask.
 2026-05-11 - In /home/kevin/coding/lesson-ops, when I ask for a new branch, create a PR doc with title and description as part of the branch setup.
 2026-05-11 - In new branch/PR workflows, prefer GitHub CLI (`gh`) for PR creation, PR status, and CI/check inspection when available; create/update the repo PR doc and then use `gh pr create` or `gh pr view` to verify the workflow.
+2026-05-14 - In email drafts, put reference links below the message body and before the sign-off/from block unless the user asks for a different layout.
+2026-05-14 - In /home/kevin/coding/lesson-ops, when the user asks to send work "to DD" or "to dd", create a PR against `admintriwayeducation/lessonops:main` from Kevin's fork branch and sync the PR title/body into a repo PR doc under `docs/pr/`.
+2026-05-14 - In /home/kevin/coding/lesson-ops, PR docs and smoke-test notes for DD/Cindy reviews must say whether the main changes require the local backend.
+  If backend is required, note there is no live backend and Cindy needs Dongdong/Kevin to show it locally because she reviews live Vercel sites and does not run code.
