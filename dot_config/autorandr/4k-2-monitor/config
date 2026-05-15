@@ -1,0 +1,25 @@
+output HDMI-1
+off
+output DP-0
+off
+output DP-1
+off
+output DP-2
+off
+output DP-3
+off
+output DVI-D-0
+crtc 1
+gamma 1.0:0.833:0.769
+mode 2048x1152
+pos 0x0
+rate 59.91
+x-prop-non_desktop 0
+output HDMI-0
+crtc 0
+gamma 1.0:0.833:0.769
+mode 3840x2160
+pos 2048x0
+primary
+rate 60.00
+x-prop-non_desktop 0
