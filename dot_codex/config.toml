@@ -1,6 +1,6 @@
 personality = "friendly"
-model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.3-codex-spark"
+model_reasoning_effort = "high"
 plan_mode_reasoning_effort = "xhigh"
 developer_instructions = """
 When a task uses an ExecPlan or updates documentation under `plans/`, keep those plan document changes in the same commit(s) as the related implementation or documentation work. Do not leave relevant plan files out of the commit unless the user explicitly asks.
@@ -253,6 +253,12 @@ trust_level = "trusted"
 [projects."/home/kevin/coding/lesson-ops"]
 trust_level = "trusted"
 
+[projects."/mnt/linux-files-3/obs"]
+trust_level = "trusted"
+
+[projects."/mnt/linux-files-3/Pictures/Backgrounds"]
+trust_level = "trusted"
+
 [notice]
 fast_default_opt_out = true
 
@@ -286,6 +292,7 @@ tool_timeout_sec = 120
 notifications = true
 notification_method = "osc9"
 status_line = ["model-with-reasoning", "five-hour-limit", "current-dir", "weekly-limit", "total-input-tokens", "total-output-tokens"]
+status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
