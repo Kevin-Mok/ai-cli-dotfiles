@@ -56,6 +56,12 @@ of stacking duplicates.
   directory returns input/output errors, reports `Mounted Pixel 9 at
   /mnt/pixel-9`, and exits cleanly with an actionable hint if the phone
   is locked or not in file-transfer mode.
+- Action: Run `/home/kevin/scripts/unmount-pixel-9` after mounting the
+  Pixel 9 with `/home/kevin/scripts/mount-pixel-9`.
+  Expected: The script unmounts `/mnt/pixel-9` with `fusermount`,
+  stops processes that keep the mount busy, reports `Unmounted Pixel 9
+  from /mnt/pixel-9`, and exits cleanly if the phone is already
+  unmounted.
 - Action: Run `fish -ic 'refresh-config'` after changing tracked repo configuration on a machine where `chezmoi` and the shell helper scripts are available.
   Expected: The live `~/.codex/config.toml` overwrites tracked `dot_codex/config.toml`, `chezmoi apply` runs, shortcuts regenerate, and fish reloads with the refreshed repo copy now matching the live Codex config.
 - Action: Run `fish -c 'backup-phone-storage'` from a machine that can

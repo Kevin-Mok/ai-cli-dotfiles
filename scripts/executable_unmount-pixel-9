@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mount_dir="${MOUNT_PIXEL_9_DIR:-/mnt/pixel-9}"
+mountpoint_cmd="${MOUNT_PIXEL_9_MOUNTPOINT:-mountpoint}"
+findmnt_cmd="${MOUNT_PIXEL_9_FINDMNT:-findmnt}"
+fusermount_cmd="${MOUNT_PIXEL_9_FUSERMOUNT:-fusermount}"
+fuser_cmd="${MOUNT_PIXEL_9_FUSER:-fuser}"
+sleep_cmd="${MOUNT_PIXEL_9_SLEEP:-sleep}"
+
+usage() {
+  cat <<EOF
+Usage:
+  unmount-pixel-9 [--help]
+
+Unmount the Pixel 9 MTP storage from:
+  /mnt/pixel-9
+EOF
+}
+
+fail() {
+  printf 'unmount-pixel-9: %s\n' "$1" >&2
+  exit 1
+}
+
+need_command() {
+  local command_path="$1"
+  local package_hint="$2"
+
+  if command -v "$command_path" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  fail "missing ${command_path}; install ${package_hint} and try again"
+}
+
+mounted_fstype() {
+  "$findmnt_cmd" --mountpoint "$mount_dir" --noheadings --output FSTYPE 2>/dev/null || true
+}
+
+mount_holders() {
+  "$fuser_cmd" -m "$mount_dir" 2>/dev/null || true
+}
+
+kill_mount_holders() {
+  local holders
+
+  holders="$(mount_holders)"
+  if [ -z "$holders" ]; then
+    return 1
+  fi
+
+  printf 'Stopping processes using %s: %s\n' "$mount_dir" "$holders" >&2
+  "$fuser_cmd" -k -TERM -m "$mount_dir" >/dev/null 2>&1 || true
+  "$sleep_cmd" 1
+
+  holders="$(mount_holders)"
+  if [ -z "$holders" ]; then
+    return 0
+  fi
+
+  printf 'Force-stopping processes still using %s: %s\n' "$mount_dir" "$holders" >&2
+  "$fuser_cmd" -k -KILL -m "$mount_dir" >/dev/null 2>&1 || true
+  "$sleep_cmd" 1
+}
+
+unmount_pixel() {
+  "$fusermount_cmd" -u "$mount_dir"
+}
+
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  "")
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+need_command "$mountpoint_cmd" "util-linux"
+need_command "$findmnt_cmd" "util-linux"
+need_command "$fusermount_cmd" "fuse"
+need_command "$fuser_cmd" "psmisc"
+need_command "$sleep_cmd" "coreutils"
+
+if [ -z "$(mounted_fstype)" ] && ! "$mountpoint_cmd" -q "$mount_dir"; then
+  printf 'Pixel 9 is not mounted at %s\n' "$mount_dir"
+  exit 0
+fi
+
+if ! unmount_pixel; then
+  kill_mount_holders || true
+  if ! unmount_pixel; then
+    fail "could not unmount Pixel 9 at ${mount_dir}; try: fuser -vm ${mount_dir}; fusermount -u ${mount_dir}"
+  fi
+fi
+
+printf 'Unmounted Pixel 9 from %s\n' "$mount_dir"
