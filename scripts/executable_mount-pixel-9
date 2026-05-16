@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mount_dir="${MOUNT_PIXEL_9_DIR:-/mnt/pixel-9}"
+jmtpfs_cmd="${MOUNT_PIXEL_9_JMTPFS:-jmtpfs}"
+mountpoint_cmd="${MOUNT_PIXEL_9_MOUNTPOINT:-mountpoint}"
+findmnt_cmd="${MOUNT_PIXEL_9_FINDMNT:-findmnt}"
+timeout_cmd="${MOUNT_PIXEL_9_TIMEOUT:-timeout}"
+fusermount_cmd="${MOUNT_PIXEL_9_FUSERMOUNT:-fusermount}"
+sudo_cmd="${MOUNT_PIXEL_9_SUDO:-sudo}"
+mkdir_cmd="${MOUNT_PIXEL_9_MKDIR:-mkdir}"
+chown_cmd="${MOUNT_PIXEL_9_CHOWN:-chown}"
+stat_cmd="${MOUNT_PIXEL_9_STAT:-stat}"
+id_cmd="${MOUNT_PIXEL_9_ID:-id}"
+
+usage() {
+  cat <<EOF
+Usage:
+  mount-pixel-9 [--help]
+
+Mount the USB-connected Pixel 9 MTP storage at:
+  /mnt/pixel-9
+
+Before running, unlock the phone and set USB mode to File transfer.
+EOF
+}
+
+fail() {
+  printf 'mount-pixel-9: %s\n' "$1" >&2
+  exit 1
+}
+
+need_command() {
+  local command_path="$1"
+  local package_hint="$2"
+
+  if command -v "$command_path" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  fail "missing ${command_path}; install ${package_hint} and try again"
+}
+
+run_privileged() {
+  if [ "$("$id_cmd" -u)" -eq 0 ]; then
+    "$@"
+    return 0
+  fi
+
+  need_command "$sudo_cmd" "sudo"
+  "$sudo_cmd" "$@"
+}
+
+mounted_fstype() {
+  "$findmnt_cmd" --mountpoint "$mount_dir" --noheadings --output FSTYPE 2>/dev/null || true
+}
+
+mount_is_accessible() {
+  "$timeout_cmd" 3 ls "$mount_dir" >/dev/null 2>&1
+}
+
+unmount_stale_mount() {
+  need_command "$fusermount_cmd" "fuse"
+
+  if ! "$fusermount_cmd" -u "$mount_dir"; then
+    fail "could not unmount stale MTP mount at ${mount_dir}; try: fusermount -u ${mount_dir}"
+  fi
+}
+
+prepare_mount_dir() {
+  if "$mkdir_cmd" -p "$mount_dir" 2>/dev/null; then
+    return 0
+  fi
+
+  run_privileged "$mkdir_cmd" -p "$mount_dir"
+}
+
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  "")
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+need_command "$jmtpfs_cmd" "jmtpfs"
+need_command "$mountpoint_cmd" "util-linux"
+need_command "$findmnt_cmd" "util-linux"
+need_command "$timeout_cmd" "coreutils"
+need_command "$stat_cmd" "coreutils"
+
+if [ -n "$(mounted_fstype)" ]; then
+  if mount_is_accessible; then
+    printf 'Pixel 9 is already mounted at %s\n' "$mount_dir"
+    exit 0
+  fi
+
+  printf 'Remounting stale Pixel 9 MTP mount at %s\n' "$mount_dir"
+  unmount_stale_mount
+elif "$mountpoint_cmd" -q "$mount_dir"; then
+  printf 'Pixel 9 is already mounted at %s\n' "$mount_dir"
+  exit 0
+fi
+
+prepare_mount_dir
+
+owner="$("$id_cmd" -un):$("$id_cmd" -gn)"
+if [ "$("$stat_cmd" -c '%U:%G' "$mount_dir")" != "$owner" ]; then
+  run_privileged "$chown_cmd" "$owner" "$mount_dir"
+fi
+
+if ! "$jmtpfs_cmd" "$mount_dir"; then
+  fail "jmtpfs could not mount the phone; unlock it, choose USB File transfer, then retry"
+fi
+
+if ! mount_is_accessible; then
+  unmount_stale_mount
+  fail "mounted but the phone storage is still inaccessible; unlock it, choose USB File transfer, then reconnect the cable and retry"
+fi
+
+printf 'Mounted Pixel 9 at %s\n' "$mount_dir"

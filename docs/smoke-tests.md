@@ -49,6 +49,13 @@ of stacking duplicates.
 
 ## Fish Helpers
 
+- Action: Connect a Pixel 9 over USB, unlock it, set USB mode to
+  `File transfer`, then run `/home/kevin/scripts/mount-pixel-9`.
+  Expected: The script creates `/mnt/pixel-9` when needed, mounts the
+  phone with `jmtpfs`, remounts a stale broken `jmtpfs` mount when the
+  directory returns input/output errors, reports `Mounted Pixel 9 at
+  /mnt/pixel-9`, and exits cleanly with an actionable hint if the phone
+  is locked or not in file-transfer mode.
 - Action: Run `fish -ic 'refresh-config'` after changing tracked repo configuration on a machine where `chezmoi` and the shell helper scripts are available.
   Expected: The live `~/.codex/config.toml` overwrites tracked `dot_codex/config.toml`, `chezmoi apply` runs, shortcuts regenerate, and fish reloads with the refreshed repo copy now matching the live Codex config.
 - Action: Run `fish -c 'backup-phone-storage'` from a machine that can
