@@ -33,7 +33,7 @@ whi "whereis"
 # nvt "nvidia-settings --assign CurrentMetaMode='DVI-I-1: nvidia-auto-select +0+0 {ForceCompositionPipeline=On}, HDMI-0: nvidia-auto-select +3840+0 {ForceCompositionPipeline=On}'"
 
 xra "xrandr --auto"
-xrs "xrandr --auto && xrandr --output HDMI-0 --right-of DVI-D-0"
+xrs "/home/kevin/scripts/apply-desktop-display-layout"
 xrn "xrandr --output HDMI-0 --rotate normal && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs /home/kevin/scripts/apply-pywal-theme > /dev/null" 
 xrr "xrandr --output HDMI-0 --rotate right && grep wallpaper ~/.cache/wal/colors.sh | cut -d\' -f2 | xargs /home/kevin/scripts/apply-pywal-theme > /dev/null" 
 

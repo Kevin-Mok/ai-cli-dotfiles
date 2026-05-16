@@ -525,6 +525,9 @@ this.
   [`dot_Xresources.tmpl`](dot_Xresources.tmpl), and
   [`dot_Xmodmap`](dot_Xmodmap) control X startup, DPI, fonts, keyboard
   remaps, and wallpaper theming.
+- [`scripts/executable_apply-desktop-display-layout`](scripts/executable_apply-desktop-display-layout)
+  saves the three-monitor desktop order used by i3: 2048px left, 4K
+  middle, and 1080p right.
 - [`dot_config/i3/config.tmpl`](dot_config/i3/config.tmpl) is the main
   desktop control plane for workspace movement, app assignments,
   launcher bindings, display and audio shortcuts, and layout control.

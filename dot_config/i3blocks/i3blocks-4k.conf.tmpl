@@ -1,0 +1,36 @@
+# vim: fdm=marker ft=conf.go-template
+
+#  global [[[ #
+
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+align=center
+command=~/.config/i3blocks/scripts/$BLOCK_NAME
+separator=true
+separator_block_width=25
+markup=pango
+color=#cbe4ff
+
+#  ]]] global #
+
+#  volume [[[ #
+
+[volume]
+interval=once
+signal=1
+interval=60
+
+#  ]]] volume #
+
+#  time [[[ #
+
+[calendar]
+interval=1
+#label=
+# DATEFMT=+%H:%M
+# DATEFMT=+%H:%M.%a-%m-%d
+# SHORTFMT=+%H:%M:%S
+#HEIGHT=180
+#WIDTH=220
+
+#  ]]] time #

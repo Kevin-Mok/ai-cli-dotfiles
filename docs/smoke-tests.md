@@ -118,6 +118,10 @@ of stacking duplicates.
 
 ## Terminal
 
+- Action: Run `/home/kevin/scripts/apply-desktop-display-layout`, reload i3, and inspect `xrandr --query`.
+  Expected: `DVI-D-0` is 2048x1152 at `+0+0`, `DP-2` is 3840x2160 at `+2048+0`, `HDMI-0` is 1920x1080 at `+5888+0`, and i3 shows bars on all three monitors with the new middle 4K bar using the combined active `volume` and `calendar` blocks.
+- Action: Focus a workspace on the left monitor, press `Alt++` until it moves across the middle 4K monitor to the right monitor, then press `Alt+-` to move it back.
+  Expected: Workspace movement follows the physical left-middle-right monitor order and reverses cleanly.
 - Action: Launch the primary terminal from an i3 binding that uses this repo's rendered config, then trigger the Codex launcher shortcut.
   Expected: The normal terminal windows open in `kitty`, and the Codex shortcut also launches inside `kitty` instead of a separate terminal path with different UI chrome.
 - Action: Keep one or more `kitty` windows open, run `/home/kevin/scripts/apply-pywal-theme <wallpaper>` or trigger one of the wallpaper-changing shortcuts, and then open one additional `kitty` window.

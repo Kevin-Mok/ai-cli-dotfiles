@@ -656,6 +656,26 @@ bar {
 
 #  ]]] secondary bar # 
 
+#  4k middle bar [[[ #
+
+bar {
+  output DP-2
+  font pango:$sb_font 50
+  i3bar_command i3bar -t
+  colors {
+    background $black$bar_trans
+    focused_workspace $inactive_ws_bg $ui_focus_bg $ui_focus_text
+    active_workspace $inactive_ws_bg $ui_active_bg $ui_active_text
+    inactive_workspace $inactive_ws_bg $ui_inactive_bg $ui_inactive_text
+  }
+  status_command i3blocks -c ~/.config/i3blocks/i3blocks-4k.conf
+  tray_output none
+  wheel_up_cmd nop
+  wheel_down_cmd nop
+}
+
+#  ]]] 4k middle bar #
+
 #  display bar [[[ # 
 
 # bar {
