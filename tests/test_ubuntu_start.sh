@@ -48,7 +48,8 @@ assert_not_matches() {
 }
 
 mount_line="$(line_number 'GRAPHITI_VOLUME_DEVICE="/dev/sdc1"' "$script_path")"
-wal_line="$(line_number 'wallpaper="$(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing" 2>/dev/null)"' "$script_path")"
+autorandr_line="$(line_number 'start_command autorandr autorandr 4k-3-monitor' "$script_path")"
+wal_line="$(line_number '/home/kevin/scripts/apply-pywal-theme "${HOME}/Pictures/Backgrounds/4k/sukana.jpg" &' "$script_path")"
 compose_line="$(line_number 'docker compose -f docker/docker-compose-neo4j.yml up -d neo4j' "$script_path")"
 
 if [ "$mount_line" -ge "$wal_line" ]; then
@@ -70,7 +71,10 @@ assert_contains 'dunst &' "$script_path"
 assert_contains 'start_command notification-daemon notification-daemon &' "$script_path"
 assert_contains 'start_command numlockx numlockx on &' "$script_path"
 assert_contains 'redshift -m randr -O 3000' "$script_path"
-assert_contains '/home/kevin/scripts/apply-pywal-theme "${wallpaper}" &' "$script_path"
+assert_contains 'start_command autorandr autorandr 4k-3-monitor' "$script_path"
+assert_contains '/home/kevin/scripts/apply-pywal-theme "${HOME}/Pictures/Backgrounds/4k/sukana.jpg" &' "$script_path"
+assert_not_contains 'wallpaper="$(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing" 2>/dev/null)"' "$script_path"
+assert_not_contains '/home/kevin/scripts/apply-pywal-theme "${wallpaper}" &' "$script_path"
 assert_not_contains '/usr/lib/notification-daemon-1.0/notification-daemon &' "$script_path"
 assert_not_contains 'wal -i $(' "$script_path"
 assert_not_matches 'refresh-rate = .*' "$picom_config_path"
@@ -78,6 +82,11 @@ assert_contains 'pointer = 1 2 3 6 7 4 5 10 11 12 8 9 13 14 15 16 17 18 19 20' "
 
 if [ "$compose_line" -le "$wal_line" ]; then
   printf 'expected Graphiti Neo4j startup after wal startup\n' >&2
+  exit 1
+fi
+
+if [ "$autorandr_line" -ge "$wal_line" ]; then
+  printf 'expected autorandr monitor profile before wal startup\n' >&2
   exit 1
 fi
 

@@ -93,8 +93,9 @@ of stacking duplicates.
   Expected: `ubuntu-start` mounts `/dev/sdc1` at `/mnt/linux-files-3`
   using `sudo` when elevation is needed, allowing the operator to enter
   a password instead of silently skipping the mount. It does this before
-  applying the wallpaper through `/home/kevin/scripts/apply-pywal-theme`,
-  starts at most one `picom` compositor, starts `dunst` for notifications
+  applying the `autorandr 4k-3-monitor` profile and the Sukana wallpaper
+  through `/home/kevin/scripts/apply-pywal-theme`, starts at most one
+  `picom` compositor, starts `dunst` for notifications
   when available, applies the full 20-button X pointer map without the
   partial-button warning, skips missing optional helpers such as `numlockx`
   without shell errors, then starts the compose Neo4j service with `docker compose -f

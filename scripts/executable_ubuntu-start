@@ -59,11 +59,12 @@ fi
 #sudo alsa force-reload
 #pulseaudio --start
 
-wallpaper="$(/home/kevin/scripts/shuffler "$HOME/Pictures/Backgrounds/dim/editing" 2>/dev/null)"
-if [ -n "${wallpaper}" ] && [ -f "${wallpaper}" ]; then
-  /home/kevin/scripts/apply-pywal-theme "${wallpaper}" &
+start_command autorandr autorandr 4k-3-monitor
+
+if [ -f "${HOME}/Pictures/Backgrounds/4k/sukana.jpg" ]; then
+  /home/kevin/scripts/apply-pywal-theme "${HOME}/Pictures/Backgrounds/4k/sukana.jpg" &
 else
-  printf 'Skipping pywal startup: no wallpaper found in %s.\n' "${HOME}/Pictures/Backgrounds/dim/editing" >&2
+  printf 'Skipping pywal startup: no wallpaper found at %s.\n' "${HOME}/Pictures/Backgrounds/4k/sukana.jpg" >&2
 fi
 
 if [ -f "${GRAPHITI_COMPOSE_FILE}" ] && command -v docker >/dev/null 2>&1; then

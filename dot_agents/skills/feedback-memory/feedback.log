@@ -94,3 +94,4 @@
 2026-05-14 - In /home/kevin/coding/lesson-ops, when the user asks to send work "to DD" or "to dd", create a PR against `admintriwayeducation/lessonops:main` from Kevin's fork branch and sync the PR title/body into a repo PR doc under `docs/pr/`.
 2026-05-14 - In /home/kevin/coding/lesson-ops, PR docs and smoke-test notes for DD/Cindy reviews must say whether the main changes require the local backend.
   If backend is required, note there is no live backend and Cindy needs Dongdong/Kevin to show it locally because she reviews live Vercel sites and does not run code.
+2026-05-20 - In /home/kevin/coding/lesson-ops, keep docs/smoke-tests.md updated with default Docker port mappings and the expected check-docker-ports OK endpoints when those checks come up.
