@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCREENSHOT_DIR="${SCREENSHOT_ALL_MONITORS_DIR:-/home/kevin/Pictures/screenshots/desktop/unsorted}"
+SCROT_BIN="${SCREENSHOT_ALL_MONITORS_SCROT:-scrot}"
+DATE_BIN="${SCREENSHOT_ALL_MONITORS_DATE:-date}"
+
+require_command() {
+  local command_name="$1"
+  local package_hint="$2"
+
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    printf 'missing required command: %s (%s)\n' "$command_name" "$package_hint" >&2
+    exit 1
+  fi
+}
+
+require_command "$SCROT_BIN" "install scrot"
+require_command "$DATE_BIN" "install coreutils"
+
+mkdir -p "$SCREENSHOT_DIR"
+
+timestamp="$("$DATE_BIN" +%F_%T)"
+output_path="${SCREENSHOT_DIR}/screenshot-${timestamp}.png"
+
+"$SCROT_BIN" "$output_path"
+printf '%s\n' "$output_path"
