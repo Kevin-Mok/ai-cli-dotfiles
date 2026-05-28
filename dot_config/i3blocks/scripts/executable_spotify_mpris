@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+player_dest="org.mpris.MediaPlayer2.spotify"
+object_path="/org/mpris/MediaPlayer2"
+player_iface="org.mpris.MediaPlayer2.Player"
+properties_iface="org.freedesktop.DBus.Properties"
+colors_file="${SPOTIFY_MPRIS_COLORS_FILE:-/home/kevin/.cache/wal/colors.sh}"
+gdbus_bin="${SPOTIFY_MPRIS_GDBUS:-gdbus}"
+dbus_send_bin="${SPOTIFY_MPRIS_DBUS_SEND:-dbus-send}"
+
+color7="#cbe4ff"
+if [ -r "$colors_file" ]; then
+  pywal_color7="$(sed -n "s/^color7=['\"]\([^'\"]*\)['\"].*/\1/p" "$colors_file" | head -n 1)"
+  if [ -n "$pywal_color7" ]; then
+    color7="$pywal_color7"
+  fi
+fi
+
+case "${BLOCK_BUTTON:-}" in
+  1) "$dbus_send_bin" --print-reply --dest="$player_dest" "$object_path" "$player_iface.PlayPause" >/dev/null 2>&1 || true ;;
+  2) "$dbus_send_bin" --print-reply --dest="$player_dest" "$object_path" "$player_iface.Previous" >/dev/null 2>&1 || true ;;
+  3) "$dbus_send_bin" --print-reply --dest="$player_dest" "$object_path" "$player_iface.Next" >/dev/null 2>&1 || true ;;
+esac
+
+metadata="$(
+  "$gdbus_bin" call \
+    --session \
+    --dest "$player_dest" \
+    --object-path "$object_path" \
+    --method "$properties_iface.Get" \
+    "$player_iface" \
+    Metadata 2>/dev/null
+)" || exit 0
+
+extract_string() {
+  local key="$1"
+  sed -n "s/.*'$key': <'\([^']*\)'>.*/\1/p" <<< "$metadata" | head -n 1
+}
+
+extract_artist() {
+  sed -n "s/.*'xesam:artist': <\['\([^']*\)'.*/\1/p" <<< "$metadata" | head -n 1
+}
+
+pango_escape() {
+  local value="$1"
+  value="${value//&/&amp;}"
+  value="${value//</&lt;}"
+  value="${value//>/&gt;}"
+  printf '%s' "$value"
+}
+
+title="$(extract_string 'xesam:title')"
+artist="$(extract_artist)"
+
+if [ -z "$title" ]; then
+  exit 0
+fi
+
+title="$(pango_escape "$title")"
+artist="$(pango_escape "$artist")"
+
+track="$title"
+if [ -n "$artist" ]; then
+  track="$artist - $title"
+fi
+printf '%s\n%s\n%s\n' "$track" "$title" "${color7:-#cbe4ff}"
