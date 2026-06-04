@@ -5,8 +5,8 @@
 set -euo pipefail
 
 WINDOW_MARK="speechnotes_dictation"
-WINDOW_WIDTH=980
-WINDOW_HEIGHT=520
+WINDOW_WIDTH=1180
+WINDOW_HEIGHT=820
 LAUNCH_URL="https://speechnotes.co/dictate/"
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/speechnotes-dictation"
 PROFILE_DIR="${STATE_DIR}/profile"

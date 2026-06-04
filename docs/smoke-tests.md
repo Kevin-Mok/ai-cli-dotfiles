@@ -47,7 +47,7 @@ of stacking duplicates.
 - Action: Run `/home/kevin/scripts/screenshot-all-monitors` from an X session with the three desktop monitors active.
   Expected: One PNG is created under `~/Pictures/screenshots/desktop/unsorted/` with the `screenshot-YYYY-MM-DD_HH:MM:SS.png` naming format, and the image contains the full left-to-right desktop across all three monitors.
 - Action: Start a fresh i3 session on a multi-monitor setup, press `Menu` on the monitor you are actively using, and grant microphone permission or install Dark Reader in the dedicated Speechnotes browser profile if needed. Press `Menu` again while the Speechnotes window is focused.
-  Expected: i3 startup prewarms a hidden Speechnotes app window, the first `Menu` press recalls it nearly instantly on the current monitor in a centered `980x520` floating window instead of between displays, extensions remain installable in the dedicated profile, and a second `Menu` press while it is focused hides it back to scratchpad instead of opening another browser window.
+  Expected: i3 startup prewarms a hidden Speechnotes app window, the first `Menu` press recalls it nearly instantly on the current monitor in a centered `1180x820` floating window instead of between displays, extensions remain installable in the dedicated profile, and a second `Menu` press while it is focused hides it back to scratchpad instead of opening another browser window.
 
 ## Fish Helpers
 

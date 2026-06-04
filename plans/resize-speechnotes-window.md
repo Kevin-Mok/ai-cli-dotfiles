@@ -14,7 +14,7 @@
 
 ## Review
 
-- Replaced the original `1180x820` geometry with a fixed `980x520` centered floating window that matches the requested screenshot size.
+- Raised the fixed Speechnotes geometry from `980x520` to `1180x820` so the i3 app window opens roomier while staying centered.
 - Kept the existing focused-output centering behavior so the fixed size still opens on the active monitor.
 - Verified the behavior with `bash tests/test_speechnotes_dictation.sh`.
 - Updated `docs/smoke-tests.md` so the shared manual check calls out the new fixed window size.
