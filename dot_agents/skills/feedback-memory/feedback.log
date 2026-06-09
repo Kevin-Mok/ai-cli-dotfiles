@@ -95,3 +95,8 @@
 2026-05-14 - In /home/kevin/coding/lesson-ops, PR docs and smoke-test notes for DD/Cindy reviews must say whether the main changes require the local backend.
   If backend is required, note there is no live backend and Cindy needs Dongdong/Kevin to show it locally because she reviews live Vercel sites and does not run code.
 2026-05-20 - In /home/kevin/coding/lesson-ops, keep docs/smoke-tests.md updated with default Docker port mappings and the expected check-docker-ports OK endpoints when those checks come up.
+2026-05-26 - When reporting pushed docs files, include a clickable GitHub link to the file when possible instead of only a local path.
+2026-05-26 - When editing Markdown docs, use rich Markdown links for referenced docs, commits, PRs, and URLs when possible instead of plain code-formatted paths or bare URLs.
+2026-05-26 - For future standup notes, include a GitHub-access check for Cindy when the note is intended for her review, with rich links to the specific standup file and the docs/standup location when useful.
+2026-05-26 - When standup notes are meant for Cindy, phrase access notes so she can read the GitHub Markdown file and pass it to Codex as context for her own conversations.
+2026-06-01 - In /home/kevin/coding/lesson-ops smoke-test docs, use ./scripts/start-app-local.sh as the default entrypoint for persistent student progress sign-in/sign-out smoke tests.
