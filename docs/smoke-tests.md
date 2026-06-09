@@ -40,8 +40,12 @@ of stacking duplicates.
   fish after `chezmoi apply`, then start a new Codex session.
   Expected: `~/.codex/AGENTS.md` exists with the canonical Codex
   instruction document, `~/.agents/AGENTS.md` exists with the shared
-  baseline, `~/.agents/skills/commit-plan/SKILL.md` exists, and the new
-  Codex session can discover the global instruction and skill surfaces.
+  baseline, `~/.agents/skills/commit-plan/SKILL.md` exists,
+  `chezmoi` is available from `$HOME/.local/bin` when it started
+  missing, the default chezmoi config exists under
+  `~/.config/chezmoi/chezmoi.toml`, the default chezmoi source
+  directory exists under `~/.local/share/chezmoi`, and the new Codex
+  session can discover the global instruction and skill surfaces.
 - Action: After `chezmoi apply`, run `install-agent-surface --target <temp-normal-repo> --skill commit-plan` from fish, then run it again from bash with `--chezmoi --target <temp-chezmoi-repo> --skill openai-docs`.
   Expected: The normal target receives `AGENTS.md`, `AGENTS.repo.md`,
   `plans/`, and `.agents/skills/commit-plan/SKILL.md`; the chezmoi

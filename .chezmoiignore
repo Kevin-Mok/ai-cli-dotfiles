@@ -2,7 +2,7 @@ README.md
 commit-msg.txt
 .agents/skills/feedback-memory/feedback.log
 
-{{ if not .gui }}
+{{ if not (and (hasKey . "gui") .gui) }}
 .config/i3/
 .config/i3blocks/
 .config/mpv/

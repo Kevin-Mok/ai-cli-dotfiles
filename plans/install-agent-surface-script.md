@@ -66,6 +66,13 @@
 - Updated `--chezmoi` mode to auto-install `chezmoi` into
   `$HOME/.local/bin` when the command is missing, using the official
   `get.chezmoi.io` installer via `curl` or `wget`.
+- Corrected global install behavior so `--global` also ensures
+  `chezmoi` is available before relying on the home-level install flow.
+- Corrected global install behavior again so `--global` also
+  initializes the default chezmoi source directory from this repo when
+  the source directory does not exist yet.
+- Added a default chezmoi config bootstrap so first-time `chezmoi apply`
+  has the expected repo data like `gui` before template evaluation.
 - Verified with
   `tests/scripts/executable_install-agent-surface_test.sh`,
   `bash -n scripts/executable_install-agent-surface tests/scripts/executable_install-agent-surface_test.sh`,

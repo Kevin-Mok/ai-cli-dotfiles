@@ -52,6 +52,18 @@ fake_bin="$tmp_root/bin"
 mkdir -p "$fake_bin"
 cat > "$fake_bin/chezmoi" <<'EOF'
 #!/usr/bin/env bash
+if [[ "${1:-}" == "--version" ]]; then
+  printf 'chezmoi fake-test\n'
+  exit 0
+fi
+
+if [[ "${1:-}" == "init" ]]; then
+  source_dir="${CHEZMOI_SOURCE_DIR:-$HOME/.local/share/chezmoi}"
+  mkdir -p "$source_dir/.git"
+  printf 'fake init %s\n' "$source_dir"
+  exit 0
+fi
+
 printf 'chezmoi fake-test\n'
 EOF
 chmod +x "$fake_bin/chezmoi"
@@ -95,13 +107,19 @@ fi
 
 global_home="$tmp_root/global-home"
 mkdir -p "$global_home"
+global_bin="$global_home/.local/bin"
+mkdir -p "$global_bin"
+cp "$fake_bin/chezmoi" "$global_bin/chezmoi"
 
-AGENT_SURFACE_HOME="$global_home" "$script_path" --global --skill commit-plan >/tmp/install-agent-surface-global.out
+PATH="$global_bin:/usr/bin:/bin" HOME="$global_home" AGENT_SURFACE_HOME="$global_home" "$script_path" --global --skill commit-plan >/tmp/install-agent-surface-global.out
 
 assert_file "$global_home/.agents/AGENTS.md"
 assert_dir "$global_home/.agents/skills"
 assert_file "$global_home/.agents/skills/commit-plan/SKILL.md"
 assert_file "$global_home/.codex/AGENTS.md"
+assert_file "$global_bin/chezmoi"
+assert_file "$global_home/.config/chezmoi/chezmoi.toml"
+assert_dir "$global_home/.local/share/chezmoi/.git"
 
 if ! grep -Fq 'Canonical Codex instruction document' "$global_home/.codex/AGENTS.md"; then
   printf 'expected global ~/.codex/AGENTS.md to contain canonical Codex instructions\n' >&2

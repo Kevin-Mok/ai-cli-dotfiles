@@ -12,7 +12,8 @@ What this does:
   - Creates plans/
   - Creates .agents/skills/ for normal repos, or dot_agents/skills/ for chezmoi source repos
   - Installs global skills to ~/.agents/skills and global Codex instructions to ~/.codex/AGENTS.md with --global
-  - Installs chezmoi into $HOME/.local/bin when --chezmoi is used and chezmoi is missing
+  - Installs chezmoi into $HOME/.local/bin when the chosen workflow needs it and chezmoi is missing
+  - Initializes the default chezmoi source directory from this repo during --global when it does not exist yet
   - Copies selected local skills from this dotfiles repo when requested
 
 Options:
@@ -145,6 +146,43 @@ ensure_chezmoi() {
   install_chezmoi
 }
 
+ensure_chezmoi_source() {
+  local global_home="${AGENT_SURFACE_HOME:-$HOME}"
+  local source_dir="${CHEZMOI_SOURCE_DIR:-$global_home/.local/share/chezmoi}"
+
+  if [[ -d "$source_dir/.git" || -f "$source_dir/.chezmoiroot" || -d "$source_dir" && -n "$(find "$source_dir" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
+    print_note "Leaving existing chezmoi source directory unchanged: $source_dir"
+    return 0
+  fi
+
+  print_step "Initializing chezmoi Source"
+  print_note "Initializing default chezmoi source at $source_dir from $source_root"
+  mkdir -p "$(dirname "$source_dir")"
+  chezmoi init --guess-repo-url=false "$source_root"
+}
+
+ensure_chezmoi_config() {
+  local global_home="${AGENT_SURFACE_HOME:-$HOME}"
+  local config_dir="${CHEZMOI_CONFIG_DIR:-$global_home/.config/chezmoi}"
+  local config_path="${CHEZMOI_CONFIG_PATH:-$config_dir/chezmoi.toml}"
+  local template_path="$source_root/dot_config/chezmoi/chezmoi-template.toml.tmpl"
+
+  if [[ -f "$config_path" ]]; then
+    print_note "Leaving existing chezmoi config unchanged: $config_path"
+    return 0
+  fi
+
+  if [[ ! -f "$template_path" ]]; then
+    print_warn "Skipping chezmoi config bootstrap because $template_path is missing"
+    return 0
+  fi
+
+  print_step "Bootstrapping chezmoi Config"
+  print_note "Rendering default chezmoi config to $config_path"
+  mkdir -p "$config_dir"
+  chezmoi execute-template < "$template_path" > "$config_path"
+}
+
 write_repo_agents_addendum() {
   local target_path="$1"
   local force="$2"
@@ -180,6 +218,10 @@ install_global_surface() {
   local global_home="${AGENT_SURFACE_HOME:-$HOME}"
   local global_agents_root="$global_home/.agents"
   local global_codex_root="$global_home/.codex"
+
+  ensure_chezmoi
+  ensure_chezmoi_config
+  ensure_chezmoi_source
 
   print_step "Installing Global AGENTS Surface"
   print_note "Source: $source_root"
