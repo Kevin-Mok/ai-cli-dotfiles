@@ -13,6 +13,13 @@ of stacking duplicates.
   Expected: The skill definition, `dot_agents/skills/README.md`, and the
   root `README.md` stay aligned with the new workflow the skill adds or
   changes.
+- Action: Run `open-pr` on a feature branch with a clear base branch and
+  at least one changed file relative to that base.
+  Expected: The skill inspects `git status`, current branch, `git
+  merge-base`, merge-base `git log`, merge-base `git diff --stat`, and
+  changed files before drafting a title/body; it lists inspected evidence,
+  says what was not run or captured, and updates `docs/pr/` only when the
+  repository workflow calls for a PR doc.
 - Action: Run `commit-plan` on a dirty tree whose changes clearly include
   an older prerequisite change and a newer follow-up change.
   Expected: The proposed commits, optional manual commands, and commit
