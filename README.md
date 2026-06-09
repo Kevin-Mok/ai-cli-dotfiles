@@ -187,6 +187,10 @@ Representative highlights:
 - [`commit-session`](dot_agents/skills/commit-session/SKILL.md) ships
   only the files owned by the current Codex session, with fallback logic
   when a session missed its pre-write baseline.
+- [`open-pr`](dot_agents/skills/open-pr/SKILL.md) turns branch-vs-base
+  evidence into reviewer-ready PR titles and bodies, including
+  `docs/pr/` sync and LessonOps DD/Cindy handoff context when those
+  workflows apply.
 - [`gh-fix-ci`](dot_agents/skills/gh-fix-ci/SKILL.md) investigates
   failing GitHub Actions checks and plans the fix before touching code.
 

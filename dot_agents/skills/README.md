@@ -182,6 +182,10 @@ Codex skill surface on this machine.
   observed-touch-only fallback when the baseline is missing, then pushes
   each successful scoped commit by default unless the user says
   otherwise.
+- [`open-pr`](open-pr/SKILL.md): Drafts or publishes pull request
+  titles and bodies from branch-vs-base evidence, keeps `docs/pr/`
+  handoff docs aligned when a repo uses them, and preserves LessonOps
+  DD/Cindy review context without inventing verification results.
 - [`gh-fix-ci`](gh-fix-ci/SKILL.md): Investigates failing GitHub Actions
   PR checks with `gh`, summarizes the real failure context, and drafts a
   fix plan before implementation.

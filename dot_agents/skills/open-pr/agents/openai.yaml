@@ -1,0 +1,7 @@
+interface:
+  display_name: "Open PR"
+  short_description: "Draft PR titles and bodies from branch diffs"
+  default_prompt: "Use $open-pr to inspect my current branch against main and draft a GitHub-ready pull request title and body from the actual diff evidence."
+
+policy:
+  allow_implicit_invocation: false
