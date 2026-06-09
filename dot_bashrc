@@ -189,7 +189,7 @@ export VISUAL='vim'
 # Both PC/Laptop {{{
 if [ "$(whoami)" == "kevin" ]; then
 	xset r rate 200 90
-	export PATH="${PATH}:${HOME}/.local/bin/"
+	export PATH="${PATH}:${HOME}/.local/bin/:${HOME}/scripts"
 	(cat ~/.cache/wal/sequences &)
 fi
 # Keep keyboard remaps in X startup / ~/.Xmodmap so opening a bash shell

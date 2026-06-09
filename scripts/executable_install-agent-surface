@@ -1,0 +1,355 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ./scripts/executable_install-agent-surface [--target PATH | --global] [--chezmoi] [--skill NAME ... | --all-skills] [--force]
+
+What this does:
+  - Installs AGENTS.md and AGENTS.repo.md into a target repo
+  - Creates plans/
+  - Creates .agents/skills/ for normal repos, or dot_agents/skills/ for chezmoi source repos
+  - Installs global skills to ~/.agents/skills and global Codex instructions to ~/.codex/AGENTS.md with --global
+  - Installs chezmoi into $HOME/.local/bin when --chezmoi is used and chezmoi is missing
+  - Copies selected local skills from this dotfiles repo when requested
+
+Options:
+  --target PATH     Target repo directory. Defaults to the current directory.
+  --global          Install the global Codex/agents surface under $HOME.
+  --chezmoi         Use dot_agents/skills/ instead of .agents/skills/.
+  --skill NAME      Copy one skill by name. May be passed multiple times.
+  --all-skills      Copy every skill directory with a SKILL.md.
+  --force           Overwrite existing AGENTS files and copied skill directories.
+  -h, --help        Show this help text.
+
+Environment:
+  CHEZMOI_INSTALL_BIN_DIR   Directory for auto-installed chezmoi. Defaults to $HOME/.local/bin.
+  AGENT_SURFACE_HOME        Home directory for --global installs. Defaults to $HOME.
+
+Examples:
+  ./scripts/executable_install-agent-surface --global --all-skills
+  ./scripts/executable_install-agent-surface --target ~/coding/my-app --skill commit-plan
+  ./scripts/executable_install-agent-surface --target ~/dotfiles --chezmoi --all-skills
+EOF
+}
+
+print_step() {
+  printf '\n== %s ==\n' "$1"
+}
+
+print_note() {
+  printf '%s\n' "$1"
+}
+
+print_warn() {
+  printf 'WARN: %s\n' "$1"
+}
+
+fail() {
+  printf 'FAIL: %s\n' "$1" >&2
+  exit 1
+}
+
+resolve_script_dir() {
+  local source="${BASH_SOURCE[0]}"
+  local dir
+
+  while [[ -L "$source" ]]; do
+    dir="$(cd -P "$(dirname "$source")" && pwd)"
+    source="$(readlink "$source")"
+    [[ "$source" != /* ]] && source="$dir/$source"
+  done
+
+  cd -P "$(dirname "$source")" && pwd
+}
+
+copy_file_safely() {
+  local source_path="$1"
+  local target_path="$2"
+  local force="$3"
+
+  if [[ -e "$target_path" && "$force" -ne 1 ]]; then
+    print_warn "Leaving existing file unchanged: $target_path"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$target_path")"
+  cp "$source_path" "$target_path"
+  print_note "Wrote $target_path"
+}
+
+copy_dir_safely() {
+  local source_dir="$1"
+  local target_dir="$2"
+  local force="$3"
+
+  if [[ -e "$target_dir" ]]; then
+    if [[ "$force" -ne 1 ]]; then
+      print_warn "Leaving existing directory unchanged: $target_dir"
+      return 0
+    fi
+
+    rm -rf "$target_dir"
+  fi
+
+  mkdir -p "$(dirname "$target_dir")"
+  cp -R "$source_dir" "$target_dir"
+  print_note "Copied $target_dir"
+}
+
+append_gitignore_entry() {
+  local target_root="$1"
+  local entry="$2"
+  local gitignore_path="$target_root/.gitignore"
+
+  touch "$gitignore_path"
+
+  if grep -Fxq "$entry" "$gitignore_path"; then
+    return 0
+  fi
+
+  printf '%s\n' "$entry" >> "$gitignore_path"
+  print_note "Added $entry to $gitignore_path"
+}
+
+install_chezmoi() {
+  local bin_dir="${CHEZMOI_INSTALL_BIN_DIR:-$HOME/.local/bin}"
+
+  print_step "Installing chezmoi"
+  print_note "chezmoi is not on PATH. Installing it to $bin_dir"
+  mkdir -p "$bin_dir"
+
+  if command -v curl >/dev/null 2>&1; then
+    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$bin_dir"
+  elif command -v wget >/dev/null 2>&1; then
+    sh -c "$(wget -qO- get.chezmoi.io)" -- -b "$bin_dir"
+  else
+    fail "chezmoi is missing and neither curl nor wget is available to install it"
+  fi
+
+  if [[ ":$PATH:" != *":$bin_dir:"* ]]; then
+    export PATH="$bin_dir:$PATH"
+  fi
+
+  command -v chezmoi >/dev/null 2>&1 || fail "chezmoi install completed, but chezmoi is still not on PATH"
+  print_note "Installed $(chezmoi --version 2>/dev/null || printf 'chezmoi')"
+}
+
+ensure_chezmoi() {
+  if command -v chezmoi >/dev/null 2>&1; then
+    return 0
+  fi
+
+  install_chezmoi
+}
+
+write_repo_agents_addendum() {
+  local target_path="$1"
+  local force="$2"
+
+  if [[ -e "$target_path" && "$force" -ne 1 ]]; then
+    print_warn "Leaving existing file unchanged: $target_path"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$target_path")"
+  cat > "$target_path" <<'EOF'
+# AGENTS.repo.md
+
+Repository-specific additions for this repo.
+
+Read the global Codex policy from `~/.codex/AGENTS.md` first when this
+repo is opened in Codex. Then read `AGENTS.md` for the shared baseline
+and this file for stricter repo-local instructions.
+
+Lower layers may only add stricter constraints or local specialization.
+They must never relax the global Codex policy or the shared baseline.
+
+## Repo Notes
+
+- Use existing project patterns before introducing new abstractions.
+- Store non-trivial ExecPlans in `plans/<task-slug>.md`.
+- Update docs when behavior changes.
+EOF
+  print_note "Wrote $target_path"
+}
+
+install_global_surface() {
+  local global_home="${AGENT_SURFACE_HOME:-$HOME}"
+  local global_agents_root="$global_home/.agents"
+  local global_codex_root="$global_home/.codex"
+
+  print_step "Installing Global AGENTS Surface"
+  print_note "Source: $source_root"
+  print_note "Home: $global_home"
+
+  mkdir -p "$global_agents_root/skills" "$global_codex_root"
+  print_note "Ensured $global_agents_root/skills"
+  print_note "Ensured $global_codex_root"
+
+  copy_file_safely "$source_agents" "$global_agents_root/AGENTS.md" "$force"
+  copy_file_safely "$source_root/dot_codex/AGENTS.md" "$global_codex_root/AGENTS.md" "$force"
+
+  if [[ -d "$source_root/dot_agents/system-design" ]]; then
+    copy_dir_safely "$source_root/dot_agents/system-design" "$global_agents_root/system-design" "$force"
+  fi
+
+  if [[ "$all_skills" -eq 1 ]]; then
+    collect_all_skills
+  fi
+
+  if [[ "${#skills[@]}" -gt 0 ]]; then
+    print_step "Installing Global Skills"
+  fi
+
+  copy_selected_skills "$global_agents_root/skills"
+
+  print_step "Next Steps"
+  print_note "Codex global instructions are installed at:"
+  print_note "  $global_codex_root/AGENTS.md"
+  print_note "Global skills are installed at:"
+  print_note "  $global_agents_root/skills"
+  print_note "Open a new Codex session so the global instruction and skill surfaces are reloaded."
+}
+
+collect_all_skills() {
+  while IFS= read -r skill_file; do
+    skill_dir="$(dirname "$skill_file")"
+    skills+=("$(basename "$skill_dir")")
+  done < <(find "$source_skills_root" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
+}
+
+copy_selected_skills() {
+  local target_skills_root="$1"
+
+  for skill_name in "${skills[@]}"; do
+    if [[ "$skill_name" == *"/"* || "$skill_name" == "." || "$skill_name" == ".." ]]; then
+      fail "Invalid skill name: $skill_name"
+    fi
+
+    skill_source="$source_skills_root/$skill_name"
+    [[ -f "$skill_source/SKILL.md" ]] || fail "No tracked skill named $skill_name at $skill_source/SKILL.md"
+
+    copy_dir_safely "$skill_source" "$target_skills_root/$skill_name" "$force"
+  done
+}
+
+target_path="."
+global_install=0
+use_chezmoi=0
+force=0
+all_skills=0
+skills=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --target)
+      shift
+      [[ $# -gt 0 ]] || fail "--target requires a path"
+      target_path="$1"
+      ;;
+    --global)
+      global_install=1
+      ;;
+    --chezmoi)
+      use_chezmoi=1
+      ;;
+    --skill)
+      shift
+      [[ $# -gt 0 ]] || fail "--skill requires a skill name"
+      skills+=("$1")
+      ;;
+    --all-skills)
+      all_skills=1
+      ;;
+    --force)
+      force=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      fail "Unknown argument: $1"
+      ;;
+  esac
+  shift
+done
+
+if [[ "$all_skills" -eq 1 && "${#skills[@]}" -gt 0 ]]; then
+  fail "Use either --all-skills or one or more --skill options, not both"
+fi
+
+if [[ "$global_install" -eq 1 && "$use_chezmoi" -eq 1 ]]; then
+  fail "Use --global or --chezmoi, not both"
+fi
+
+script_dir="$(resolve_script_dir)"
+source_root="$(cd "$script_dir/.." && pwd)"
+source_agents="$source_root/AGENTS.md"
+source_repo_agents="$source_root/AGENTS.repo.md"
+source_skills_root="$source_root/dot_agents/skills"
+
+[[ -f "$source_agents" ]] || fail "Missing source AGENTS.md at $source_agents"
+[[ -f "$source_repo_agents" ]] || fail "Missing source AGENTS.repo.md at $source_repo_agents"
+[[ -f "$source_root/dot_codex/AGENTS.md" ]] || fail "Missing global Codex AGENTS source at $source_root/dot_codex/AGENTS.md"
+[[ -d "$source_skills_root" ]] || fail "Missing source skills directory at $source_skills_root"
+
+if [[ "$global_install" -eq 1 ]]; then
+  install_global_surface
+  exit 0
+fi
+
+mkdir -p "$target_path"
+target_root="$(cd "$target_path" && pwd)"
+
+if [[ "$target_root" == "$source_root" ]]; then
+  print_warn "Target is this dotfiles repo. The script will verify/create folders, but AGENTS files already exist."
+fi
+
+if [[ "$use_chezmoi" -eq 1 ]]; then
+  target_skills_root="$target_root/dot_agents/skills"
+else
+  target_skills_root="$target_root/.agents/skills"
+fi
+
+print_step "Installing AGENTS Surface"
+print_note "Source: $source_root"
+print_note "Target: $target_root"
+
+if [[ "$use_chezmoi" -eq 1 ]]; then
+  ensure_chezmoi
+fi
+
+copy_file_safely "$source_agents" "$target_root/AGENTS.md" "$force"
+write_repo_agents_addendum "$target_root/AGENTS.repo.md" "$force"
+mkdir -p "$target_root/plans" "$target_skills_root"
+print_note "Ensured $target_root/plans"
+print_note "Ensured $target_skills_root"
+
+append_gitignore_entry "$target_root" "AGENTS.override.local.md"
+
+if [[ "$all_skills" -eq 1 ]]; then
+  collect_all_skills
+fi
+
+if [[ "${#skills[@]}" -gt 0 ]]; then
+  print_step "Installing Skills"
+fi
+
+copy_selected_skills "$target_skills_root"
+
+print_step "Next Steps"
+if [[ "$use_chezmoi" -eq 1 ]]; then
+  print_note "Preview home-directory changes from the target repo:"
+  print_note "  chezmoi -S \"$target_root\" diff"
+  print_note "Apply when ready:"
+  print_note "  chezmoi -S \"$target_root\" apply"
+else
+  print_note "Open the target repo with Codex. Local skills live at:"
+  print_note "  $target_skills_root"
+fi
+
+print_note "Review AGENTS.repo.md and tighten it for the target project's actual rules."
