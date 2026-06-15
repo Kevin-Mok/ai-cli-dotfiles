@@ -1,7 +1,7 @@
 function fn-progress
     # --- Season Dates (Fortnite Chapter 7 Season 2) ---
-    set SEASON_START "2026-03-19 00:00:00"
-    set SEASON_END "2026-06-05 00:00:00"
+    set SEASON_START "2026-06-10 00:00:00"
+    set SEASON_END "2026-08-10 00:00:00"
 
     # --- Calculate Unix Timestamps ---
     set START_SECONDS (date -d "$SEASON_START" +%s)
