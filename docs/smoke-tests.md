@@ -42,6 +42,8 @@ of stacking duplicates.
 - Action: Add or change a standing workflow rule in `dot_codex/AGENTS.md`.
   Expected: The corresponding public docs and reusable verification
   guidance stay in sync with that rule in the same change.
+- Action: Run `powershell -NoProfile -File .\scripts\executable_install-agent-surface.ps1 -InstallChezmoi` from a Windows checkout of this repo.
+  Expected: The script treats the checked-out repo as the `chezmoi` source directory, ensures `chezmoi` is available, and runs a global `chezmoi -S <repo> apply` flow. With `-DryRun`, it runs `chezmoi -S <repo> apply -n -v` instead and previews the global changes without mutating tracked repo files.
 
 ## Keyboard And Input
 
