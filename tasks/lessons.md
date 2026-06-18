@@ -56,6 +56,10 @@
 - When maintaining `commit-plan`, treat oldest-to-newest commit order as an execution invariant across the plan, manual commands, and message summary.
 2026-04-10 - When asked to merge from a work tree, always push to `main` afterwards before proceeding.
 - In /home/kevin/linux-config, when a README check passes structural headings but fails recruiter-first positioning, run the gate against opening-hook substance, hierarchy, and stack-vs-setup ordering before reporting it as acceptable.
+- In /home/kevin/linux-config, when a user asks whether a skill exists, check the repo-local skill source under `dot_agents/skills/` and the repo AGENTS chain before relying on the globally registered skill list.
+- When a script supports multiple install modes that converge on the same operator workflow, ensure dependency bootstrapping applies consistently across those modes instead of only the first path implemented.
+- When bootstrapping a tool-driven workflow, verify both binary availability and first-run initialization state; a successful install is not enough if the next command still fails on missing default state directories.
+- When first-run template evaluation depends on repo data keys like `gui`, bootstrap the default tool config before telling the user to run the tool, or make the template safe when those keys are absent.
 
 - 2026-04-16: Fixed `readme-recruiter-sync` to resolve metadata repo-agnostically (`dot_agents/` first, then repo `.agents`, then `$HOME/.agents`, plus optional `READMERECRUITERSYNC_SKILL_DIR`) and derive repo root by walking up to nearest README. This prevents terminal-specific false failures in repos without local skill copy.
 - 2026-04-27: When Graphiti MCP needs to be available on login, mount `/dev/sdc1` to `/mnt/linux-files-3` only when the device exists and start `docker compose -f ~/coding/graphiti/mcp_server/docker/docker-compose-neo4j.yml up -d`; skip startup cleanly if host port 8000 is already bound so startup can continue.

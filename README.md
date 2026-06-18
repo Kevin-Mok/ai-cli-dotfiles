@@ -110,14 +110,17 @@ high-leverage properties:
 
 [`AGENTS.md`](AGENTS.md), [`AGENTS.repo.md`](AGENTS.repo.md), and
 [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) are the behavioral
-backbone, shared across both Codex and Claude Code.
+backbone. When applied globally, `dot_codex/AGENTS.md` becomes
+`~/.codex/AGENTS.md` for Codex, while the tracked skills and system
+design references land under `~/.agents/`.
 
 - [`AGENTS.md`](AGENTS.md) holds the shared baseline.
 - [`AGENTS.repo.md`](AGENTS.repo.md) says
   [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) is authoritative for
   Codex in this repo.
 - [`dot_codex/AGENTS.md`](dot_codex/AGENTS.md) is the canonical working
-  document for this codebase.
+  document for this codebase and the source for global
+  `~/.codex/AGENTS.md`.
 - [`dot_claude/CLAUDE.md`](dot_claude/CLAUDE.md.tmpl) wires that same
   canonical document into Claude Code globally via an `@path` import.
   No separate Claude-specific copy is maintained.
@@ -439,6 +442,7 @@ source in this repo.
 | `chezmoi -S "$PWD" apply -n -v` | Dry-run an apply with extra detail before touching files in `$HOME`. | `-S` / `--source` uses this repo as the source state. `-n` / `--dry-run` previews changes without writing them. `-v` / `--verbose` prints more detail. |
 | `chezmoi -S "$PWD" apply` | Apply the tracked source state from this clone into `$HOME`. | `-S` / `--source` uses this repo as the source state. `-P` / `--parent-dirs` is useful when you apply a nested target and also want its parent directories handled. |
 | `refresh-config` | Snapshot the live Codex config into the repo, then reapply the chezmoi-managed environment layer. | No user-facing flags. It copies `~/.codex/config.toml` into `dot_codex/config.toml`, runs `chezmoi apply`, syncs shortcuts, and reloads fish. |
+| `install-agent-surface --global --all-skills` after `chezmoi apply`, or `./scripts/executable_install-agent-surface --global --all-skills` from this clone | Install the global AI surface for Codex: `~/.codex/AGENTS.md`, `~/.agents/AGENTS.md`, `~/.agents/skills/`, and `~/.agents/system-design/`. Fish gets completions for the installed command, and bash can run the same command through `~/scripts` as a fallback shell. | `--global` chooses the home-level install, auto-installs `chezmoi` into `$HOME/.local/bin` when missing, renders a default chezmoi config under `~/.config/chezmoi/chezmoi.toml` when it does not exist yet, and initializes the default chezmoi source directory from this repo when it does not exist yet. `--target <repo>` scaffolds a repo-local `AGENTS.md`, `AGENTS.repo.md`, `plans/`, and local skills folder. `--chezmoi` writes `dot_agents/skills/` instead of `.agents/skills/` and also auto-installs `chezmoi` when missing. `--skill NAME` copies selected tracked skills, `--all-skills` copies every tracked skill with a `SKILL.md`, and `--force` overwrites existing AGENTS files or copied skill directories. |
 | `./scripts/executable_apply-pywal-theme <wallpaper>` | Regenerate the active `pywal` theme through the repo-owned wrapper so wallpaper changes also refresh kitty and the i3 color resources this repo depends on. | Pass an image path directly, or pass raw `wal` flags when you need that lower-level control. The wrapper runs `wal --saturate 0.8 -e`, reloads Xresources, refreshes running kitty windows when the socket is available, and regenerates the derived i3 palette file. |
 | `./scripts/executable_screenshot-all-monitors` | Save one combined `scrot` capture of the full X virtual desktop, covering every active monitor in one image. | No flags. Saves to `/home/kevin/Pictures/screenshots/desktop/unsorted/screenshot-YYYY-MM-DD_HH:MM:SS.png`. `SCREENSHOT_ALL_MONITORS_DIR`, `SCREENSHOT_ALL_MONITORS_SCROT`, and `SCREENSHOT_ALL_MONITORS_DATE` override the destination, capture binary, and timestamp binary for tests or alternate hosts. |
 | `./scripts/executable_setup-st.sh` | Render the tracked `st` config, sync it into your `st` source checkout, and install the compiled terminal you actually want to use. | `--source-dir` points the script at a non-default `st` checkout path. `--skip-install` only refreshes `~/.config/st/config.def.h` plus the source-tree `config.def.h` and prints the exact `sudo make -C ... install` command instead of running it. `--clone-if-missing` clones the official upstream source from `https://git.suckless.org/st` into the target checkout path before syncing and building. |
